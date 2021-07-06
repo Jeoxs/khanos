@@ -18,6 +18,7 @@ class _TaskPageState extends State<TaskPage> {
   final taskProvider = new TaskProvider();
   final subtaskProvider = new SubtaskProvider();
   final columnProvider = new ColumnProvider();
+  bool _enabled = true;
 
   @override
   Widget build(BuildContext context) {
@@ -70,6 +71,7 @@ class _TaskPageState extends State<TaskPage> {
         builder: (BuildContext context, AsyncSnapshot<List<dynamic>> snapshot) {
           if (snapshot.hasData) {
             final List<SubtaskModel> subtasks = snapshot.data;
+
             return Expanded(
               child: ListView.builder(
                 itemCount: subtasks.length,
@@ -91,7 +93,15 @@ class _TaskPageState extends State<TaskPage> {
                       leading: subtaskStatusIcon,
                       title: Text(subtasks[i].title,
                           overflow: TextOverflow.ellipsis),
-                      onTap: () {},
+                      enableFeedback: true,
+                      enabled: _enabled,
+                      onTap: () async {
+                        _enabled = false;
+                        await subtaskProvider.processSubtask(subtasks[i]);
+                        setState(() {
+                          _enabled = true;
+                        });
+                      },
                     ),
                     Divider(height: 2.0),
                   ]);
