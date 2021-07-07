@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 import 'package:kanboard/src/models/column_model.dart';
 import 'package:kanboard/src/models/project_model.dart';
 import 'package:kanboard/src/models/task_model.dart';
 import 'package:kanboard/src/providers/column_provider.dart';
 import 'package:kanboard/src/providers/project_provider.dart';
 import 'package:kanboard/src/providers/task_provider.dart';
+import 'package:kanboard/src/utils/datetime_utils.dart';
+import 'package:kanboard/src/utils/widgets_utils.dart';
+import 'package:kanboard/src/utils/theme_utils.dart';
 import 'package:shimmer/shimmer.dart';
 
 class ProjectPage extends StatefulWidget {
@@ -30,9 +32,7 @@ class _ProjectPageState extends State<ProjectPage> {
     }
 
     return Scaffold(
-      appBar: AppBar(
-          title:
-              project.name != null ? Text(project.name) : Text('New Project')),
+      appBar: normalAppBar(project.name != null ? project.name : 'New Project'),
       body: Container(
           width: double.infinity,
           padding: EdgeInsets.only(top: 20.0),
@@ -63,6 +63,8 @@ class _ProjectPageState extends State<ProjectPage> {
             ],
           ),
         ),
+        // _testWidget('07:00 AM', 'Title', Colors.blue),
+        SizedBox(height: 20.0),
         _taskList(int.parse(project.id)),
       ],
     );
@@ -77,28 +79,25 @@ class _ProjectPageState extends State<ProjectPage> {
         builder: (BuildContext context, AsyncSnapshot<List<dynamic>> snapshot) {
           if (snapshot.hasData) {
             final List<TaskModel> tasks = snapshot.data[0];
-            final Map<String, ColumnModel> columns = snapshot.data[1];
+
             return Expanded(
               child: ListView.builder(
                 itemCount: tasks.length,
                 itemBuilder: (BuildContext context, int i) {
                   return new Column(children: [
-                    ListTile(
-                      leading: Icon(Icons.circle,
-                          color: TaskModel().getTaskColor(tasks[i].colorId)),
-                      title:
-                          Text(tasks[i].title, overflow: TextOverflow.ellipsis),
-                      subtitle: Text(
-                        'Column: ${columns[tasks[i].columnId].title} - ${'Updated: ' + DateFormat("dd/MM/yy").format(DateTime.fromMillisecondsSinceEpoch(int.parse(tasks[i].dateModification) * 1000))}',
-                      ),
+                    GestureDetector(
                       onTap: () {
                         Navigator.pushNamed(context, 'task', arguments: {
                           'task': tasks[i],
                           'project_name': project.name
                         });
                       },
+                      child: _taskElement(
+                          getDateTimeFromEpoch(
+                              "dd/MM/yy", tasks[i].dateModification),
+                          tasks[i].title,
+                          TaskModel().getTaskColor(tasks[i].colorId)),
                     ),
-                    Divider(height: 2.0),
                   ]);
                 },
               ),
@@ -126,5 +125,43 @@ class _ProjectPageState extends State<ProjectPage> {
             );
           }
         });
+  }
+
+  Widget _taskElement(String timeUpdated, String title, Color color) {
+    return Container(
+      margin: EdgeInsets.fromLTRB(20, 0, 20, 15),
+      padding: EdgeInsets.fromLTRB(5, 13, 5, 13),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        children: <Widget>[
+          Text(
+            timeUpdated,
+          ),
+          Container(
+            width: 180,
+            child: Text(title,
+                style: TextStyle(fontSize: 15),
+                overflow: TextOverflow.ellipsis),
+          ),
+        ],
+      ),
+      decoration: BoxDecoration(
+        gradient: LinearGradient(
+          stops: [0.015, 0.015],
+          colors: [color, Colors.white],
+        ),
+        borderRadius: BorderRadius.all(
+          Radius.circular(5.0),
+        ),
+        boxShadow: [
+          BoxShadow(
+            color: CustomColors.GreyBorder,
+            blurRadius: 10.0,
+            spreadRadius: 5.0,
+            offset: Offset(0.0, 0.0),
+          ),
+        ],
+      ),
+    );
   }
 }

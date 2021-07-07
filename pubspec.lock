@@ -90,6 +90,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "2.0.2"
+  flutter_slidable:
+    dependency: "direct main"
+    description:
+      name: flutter_slidable
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.6.0"
   flutter_test:
     dependency: "direct dev"
     description: flutter
@@ -100,6 +107,15 @@ packages:
     description: flutter
     source: sdk
     version: "0.0.0"
+  gradient_app_bar:
+    dependency: "direct main"
+    description:
+      path: "."
+      ref: HEAD
+      resolved-ref: "37c4b1bea68eebaf29627cc696fcf8ed4701592e"
+      url: "https://github.com/TinyProgrammers/GradientAppBar.git"
+    source: git
+    version: "0.1.4"
   http:
     dependency: "direct main"
     description:

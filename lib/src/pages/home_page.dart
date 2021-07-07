@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:kanboard/src/utils/widgets_utils.dart';
+import 'package:shimmer/shimmer.dart';
 import 'package:kanboard/src/models/project_model.dart';
 import 'package:kanboard/src/providers/column_provider.dart';
 import 'package:kanboard/src/providers/project_provider.dart';
-import 'package:shimmer/shimmer.dart';
 
 class HomePage extends StatefulWidget {
   @override
@@ -12,19 +13,12 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   final projectProvider = new ProjectProvider();
   final columnProvider = new ColumnProvider();
+  int projectsAmount;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text('Projects'),
-        actions: [
-          IconButton(
-            icon: Icon(Icons.add),
-            onPressed: () => Navigator.pushNamed(context, 'project'),
-          ),
-        ],
-      ),
-      body: homeContent(context),
+      appBar: normalAppBar('GoJaponte Kanboard'),
+      body: projectList(context),
     );
   }
 
@@ -54,40 +48,10 @@ class _HomePageState extends State<HomePage> {
       child: Padding(
         padding: const EdgeInsets.all(10.0),
         child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
-            Column(
-              children: [
-                Text(
-                  '20',
-                  style: TextStyle(fontWeight: FontWeight.w500, fontSize: 25.0),
-                ),
-                Text(
-                  'Projects',
-                ),
-              ],
-            ),
-            Column(
-              children: [
-                Text(
-                  '120',
-                  style: TextStyle(fontWeight: FontWeight.w500, fontSize: 25.0),
-                ),
-                Text(
-                  'tasks',
-                ),
-              ],
-            ),
-            Column(
-              children: [
-                Text(
-                  '48',
-                  style: TextStyle(fontWeight: FontWeight.w500, fontSize: 25.0),
-                ),
-                Text(
-                  'Sub-tasks',
-                ),
-              ],
+            Text(
+              '${projectsAmount.toString()} Projects',
+              style: TextStyle(fontWeight: FontWeight.w400, fontSize: 25.0),
             ),
           ],
         ),
@@ -97,49 +61,69 @@ class _HomePageState extends State<HomePage> {
 
   Widget projectList(BuildContext context) {
     return FutureBuilder(
-        future: projectProvider.getProjects(),
+        future: projectProvider.getProjects(context),
         builder:
             (BuildContext context, AsyncSnapshot<List<ProjectModel>> snapshot) {
           if (snapshot.hasData) {
             final projects = snapshot.data;
-            return Expanded(
-              child: ListView.builder(
-                  padding: EdgeInsets.symmetric(horizontal: 20.0),
-                  itemCount: projects.length,
-                  itemBuilder: (BuildContext context, int i) {
-                    return Card(
-                      elevation: 3.0,
-                      child: ListTile(
-                        title: Text(projects[i].name),
-                        subtitle: projects[i].description != null
-                            ? Text(
-                                projects[i].description,
-                                overflow: TextOverflow.ellipsis,
-                              )
-                            : Text('No Description'),
-                        onTap: () {
-                          Navigator.pushNamed(context, 'project',
-                              arguments: {'project': projects[i]});
-                        },
-                      ),
-                    );
-                  }),
+            projectsAmount = projects.length;
+            return Column(
+              children: [
+                Container(
+                  margin: EdgeInsets.only(top: 15, left: 20, bottom: 10),
+                  child: Text(
+                    'Projects',
+                    style: TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                ),
+                Expanded(
+                  child: ListView.builder(
+                      padding: EdgeInsets.symmetric(horizontal: 20.0),
+                      itemCount: projects.length,
+                      itemBuilder: (BuildContext context, int i) {
+                        return Card(
+                          elevation: 10.0,
+                          child: ListTile(
+                            title: Text(projects[i].name),
+                            subtitle: projects[i].description != null
+                                ? Text(
+                                    projects[i].description,
+                                    overflow: TextOverflow.ellipsis,
+                                  )
+                                : Text('No Description'),
+                            onTap: () {
+                              Navigator.pushNamed(context, 'project',
+                                  arguments: {'project': projects[i]});
+                            },
+                          ),
+                        );
+                      }),
+                ),
+              ],
             );
           } else {
-            return Expanded(
-              child: Shimmer.fromColors(
-                child: ListView.builder(
-                    padding: EdgeInsets.symmetric(horizontal: 20.0),
-                    itemCount: 8,
-                    itemBuilder: (context, index) {
-                      return Card(
-                        elevation: 3.0,
-                        child: ListTile(),
-                      );
-                    }),
-                baseColor: Colors.grey[200],
-                highlightColor: Colors.grey[300],
-              ),
+            return Column(
+              children: [
+                Expanded(
+                  child: Shimmer.fromColors(
+                    child: ListView.builder(
+                        padding: EdgeInsets.symmetric(
+                            horizontal: 20.0, vertical: 10.0),
+                        itemCount: 8,
+                        itemBuilder: (context, index) {
+                          return Card(
+                            elevation: 3.0,
+                            child: ListTile(),
+                          );
+                        }),
+                    baseColor: Colors.grey[200],
+                    highlightColor: Colors.grey[300],
+                  ),
+                ),
+              ],
             );
           }
         });
