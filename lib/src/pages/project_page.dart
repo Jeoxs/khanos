@@ -137,16 +137,14 @@ class _ProjectPageState extends State<ProjectPage> {
                     itemBuilder: (context, index) {
                       return Column(
                         children: [
-                          ListTile(
-                            leading: Icon(Icons.circle),
-                            title: Text('Task #$index ...'),
-                          ),
+                          _taskElement(
+                              '01/01/1970', 'Task #$index', Colors.grey),
                           Divider(height: 2.0),
                         ],
                       );
                     }),
-                baseColor: Colors.grey[400],
-                highlightColor: Colors.grey[600],
+                baseColor: CustomColors.BlueDark,
+                highlightColor: Colors.lightBlue[200],
               ),
             );
           }

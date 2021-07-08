@@ -160,6 +160,7 @@ class _LoginPageState extends State<LoginPage> {
             textColor: Colors.white,
             onPressed: () {
               if (_formKey.currentState.validate()) {
+                showLoaderDialog(context);
                 _login(context);
               } else {
                 mostrarAlerta(context, 'Please fill all the fields');
@@ -169,7 +170,7 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 
-  _login(BuildContext context) async {   
+  _login(BuildContext context) async {
     final String _endPoint = _endPointController.text;
     final String _username = _usernameController.text;
     final String _password = _passwordController.text;
@@ -177,13 +178,12 @@ class _LoginPageState extends State<LoginPage> {
     bool authResult =
         await AuthProvider().login(_endPoint, _username, _password);
 
+    Navigator.pop(context);
     if (authResult) {
-      print("GOT RESULT");
       setState(() {
         Navigator.pushReplacementNamed(context, 'home');
       });
     } else {
-      print("Failed");
       mostrarAlerta(context, 'Couldn\'t connect to your server!');
     }
   }

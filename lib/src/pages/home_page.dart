@@ -108,13 +108,10 @@ class _HomePageState extends State<HomePage> {
                             horizontal: 20.0, vertical: 10.0),
                         itemCount: 8,
                         itemBuilder: (context, index) {
-                          return Card(
-                            elevation: 3.0,
-                            child: ListTile(),
-                          );
+                          return _projectElement('someTitle', 'description..');
                         }),
-                    baseColor: Colors.grey[200],
-                    highlightColor: Colors.grey[300],
+                    baseColor: CustomColors.BlueDark,
+                    highlightColor: Colors.lightBlue[200],
                   ),
                 ),
               ],
