@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:kanboard/src/utils/theme_utils.dart';
 import 'package:kanboard/src/utils/widgets_utils.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:kanboard/src/models/project_model.dart';
@@ -81,24 +82,15 @@ class _HomePageState extends State<HomePage> {
                 ),
                 Expanded(
                   child: ListView.builder(
-                      padding: EdgeInsets.symmetric(horizontal: 20.0),
+                      padding: EdgeInsets.only(
+                          left: 20.0, right: 20.0, bottom: 80.0),
                       itemCount: projects.length,
                       itemBuilder: (BuildContext context, int i) {
-                        return Card(
-                          elevation: 10.0,
-                          child: ListTile(
-                            title: Text(projects[i].name),
-                            subtitle: projects[i].description != null
-                                ? Text(
-                                    projects[i].description,
-                                    overflow: TextOverflow.ellipsis,
-                                  )
-                                : Text('No Description'),
-                            onTap: () {
-                              Navigator.pushNamed(context, 'project',
-                                  arguments: {'project': projects[i]});
-                            },
-                          ),
+                        return GestureDetector(
+                          onTap: () => Navigator.pushNamed(context, 'project',
+                              arguments: {'project': projects[i]}),
+                          child: _projectElement(
+                              projects[i].name, projects[i].description),
                         );
                       }),
                 ),
@@ -127,5 +119,45 @@ class _HomePageState extends State<HomePage> {
             );
           }
         });
+  }
+
+  Widget _projectElement(String title, String description) {
+    description = description != null ? description : 'No description';
+    return Container(
+      margin: EdgeInsets.symmetric(horizontal: 10.0, vertical: 10.0),
+      padding: EdgeInsets.symmetric(vertical: 20.0, horizontal: 30.0),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.spaceAround,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: <Widget>[
+          Text(
+            title,
+            style: TextStyle(fontSize: 20.0),
+          ),
+          Container(
+            child: Text(description,
+                style: TextStyle(fontSize: 15),
+                overflow: TextOverflow.ellipsis),
+          ),
+        ],
+      ),
+      decoration: BoxDecoration(
+        gradient: LinearGradient(
+          stops: [0.015, 0.015],
+          colors: [Colors.green, Colors.white],
+        ),
+        borderRadius: BorderRadius.all(
+          Radius.circular(5.0),
+        ),
+        boxShadow: [
+          BoxShadow(
+            color: CustomColors.GreyBorder,
+            blurRadius: 10.0,
+            spreadRadius: 5.0,
+            offset: Offset(0.0, 0.0),
+          ),
+        ],
+      ),
+    );
   }
 }

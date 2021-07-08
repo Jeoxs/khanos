@@ -79,29 +79,55 @@ class _ProjectPageState extends State<ProjectPage> {
         builder: (BuildContext context, AsyncSnapshot<List<dynamic>> snapshot) {
           if (snapshot.hasData) {
             final List<TaskModel> tasks = snapshot.data[0];
-
-            return Expanded(
-              child: ListView.builder(
-                itemCount: tasks.length,
-                itemBuilder: (BuildContext context, int i) {
-                  return new Column(children: [
-                    GestureDetector(
-                      onTap: () {
-                        Navigator.pushNamed(context, 'task', arguments: {
-                          'task': tasks[i],
-                          'project_name': project.name
-                        });
-                      },
-                      child: _taskElement(
-                          getDateTimeFromEpoch(
-                              "dd/MM/yy", tasks[i].dateModification),
-                          tasks[i].title,
-                          TaskModel().getTaskColor(tasks[i].colorId)),
+            if (tasks.length > 0) {
+              return Expanded(
+                child: ListView.builder(
+                  itemCount: tasks.length,
+                  itemBuilder: (BuildContext context, int i) {
+                    return new Column(children: [
+                      GestureDetector(
+                        onTap: () {
+                          Navigator.pushNamed(context, 'task', arguments: {
+                            'task': tasks[i],
+                            'project_name': project.name
+                          });
+                        },
+                        child: _taskElement(
+                            getDateTimeFromEpoch(
+                                "dd/MM/yy", tasks[i].dateModification),
+                            tasks[i].title,
+                            TaskModel().getTaskColor(tasks[i].colorId)),
+                      ),
+                    ]);
+                  },
+                ),
+              );
+            } else {
+              return Center(
+                  child: Container(
+                width: MediaQuery.of(context).size.width / 1.2,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  mainAxisSize: MainAxisSize.min,
+                  children: <Widget>[
+                    Flexible(
+                      fit: FlexFit.loose,
+                      child: Hero(
+                        tag: 'Clipboard',
+                        child: Image.asset('assets/images/Clipboard-empty.png'),
+                      ),
                     ),
-                  ]);
-                },
-              ),
-            );
+                    Text(
+                      'No tasks',
+                      style: TextStyle(
+                          fontSize: 22,
+                          fontWeight: FontWeight.w500,
+                          color: CustomColors.TextHeader),
+                    ),
+                  ],
+                ),
+              ));
+            }
           } else {
             return Expanded(
               child: Shimmer.fromColors(

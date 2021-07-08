@@ -38,58 +38,86 @@ class _SubtaskPageState extends State<SubtaskPage> {
         builder: (BuildContext context, AsyncSnapshot<List<dynamic>> snapshot) {
           if (snapshot.hasData) {
             final List<SubtaskModel> subtasks = snapshot.data;
-            return Column(
-              children: [
-                Container(
-                  margin: EdgeInsets.only(top: 15, left: 20),
-                  child: Text(
-                    'Subtasks',
-                    style: TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.w600,
+            if (subtasks.length > 0) {
+              return Column(
+                children: [
+                  Container(
+                    margin: EdgeInsets.only(top: 15, left: 20),
+                    child: Text(
+                      'Subtasks',
+                      style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.w600,
+                      ),
                     ),
                   ),
-                ),
-                Expanded(
-                  child: ListView.builder(
-                    padding: EdgeInsets.only(top: 20),
-                    itemCount: subtasks.length,
-                    itemBuilder: (BuildContext context, int i) {
-                      return GestureDetector(
-                        onTap: () async {
-                          _enabled = false;
-                          subtaskProvider.processSubtask(subtasks[i]);
-                          setState(() {
-                            _enabled = true;
-                          });
-                        },
-                        child: Slidable(
-                          actionPane: SlidableDrawerActionPane(),
-                          child: _taskElement(
-                              subtasks[i].title, subtasks[i].status),
-                          secondaryActions: <Widget>[
-                            SlideAction(
-                              child: Container(
-                                padding: EdgeInsets.only(bottom: 10),
+                  Expanded(
+                    child: ListView.builder(
+                      padding: EdgeInsets.only(top: 20),
+                      itemCount: subtasks.length,
+                      itemBuilder: (BuildContext context, int i) {
+                        return GestureDetector(
+                          onTap: () async {
+                            _enabled = false;
+                            subtaskProvider.processSubtask(subtasks[i]);
+                            setState(() {
+                              _enabled = true;
+                            });
+                          },
+                          child: Slidable(
+                            actionPane: SlidableDrawerActionPane(),
+                            child: _taskElement(
+                                subtasks[i].title, subtasks[i].status),
+                            secondaryActions: <Widget>[
+                              SlideAction(
                                 child: Container(
-                                  height: 35,
-                                  width: 35,
-                                  decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(50),
-                                      color: CustomColors.TrashRedBackground),
-                                  child: Image.asset('assets/images/trash.png'),
+                                  padding: EdgeInsets.only(bottom: 10),
+                                  child: Container(
+                                    height: 35,
+                                    width: 35,
+                                    decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(50),
+                                        color: CustomColors.TrashRedBackground),
+                                    child:
+                                        Image.asset('assets/images/trash.png'),
+                                  ),
                                 ),
+                                onTap: () => print('Delete'),
                               ),
-                              onTap: () => print('Delete'),
-                            ),
-                          ],
-                        ),
-                      );
-                    },
+                            ],
+                          ),
+                        );
+                      },
+                    ),
                   ),
+                ],
+              );
+            } else {
+              return Center(
+                  child: Container(
+                width: MediaQuery.of(context).size.width / 1.2,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  mainAxisSize: MainAxisSize.min,
+                  children: <Widget>[
+                    Flexible(
+                      fit: FlexFit.loose,
+                      child: Hero(
+                        tag: 'Clipboard',
+                        child: Image.asset('assets/images/Clipboard-empty.png'),
+                      ),
+                    ),
+                    Text(
+                      'No subtasks',
+                      style: TextStyle(
+                          fontSize: 22,
+                          fontWeight: FontWeight.w500,
+                          color: CustomColors.TextHeader),
+                    ),
+                  ],
                 ),
-              ],
-            );
+              ));
+            }
           } else {
             return Column(
               children: [

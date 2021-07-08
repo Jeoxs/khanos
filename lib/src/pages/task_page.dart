@@ -55,9 +55,11 @@ class _TaskPageState extends State<TaskPage> {
             children: [
               Row(
                 children: [
-                  Flexible(
+                  Container(
+                    width: MediaQuery.of(context).size.width / 1.2,
                     child: Text('Task #${task.id} - ${task.title}',
-                        style: TextStyle(fontSize: 25.0)),
+                        style: TextStyle(
+                            fontSize: 22, fontStyle: FontStyle.normal)),
                   ),
                 ],
               ),
