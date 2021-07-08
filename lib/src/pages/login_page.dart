@@ -104,7 +104,6 @@ class _LoginPageState extends State<LoginPage> {
             return null;
           }),
     );
-    ;
   }
 
   Widget _createUsername() {
@@ -170,8 +169,7 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 
-  _login(BuildContext context) async {
-    print("login button pressed");
+  _login(BuildContext context) async {   
     final String _endPoint = _endPointController.text;
     final String _username = _usernameController.text;
     final String _password = _passwordController.text;

@@ -4,6 +4,7 @@ import 'package:kanboard/src/models/subtask_model.dart';
 import 'package:kanboard/src/models/task_model.dart';
 import 'package:kanboard/src/providers/subtask_provider.dart';
 import 'package:kanboard/src/providers/task_provider.dart';
+import 'package:kanboard/src/utils/utils.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:kanboard/src/utils/widgets_utils.dart';
 import 'package:kanboard/src/utils/theme_utils.dart';
@@ -29,6 +30,13 @@ class _SubtaskPageState extends State<SubtaskPage> {
         width: double.infinity,
         child: _subtaskList(int.parse(task.id)),
       ),
+      floatingActionButton: FloatingActionButton(
+        child: Icon(Icons.add),
+        onPressed: () {
+          Navigator.pushNamed(context, 'newSubtask', arguments: {'task': task})
+              .then((_) => setState(() {}));
+        },
+      ),
     );
   }
 
@@ -53,15 +61,15 @@ class _SubtaskPageState extends State<SubtaskPage> {
                   ),
                   Expanded(
                     child: ListView.builder(
-                      padding: EdgeInsets.only(top: 20),
+                      padding: EdgeInsets.only(top: 20, bottom: 80),
                       itemCount: subtasks.length,
                       itemBuilder: (BuildContext context, int i) {
                         return GestureDetector(
                           onTap: () async {
-                            _enabled = false;
-                            subtaskProvider.processSubtask(subtasks[i]);
+                            showLoaderDialog(context);
+                            await subtaskProvider.processSubtask(subtasks[i]);
                             setState(() {
-                              _enabled = true;
+                              Navigator.pop(context);
                             });
                           },
                           child: Slidable(
@@ -82,7 +90,10 @@ class _SubtaskPageState extends State<SubtaskPage> {
                                         Image.asset('assets/images/trash.png'),
                                   ),
                                 ),
-                                onTap: () => print('Delete'),
+                                onTap: () {
+                                  showLoaderDialog(context);
+                                  _removeSubtask(subtasks[i].id);
+                                },
                               ),
                             ],
                           ),
@@ -197,5 +208,15 @@ class _SubtaskPageState extends State<SubtaskPage> {
         ],
       ),
     );
+  }
+
+  _removeSubtask(String subtaskId) async {
+    bool result = await subtaskProvider.removeSubtask(int.parse(subtaskId));
+    Navigator.pop(context);
+    if (result) {
+      setState(() {});
+    } else {
+      mostrarAlerta(context, 'Something went Wront!');
+    }
   }
 }

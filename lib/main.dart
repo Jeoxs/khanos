@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:kanboard/src/pages/home_page.dart';
 import 'package:kanboard/src/pages/login_page.dart';
+import 'package:kanboard/src/pages/new_subtask_page.dart';
 import 'package:kanboard/src/pages/project_page.dart';
 import 'package:kanboard/src/pages/subtask_page.dart';
 import 'package:kanboard/src/pages/task_page.dart';
@@ -51,6 +52,7 @@ class MyApp extends StatelessWidget {
         'subtask': (BuildContext context) => SubtaskPage(),
         'welcome': (BuildContext context) => WelcomePage(),
         'login': (BuildContext context) => LoginPage(),
+        'newSubtask': (BuildContext context) => NewSubtaskPage(),
       },
       theme: ThemeData(
         // This is the theme of your application.
