@@ -61,4 +61,6 @@ class CustomColors {
   static const Color TextGrey = Color.fromRGBO(198, 198, 200, 1);
   static const Color TextWhite = Color.fromRGBO(243, 243, 243, 1);
   static const Color HeaderCircle = Color.fromRGBO(255, 255, 255, 0.17);
+
+  
 }

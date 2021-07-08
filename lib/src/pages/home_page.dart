@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:kanboard/src/providers/user_provider.dart';
 import 'package:kanboard/src/utils/theme_utils.dart';
 import 'package:kanboard/src/utils/widgets_utils.dart';
 import 'package:shimmer/shimmer.dart';
@@ -14,6 +15,7 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   final projectProvider = new ProjectProvider();
   final columnProvider = new ColumnProvider();
+  final userProvider = new UserProvider();
   int projectsAmount;
   @override
   Widget build(BuildContext context) {

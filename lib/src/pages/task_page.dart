@@ -1,9 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:kanboard/src/models/column_model.dart';
+import 'package:kanboard/src/models/tag_model.dart';
 import 'package:kanboard/src/models/task_model.dart';
+import 'package:kanboard/src/models/user_model.dart';
 import 'package:kanboard/src/providers/column_provider.dart';
 import 'package:kanboard/src/providers/subtask_provider.dart';
+import 'package:kanboard/src/providers/tag_provider.dart';
 import 'package:kanboard/src/providers/task_provider.dart';
+import 'package:kanboard/src/providers/user_provider.dart';
 import 'package:kanboard/src/utils/datetime_utils.dart';
 import 'package:kanboard/src/utils/widgets_utils.dart';
 import 'package:kanboard/src/utils/theme_utils.dart';
@@ -18,6 +22,7 @@ class _TaskPageState extends State<TaskPage> {
   Map<String, ColumnModel> projectColumns = {};
   final taskProvider = new TaskProvider();
   final subtaskProvider = new SubtaskProvider();
+  final userProvider = new UserProvider();
   final columnProvider = new ColumnProvider();
 
   @override
@@ -88,7 +93,7 @@ class _TaskPageState extends State<TaskPage> {
                   padding: const EdgeInsets.only(right: 10.0),
                   child: Icon(Icons.person, color: Colors.blueGrey),
                 ),
-                Text('Asignee: ${task.creatorId}')
+                _getUserFullName(task.creatorId),
               ]),
               SizedBox(height: 20.0),
               Row(children: [
@@ -109,6 +114,15 @@ class _TaskPageState extends State<TaskPage> {
                 Text('Spent: ${task.timeSpent} hours')
               ]),
               SizedBox(height: 20.0),
+              Row(
+                children: [
+                  Text('Tags',
+                      style: TextStyle(fontSize: 20.0),
+                      textAlign: TextAlign.left),
+                ],
+              ),
+              SizedBox(height: 10.0),
+              _taskTags(task.id),
               Row(
                 children: [
                   Text('Description',
@@ -134,5 +148,71 @@ class _TaskPageState extends State<TaskPage> {
         ),
       ],
     );
+  }
+
+  Widget _getUserFullName(String creatorId) {
+    return FutureBuilder(
+        future: UserProvider().getUser(int.parse(creatorId)),
+        builder: (BuildContext context, AsyncSnapshot snapshot) {
+          if (snapshot.hasData) {
+            final UserModel user = snapshot.data;
+            return _userButton(user);
+          } else {
+            return Text('Loading..');
+          }
+        });
+  }
+
+  Widget _userButton(UserModel user) {
+    return GestureDetector(
+      onTap: () {},
+      child: Container(
+        margin: EdgeInsets.only(right: 10),
+        child: Text(
+          user.name,
+          style: TextStyle(color: Colors.white),
+        ),
+        padding: EdgeInsets.symmetric(vertical: 5, horizontal: 10),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.all(
+            Radius.circular(5),
+          ),
+          color: CustomColors.BlueShadow,
+          boxShadow: [
+            BoxShadow(
+              color: CustomColors.GreenShadow,
+              blurRadius: 5.0,
+              spreadRadius: 3.0,
+              offset: Offset(0.0, 0.0),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  _taskTags(String taskId) {
+    return FutureBuilder(
+        future: TagProvider().getTagsByTask(int.parse(taskId)),
+        builder: (BuildContext context, AsyncSnapshot snapshot) {
+          if (snapshot.hasData) {
+            List<TagModel> tags = snapshot.data;
+            if (tags.length > 0) {
+              List<Widget> chips = [];
+              tags.forEach((tag) {
+                chips.add(Chip(
+                  backgroundColor: CustomColors.HeaderBlueLight,
+                  elevation: 4.0,
+                  label: Text(tag.name),
+                ));
+              });
+              return Wrap(spacing: 5.0, children: chips);
+            } else {
+              return Text('No Tags');
+            }
+          } else {
+            return Text('Loading...');
+          }
+        });
   }
 }

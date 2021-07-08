@@ -42,6 +42,7 @@ dependencies:
     git:
       url: https://github.com/TinyProgrammers/GradientAppBar.git
   flutter_slidable: "^0.6.0"
+  scoped_model: ^1.0.1
 
 dev_dependencies:
   flutter_test:
