@@ -21,7 +21,7 @@ class _WelcomePageState extends State<WelcomePage> {
                 flex: 8,
                 child: Hero(
                   tag: 'Clipboard',
-                  child: Image.asset('assets/images/Clipboard.png'),
+                  child: Image.asset('assets/images/khanos_transparent.png'),
                 ),
               ),
               Expanded(

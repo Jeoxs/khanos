@@ -2,7 +2,7 @@
     package="gojaponte.com.khanos">
    <application
         android:label="khanos"
-        android:icon="@mipmap/ic_launcher">
+        android:icon="@mipmap/launcher_icon">
         <activity
             android:name=".MainActivity"
             android:launchMode="singleTop"
