@@ -28,4 +28,5 @@ The format is based on [Keep a Changelog][Keep a Changelog] and this project adh
 [Unreleased]: https://github.com/Jeoxs/khanos/compare/v1.0...HEAD
 [Released]: https://github.com/Jeoxs/khanos/releases
 
+[1.0.1]: https://github.com/Jeoxs/khanos/compare/v1.0...v1.0.1
 [1.0]: https://github.com/Jeoxs/khanos/releases/v1.0
