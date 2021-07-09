@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:khanos/src/models/task_model.dart';
 import 'package:khanos/src/preferences/user_preferences.dart';
+import 'package:khanos/src/utils/utils.dart';
 
 class TaskProvider {
   final _prefs = new UserPreferences();
@@ -35,11 +36,15 @@ class TaskProvider {
 
     if (decodedData == null) return [];
 
+    // Check for errors
+    if (decodedData['error'] != null) {
+      return Future.error(decodedData['error']);
+    }
+
     results.forEach((task) {
       final taskTemp = TaskModel.fromJson(task);
       tasks.add(taskTemp);
     });
-    // print(decodedData['result']);
     return tasks;
   }
 
