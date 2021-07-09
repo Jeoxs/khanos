@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:kanboard/src/models/project_model.dart';
-import 'package:kanboard/src/providers/column_provider.dart';
-import 'package:kanboard/src/providers/project_provider.dart';
+import 'package:khanos/src/providers/user_provider.dart';
+import 'package:khanos/src/utils/theme_utils.dart';
+import 'package:khanos/src/utils/widgets_utils.dart';
 import 'package:shimmer/shimmer.dart';
+import 'package:khanos/src/models/project_model.dart';
+import 'package:khanos/src/providers/column_provider.dart';
+import 'package:khanos/src/providers/project_provider.dart';
 
 class HomePage extends StatefulWidget {
   @override
@@ -12,19 +15,13 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   final projectProvider = new ProjectProvider();
   final columnProvider = new ColumnProvider();
+  final userProvider = new UserProvider();
+  int projectsAmount;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text('Projects'),
-        actions: [
-          IconButton(
-            icon: Icon(Icons.add),
-            onPressed: () => Navigator.pushNamed(context, 'project'),
-          ),
-        ],
-      ),
-      body: homeContent(context),
+      appBar: normalAppBar('Khanos'),
+      body: projectList(context),
     );
   }
 
@@ -54,40 +51,10 @@ class _HomePageState extends State<HomePage> {
       child: Padding(
         padding: const EdgeInsets.all(10.0),
         child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
-            Column(
-              children: [
-                Text(
-                  '20',
-                  style: TextStyle(fontWeight: FontWeight.w500, fontSize: 25.0),
-                ),
-                Text(
-                  'Projects',
-                ),
-              ],
-            ),
-            Column(
-              children: [
-                Text(
-                  '120',
-                  style: TextStyle(fontWeight: FontWeight.w500, fontSize: 25.0),
-                ),
-                Text(
-                  'tasks',
-                ),
-              ],
-            ),
-            Column(
-              children: [
-                Text(
-                  '48',
-                  style: TextStyle(fontWeight: FontWeight.w500, fontSize: 25.0),
-                ),
-                Text(
-                  'Sub-tasks',
-                ),
-              ],
+            Text(
+              '${projectsAmount.toString()} Projects',
+              style: TextStyle(fontWeight: FontWeight.w400, fontSize: 25.0),
             ),
           ],
         ),
@@ -97,51 +64,99 @@ class _HomePageState extends State<HomePage> {
 
   Widget projectList(BuildContext context) {
     return FutureBuilder(
-        future: projectProvider.getProjects(),
+        future: projectProvider.getProjects(context),
         builder:
             (BuildContext context, AsyncSnapshot<List<ProjectModel>> snapshot) {
           if (snapshot.hasData) {
             final projects = snapshot.data;
-            return Expanded(
-              child: ListView.builder(
-                  padding: EdgeInsets.symmetric(horizontal: 20.0),
-                  itemCount: projects.length,
-                  itemBuilder: (BuildContext context, int i) {
-                    return Card(
-                      elevation: 3.0,
-                      child: ListTile(
-                        title: Text(projects[i].name),
-                        subtitle: projects[i].description != null
-                            ? Text(
-                                projects[i].description,
-                                overflow: TextOverflow.ellipsis,
-                              )
-                            : Text('No Description'),
-                        onTap: () {
-                          Navigator.pushNamed(context, 'project',
-                              arguments: {'project': projects[i]});
-                        },
-                      ),
-                    );
-                  }),
+            projectsAmount = projects.length;
+            return Column(
+              children: [
+                Container(
+                  margin: EdgeInsets.only(top: 15, left: 20, bottom: 10),
+                  child: Text(
+                    'Projects',
+                    style: TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                ),
+                Expanded(
+                  child: ListView.builder(
+                      padding: EdgeInsets.only(
+                          left: 20.0, right: 20.0, bottom: 80.0),
+                      itemCount: projects.length,
+                      itemBuilder: (BuildContext context, int i) {
+                        return GestureDetector(
+                          onTap: () => Navigator.pushNamed(context, 'project',
+                              arguments: {'project': projects[i]}),
+                          child: _projectElement(
+                              projects[i].name, projects[i].description),
+                        );
+                      }),
+                ),
+              ],
             );
           } else {
-            return Expanded(
-              child: Shimmer.fromColors(
-                child: ListView.builder(
-                    padding: EdgeInsets.symmetric(horizontal: 20.0),
-                    itemCount: 8,
-                    itemBuilder: (context, index) {
-                      return Card(
-                        elevation: 3.0,
-                        child: ListTile(),
-                      );
-                    }),
-                baseColor: Colors.grey[200],
-                highlightColor: Colors.grey[300],
-              ),
+            return Column(
+              children: [
+                Expanded(
+                  child: Shimmer.fromColors(
+                    child: ListView.builder(
+                        padding: EdgeInsets.symmetric(
+                            horizontal: 20.0, vertical: 10.0),
+                        itemCount: 8,
+                        itemBuilder: (context, index) {
+                          return _projectElement('someTitle', 'description..');
+                        }),
+                    baseColor: CustomColors.BlueDark,
+                    highlightColor: Colors.lightBlue[200],
+                  ),
+                ),
+              ],
             );
           }
         });
+  }
+
+  Widget _projectElement(String title, String description) {
+    description = description != null ? description : 'No description';
+    return Container(
+      margin: EdgeInsets.symmetric(horizontal: 10.0, vertical: 10.0),
+      padding: EdgeInsets.symmetric(vertical: 20.0, horizontal: 30.0),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.spaceAround,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: <Widget>[
+          Text(
+            title,
+            style: TextStyle(fontSize: 20.0),
+          ),
+          Container(
+            child: Text(description,
+                style: TextStyle(fontSize: 15),
+                overflow: TextOverflow.ellipsis),
+          ),
+        ],
+      ),
+      decoration: BoxDecoration(
+        gradient: LinearGradient(
+          stops: [0.015, 0.015],
+          colors: [Colors.green, Colors.white],
+        ),
+        borderRadius: BorderRadius.all(
+          Radius.circular(5.0),
+        ),
+        boxShadow: [
+          BoxShadow(
+            color: CustomColors.GreyBorder,
+            blurRadius: 10.0,
+            spreadRadius: 5.0,
+            offset: Offset(0.0, 0.0),
+          ),
+        ],
+      ),
+    );
   }
 }

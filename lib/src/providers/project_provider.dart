@@ -1,25 +1,29 @@
 import 'dart:convert';
+import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
-import 'package:kanboard/src/models/project_model.dart';
+import 'package:khanos/src/models/project_model.dart';
+import 'package:khanos/src/preferences/user_preferences.dart';
 
 class ProjectProvider {
-  final String _apiEndPoint = 'https://kanban.gojaponte.com/jsonrpc.php';
+  final _prefs = new UserPreferences();
 
-  Future<List<ProjectModel>> getProjects() async {
+  // final String _apiEndPoint = 'https://kanban.gojaponte.com/jsonrpc.php';
+
+  Future<List<ProjectModel>> getProjects(BuildContext context) async {
     final Map<String, dynamic> parameters = {
       "jsonrpc": "2.0",
       "method": "getAllProjects",
       "id": 1
     };
 
-    final credentials = "jeoxs:J30*54nd*41d1n";
+    final credentials = "${_prefs.username}:${_prefs.password}";
 
     Codec<String, String> stringToBase64 = utf8.fuse(base64);
 
     String encoded = stringToBase64.encode(credentials);
 
     final resp = await http.post(
-      Uri.parse(_apiEndPoint),
+      Uri.parse(_prefs.endpoint),
       headers: <String, String>{"Authorization": "Basic $encoded"},
       body: json.encode(parameters),
     );

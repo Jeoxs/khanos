@@ -1,11 +1,12 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
-import 'package:kanboard/src/models/column_model.dart';
+import 'package:khanos/src/models/column_model.dart';
+import 'package:khanos/src/preferences/user_preferences.dart';
 
 class ColumnProvider {
-  final String _apiEndPoint = 'https://kanban.gojaponte.com/jsonrpc.php';
+  final _prefs = new UserPreferences();
 
-  Future<Map<String, ColumnModel>> getColumns(projectId) async {
+  Future<List<ColumnModel>> getColumns(projectId) async {
     final Map<String, dynamic> parameters = {
       "jsonrpc": "2.0",
       "method": "getColumns",
@@ -13,33 +14,30 @@ class ColumnProvider {
       "params": {"project_id": projectId}
     };
 
-    final credentials = "jeoxs:J30*54nd*41d1n";
+    final credentials = "${_prefs.username}:${_prefs.password}";
 
     Codec<String, String> stringToBase64 = utf8.fuse(base64);
 
     String encoded = stringToBase64.encode(credentials);
 
     final resp = await http.post(
-      Uri.parse(_apiEndPoint),
+      Uri.parse(_prefs.endpoint),
       headers: <String, String>{"Authorization": "Basic $encoded"},
       body: json.encode(parameters),
     );
 
     final decodedData = json.decode(utf8.decode(resp.bodyBytes));
-
-    // final List<ColumnModel> columns = [];
+    final List<ColumnModel> columns = [];
 
     final List<dynamic> results = decodedData['result'];
 
-    if (decodedData == null) return {};
-
-    final Map<String, ColumnModel> columns = {};
+    if (decodedData == null) return [];
 
     results.forEach((column) {
       final columnTemp = ColumnModel.fromJson(column);
-      columns[columnTemp.id] = columnTemp;
+      columns.add(columnTemp);
     });
-    // print(decodedData['result']);
+
     return columns;
   }
 }

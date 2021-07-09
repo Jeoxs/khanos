@@ -8,12 +8,22 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
-import 'package:kanboard/main.dart';
+import 'package:khanos/main.dart';
+import 'package:khanos/src/preferences/user_preferences.dart';
 
-void main() {
+void main() async {
+  final prefs = new UserPreferences();
+  await prefs.initPrefs();
+
+  final Map<String, dynamic> preferences = {
+    'endpoint': prefs.endpoint,
+    'username': prefs.username,
+    'password': prefs.password,
+    'authFlag': prefs.authFlag
+  };
   testWidgets('Counter increments smoke test', (WidgetTester tester) async {
     // Build our app and trigger a frame.
-    await tester.pumpWidget(MyApp());
+    await tester.pumpWidget(MyApp(preferences));
 
     // Verify that our counter starts at 0.
     expect(find.text('0'), findsOneWidget);
