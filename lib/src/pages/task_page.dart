@@ -1,18 +1,18 @@
 import 'package:flutter/material.dart';
-import 'package:kanboard/src/models/column_model.dart';
-import 'package:kanboard/src/models/project_model.dart';
-import 'package:kanboard/src/models/tag_model.dart';
-import 'package:kanboard/src/models/task_model.dart';
-import 'package:kanboard/src/models/user_model.dart';
-import 'package:kanboard/src/providers/column_provider.dart';
-import 'package:kanboard/src/providers/subtask_provider.dart';
-import 'package:kanboard/src/providers/tag_provider.dart';
-import 'package:kanboard/src/providers/task_provider.dart';
-import 'package:kanboard/src/providers/user_provider.dart';
-import 'package:kanboard/src/utils/datetime_utils.dart';
-import 'package:kanboard/src/utils/utils.dart';
-import 'package:kanboard/src/utils/widgets_utils.dart';
-import 'package:kanboard/src/utils/theme_utils.dart';
+import 'package:khanos/src/models/column_model.dart';
+import 'package:khanos/src/models/project_model.dart';
+import 'package:khanos/src/models/tag_model.dart';
+import 'package:khanos/src/models/task_model.dart';
+import 'package:khanos/src/models/user_model.dart';
+import 'package:khanos/src/providers/column_provider.dart';
+import 'package:khanos/src/providers/subtask_provider.dart';
+import 'package:khanos/src/providers/tag_provider.dart';
+import 'package:khanos/src/providers/task_provider.dart';
+import 'package:khanos/src/providers/user_provider.dart';
+import 'package:khanos/src/utils/datetime_utils.dart';
+import 'package:khanos/src/utils/utils.dart';
+import 'package:khanos/src/utils/widgets_utils.dart';
+import 'package:khanos/src/utils/theme_utils.dart';
 
 class TaskPage extends StatefulWidget {
   @override

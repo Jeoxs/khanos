@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:kanboard/src/models/task_model.dart';
-import 'package:kanboard/src/models/user_model.dart';
-import 'package:kanboard/src/providers/subtask_provider.dart';
-import 'package:kanboard/src/providers/user_provider.dart';
-import 'package:kanboard/src/utils/utils.dart';
-import 'package:kanboard/src/utils/widgets_utils.dart';
+import 'package:khanos/src/models/task_model.dart';
+import 'package:khanos/src/models/user_model.dart';
+import 'package:khanos/src/providers/subtask_provider.dart';
+import 'package:khanos/src/providers/user_provider.dart';
+import 'package:khanos/src/utils/utils.dart';
+import 'package:khanos/src/utils/widgets_utils.dart';
 
 class NewSubtaskPage extends StatefulWidget {
   @override

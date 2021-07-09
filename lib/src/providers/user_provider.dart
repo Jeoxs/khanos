@@ -1,7 +1,7 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
-import 'package:kanboard/src/models/user_model.dart';
-import 'package:kanboard/src/preferences/user_preferences.dart';
+import 'package:khanos/src/models/user_model.dart';
+import 'package:khanos/src/preferences/user_preferences.dart';
 
 class UserProvider {
   final _prefs = new UserPreferences();

@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:kanboard/src/models/column_model.dart';
-import 'package:kanboard/src/models/project_model.dart';
-import 'package:kanboard/src/models/task_model.dart';
-import 'package:kanboard/src/providers/column_provider.dart';
-import 'package:kanboard/src/providers/project_provider.dart';
-import 'package:kanboard/src/providers/task_provider.dart';
-import 'package:kanboard/src/utils/datetime_utils.dart';
-import 'package:kanboard/src/utils/widgets_utils.dart';
-import 'package:kanboard/src/utils/theme_utils.dart';
+import 'package:khanos/src/models/column_model.dart';
+import 'package:khanos/src/models/project_model.dart';
+import 'package:khanos/src/models/task_model.dart';
+import 'package:khanos/src/providers/column_provider.dart';
+import 'package:khanos/src/providers/project_provider.dart';
+import 'package:khanos/src/providers/task_provider.dart';
+import 'package:khanos/src/utils/datetime_utils.dart';
+import 'package:khanos/src/utils/widgets_utils.dart';
+import 'package:khanos/src/utils/theme_utils.dart';
 import 'package:shimmer/shimmer.dart';
 
 class ProjectPage extends StatefulWidget {
