@@ -6,9 +6,11 @@ import 'package:khanos/src/providers/column_provider.dart';
 import 'package:khanos/src/providers/project_provider.dart';
 import 'package:khanos/src/providers/task_provider.dart';
 import 'package:khanos/src/utils/datetime_utils.dart';
+import 'package:khanos/src/utils/utils.dart';
 import 'package:khanos/src/utils/widgets_utils.dart';
 import 'package:khanos/src/utils/theme_utils.dart';
 import 'package:shimmer/shimmer.dart';
+import 'package:flutter_slidable/flutter_slidable.dart';
 
 class ProjectPage extends StatefulWidget {
   @override
@@ -89,18 +91,32 @@ class _ProjectPageState extends State<ProjectPage> {
                   itemCount: tasks.length,
                   itemBuilder: (BuildContext context, int i) {
                     return new Column(children: [
-                      GestureDetector(
-                        onTap: () {
-                          Navigator.pushNamed(context, 'task', arguments: {
-                            'task': tasks[i],
-                            'project': project
-                          });
-                        },
+                      Slidable(
+                        actionPane: SlidableDrawerActionPane(),
                         child: _taskElement(
                             getDateTimeFromEpoch(
                                 "dd/MM/yy", tasks[i].dateModification),
                             tasks[i].title,
                             TaskModel().getTaskColor(tasks[i].colorId)),
+                        secondaryActions: <Widget>[
+                          SlideAction(
+                            child: Container(
+                              padding: EdgeInsets.only(bottom: 10),
+                              child: Container(
+                                height: 35,
+                                width: 35,
+                                decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(50),
+                                    color: CustomColors.TrashRedBackground),
+                                child: Image.asset('assets/images/trash.png'),
+                              ),
+                            ),
+                            onTap: () {
+                              showLoaderDialog(context);
+                              _removeTask(tasks[i].id);
+                            },
+                          ),
+                        ],
                       ),
                     ]);
                   },
@@ -191,5 +207,15 @@ class _ProjectPageState extends State<ProjectPage> {
         ],
       ),
     );
+  }
+
+  void _removeTask(String taskId) async {
+    bool result = await taskProvider.removeTask(int.parse(taskId));
+    Navigator.pop(context);
+    if (result) {
+      setState(() {});
+    } else {
+      mostrarAlerta(context, 'Something went Wront!');
+    }
   }
 }
