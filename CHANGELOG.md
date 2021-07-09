@@ -5,15 +5,18 @@ The format is based on [Keep a Changelog][Keep a Changelog] and this project adh
 
 ## [Unreleased]
 
-## [1.0] - 2021-07-09
-### Added
-- Initial Release
-
 ---
 
 ## [Released]
 
-- Nothing yet!
+## [1.0.1] - 2021-07-09
+### Fixed
+- Fixed Signatures for App in AndroidManifest & build.gradle.
+- Fixed Title name in Main.dart (This title affects the running application in Android Devices)
+
+## [1.0] - 2021-07-09
+### Added
+- Initial Release.
 
 ---
 
@@ -22,7 +25,7 @@ The format is based on [Keep a Changelog][Keep a Changelog] and this project adh
 [Semantic Versioning]: https://semver.org/
 
 <!-- Versions -->
-[Unreleased]: https://github.com/Jeoxs/khanos/compare/v1.0.0...HEAD
+[Unreleased]: https://github.com/Jeoxs/khanos/compare/v1.0...HEAD
 [Released]: https://github.com/Jeoxs/khanos/releases
 
-[1.0]: https://github.com/Jeoxs/khanos/releases/v1.0.0
+[1.0]: https://github.com/Jeoxs/khanos/releases/v1.0
