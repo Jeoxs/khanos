@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:kanboard/src/preferences/user_preferences.dart';
-import 'package:kanboard/src/providers/auth_provider.dart';
-import 'package:kanboard/src/utils/utils.dart';
+import 'package:khanos/src/preferences/user_preferences.dart';
+import 'package:khanos/src/providers/auth_provider.dart';
+import 'package:khanos/src/utils/utils.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class LoginPage extends StatefulWidget {
@@ -24,9 +24,6 @@ class _LoginPageState extends State<LoginPage> {
 
   @override
   Widget build(BuildContext context) {
-    _endPointController.text = _prefs.endpoint;
-    _usernameController.text = _prefs.username;
-    _passwordController.text = _prefs.password;
     return Scaffold(
         body: Stack(
       children: <Widget>[
@@ -89,14 +86,15 @@ class _LoginPageState extends State<LoginPage> {
       padding: EdgeInsets.symmetric(horizontal: 20.0),
       child: TextFormField(
           controller: _endPointController,
-          keyboardType: TextInputType.emailAddress,
           decoration: InputDecoration(
             icon:
                 Icon(Icons.swap_horizontal_circle_outlined, color: Colors.blue),
             hintText: 'https://YOUR_SERVER/jsonrpc.php',
-            labelText: 'Kanboard Endpoint',
+            labelText: 'khanos Endpoint',
           ),
-          onChanged: (value) {},
+          onChanged: (value) {
+            endPoint = value;
+          },
           validator: (value) {
             if (value == null || value.isEmpty) {
               return 'Must fill an endpoint URL!';
@@ -116,7 +114,9 @@ class _LoginPageState extends State<LoginPage> {
             hintText: 'cloudstrife',
             labelText: 'Username',
           ),
-          onChanged: (value) {},
+          onChanged: (value) {
+            username = value;
+          },
           validator: (value) {
             if (value == null || value.isEmpty) {
               return 'Must provide an email!';
@@ -135,7 +135,9 @@ class _LoginPageState extends State<LoginPage> {
           decoration: InputDecoration(
               icon: Icon(Icons.lock_outline, color: Colors.blue),
               labelText: 'Password'),
-          onChanged: (value) {},
+          onChanged: (value) {
+            password = value;
+          },
           validator: (value) {
             if (value == null || value.isEmpty) {
               return 'Must provide a password!';
@@ -222,7 +224,7 @@ class _LoginPageState extends State<LoginPage> {
               Icon(Icons.check_circle_outline,
                   color: Colors.white, size: 100.0),
               SizedBox(height: 10.0, width: double.infinity),
-              Text('Kanboard App',
+              Text('khanos App',
                   style: TextStyle(color: Colors.white, fontSize: 25.0))
             ],
           ),

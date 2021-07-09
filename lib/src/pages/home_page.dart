@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:kanboard/src/providers/user_provider.dart';
-import 'package:kanboard/src/utils/theme_utils.dart';
-import 'package:kanboard/src/utils/widgets_utils.dart';
+import 'package:khanos/src/providers/user_provider.dart';
+import 'package:khanos/src/utils/theme_utils.dart';
+import 'package:khanos/src/utils/widgets_utils.dart';
 import 'package:shimmer/shimmer.dart';
-import 'package:kanboard/src/models/project_model.dart';
-import 'package:kanboard/src/providers/column_provider.dart';
-import 'package:kanboard/src/providers/project_provider.dart';
+import 'package:khanos/src/models/project_model.dart';
+import 'package:khanos/src/providers/column_provider.dart';
+import 'package:khanos/src/providers/project_provider.dart';
 
 class HomePage extends StatefulWidget {
   @override
@@ -20,7 +20,7 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: normalAppBar('GoJaponte Kanboard'),
+      appBar: normalAppBar('Khanos'),
       body: projectList(context),
     );
   }

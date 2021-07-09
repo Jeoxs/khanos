@@ -1,8 +1,8 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
-import 'package:kanboard/src/models/project_model.dart';
-import 'package:kanboard/src/preferences/user_preferences.dart';
+import 'package:khanos/src/models/project_model.dart';
+import 'package:khanos/src/preferences/user_preferences.dart';
 
 class ProjectProvider {
   final _prefs = new UserPreferences();

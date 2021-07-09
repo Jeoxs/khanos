@@ -1,7 +1,7 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
-import 'package:kanboard/src/models/subtask_model.dart';
-import 'package:kanboard/src/preferences/user_preferences.dart';
+import 'package:khanos/src/models/subtask_model.dart';
+import 'package:khanos/src/preferences/user_preferences.dart';
 
 class SubtaskProvider {
   final _prefs = new UserPreferences();

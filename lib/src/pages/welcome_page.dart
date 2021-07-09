@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import 'package:kanboard/src/utils/theme_utils.dart';
+import 'package:khanos/src/utils/theme_utils.dart';
 
 class WelcomePage extends StatefulWidget {
   WelcomePage({Key key}) : super(key: key);
@@ -21,7 +21,7 @@ class _WelcomePageState extends State<WelcomePage> {
                 flex: 8,
                 child: Hero(
                   tag: 'Clipboard',
-                  child: Image.asset('assets/images/Clipboard.png'),
+                  child: Image.asset('assets/images/khanos_transparent.png'),
                 ),
               ),
               Expanded(
@@ -29,7 +29,7 @@ class _WelcomePageState extends State<WelcomePage> {
                 child: Column(
                   children: <Widget>[
                     Text(
-                      'Kanboard Android App',
+                      'khanos Android App',
                       style: TextStyle(
                           fontSize: 22,
                           fontWeight: FontWeight.w500,
@@ -76,8 +76,8 @@ class _WelcomePageState extends State<WelcomePage> {
                     decoration: const BoxDecoration(
                       gradient: LinearGradient(
                         colors: <Color>[
-                          CustomColors.GreenLight,
-                          CustomColors.GreenDark,
+                          CustomColors.BlueLight,
+                          CustomColors.BlueDark,
                         ],
                       ),
                       borderRadius: BorderRadius.all(
@@ -85,9 +85,9 @@ class _WelcomePageState extends State<WelcomePage> {
                       ),
                       boxShadow: [
                         BoxShadow(
-                          color: CustomColors.GreenShadow,
+                          color: CustomColors.BlueShadow,
                           blurRadius: 15.0,
-                          spreadRadius: 7.0,
+                          spreadRadius: 3.0,
                           offset: Offset(0.0, 0.0),
                         ),
                       ],

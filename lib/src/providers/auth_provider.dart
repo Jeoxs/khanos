@@ -1,6 +1,6 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
-import 'package:kanboard/src/preferences/user_preferences.dart';
+import 'package:khanos/src/preferences/user_preferences.dart';
 
 class AuthProvider {
   final _prefs = new UserPreferences();

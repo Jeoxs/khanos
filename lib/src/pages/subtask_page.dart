@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
-import 'package:kanboard/src/models/subtask_model.dart';
-import 'package:kanboard/src/models/task_model.dart';
-import 'package:kanboard/src/providers/subtask_provider.dart';
-import 'package:kanboard/src/providers/task_provider.dart';
-import 'package:kanboard/src/utils/utils.dart';
+import 'package:khanos/src/models/subtask_model.dart';
+import 'package:khanos/src/models/task_model.dart';
+import 'package:khanos/src/providers/subtask_provider.dart';
+import 'package:khanos/src/providers/task_provider.dart';
+import 'package:khanos/src/utils/utils.dart';
 import 'package:shimmer/shimmer.dart';
-import 'package:kanboard/src/utils/widgets_utils.dart';
-import 'package:kanboard/src/utils/theme_utils.dart';
+import 'package:khanos/src/utils/widgets_utils.dart';
+import 'package:khanos/src/utils/theme_utils.dart';
 
 class SubtaskPage extends StatefulWidget {
   @override

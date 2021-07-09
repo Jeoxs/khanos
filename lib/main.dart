@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:kanboard/src/pages/home_page.dart';
-import 'package:kanboard/src/pages/login_page.dart';
-import 'package:kanboard/src/pages/new_subtask_page.dart';
-import 'package:kanboard/src/pages/project_page.dart';
-import 'package:kanboard/src/pages/subtask_page.dart';
-import 'package:kanboard/src/pages/task_form.dart';
-import 'package:kanboard/src/pages/task_page.dart';
-import 'package:kanboard/src/pages/welcome_page.dart';
-import 'package:kanboard/src/preferences/user_preferences.dart';
+import 'package:khanos/src/pages/home_page.dart';
+import 'package:khanos/src/pages/login_page.dart';
+import 'package:khanos/src/pages/new_subtask_page.dart';
+import 'package:khanos/src/pages/project_page.dart';
+import 'package:khanos/src/pages/subtask_page.dart';
+import 'package:khanos/src/pages/task_form.dart';
+import 'package:khanos/src/pages/task_page.dart';
+import 'package:khanos/src/pages/welcome_page.dart';
+import 'package:khanos/src/preferences/user_preferences.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 
 void main() async {

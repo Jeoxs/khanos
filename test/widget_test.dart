@@ -8,8 +8,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
-import 'package:kanboard/main.dart';
-import 'package:kanboard/src/preferences/user_preferences.dart';
+import 'package:khanos/main.dart';
+import 'package:khanos/src/preferences/user_preferences.dart';
 
 void main() async {
   final prefs = new UserPreferences();
