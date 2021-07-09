@@ -41,6 +41,7 @@ class TaskModel {
     this.recurrenceBasedate,
     this.recurrenceParent,
     this.recurrenceChild,
+    this.priority,
     this.url,
   });
 
@@ -62,6 +63,42 @@ class TaskModel {
     "light_green": Colors.lightGreen,
     "amber": Colors.amber,
   };
+
+  Map<Color, String> taskColorsName = {
+    Colors.yellow: "yellow",
+    Colors.blue: "blue",
+    Colors.green: "green",
+    Colors.purple: "purple",
+    Colors.red: "red",
+    Colors.orange: "orange",
+    Colors.grey: "grey",
+    Colors.brown: "brown",
+    Colors.deepOrange: "deep_orange",
+    Colors.pink: "pink",
+    Colors.teal: "teal",
+    Colors.cyan: "cyan",
+    Colors.lime: "lime",
+    Colors.lightGreen: "light_green",
+    Colors.amber: "amber",
+  };
+
+  List<ColorSwatch> taskColorsList = [
+    Colors.yellow,
+    Colors.blue,
+    Colors.green,
+    Colors.purple,
+    Colors.red,
+    Colors.orange,
+    Colors.grey,
+    Colors.brown,
+    Colors.deepOrange,
+    Colors.pink,
+    Colors.teal,
+    Colors.cyan,
+    Colors.lime,
+    Colors.lightGreen,
+    Colors.amber,
+  ];
 
   String id;
   String title;
@@ -92,10 +129,19 @@ class TaskModel {
   String recurrenceBasedate;
   String recurrenceParent;
   String recurrenceChild;
+  String priority;
   String url;
 
   Color getTaskColor(String colorName) {
     return taskColors[colorName];
+  }
+
+  String getTaskColorName(Color color) {
+    return taskColorsName[color];
+  }
+
+  List<ColorSwatch> getTaskColorsList() {
+    return taskColorsList;
   }
 
   factory TaskModel.fromJson(Map<String, dynamic> json) => TaskModel(
@@ -128,6 +174,7 @@ class TaskModel {
         recurrenceBasedate: json["recurrence_basedate"],
         recurrenceParent: json["recurrence_parent"],
         recurrenceChild: json["recurrence_child"],
+        priority: json["priority"],
         url: json["url"],
       );
 
@@ -161,6 +208,7 @@ class TaskModel {
         "recurrence_basedate": recurrenceBasedate,
         "recurrence_parent": recurrenceParent,
         "recurrence_child": recurrenceChild,
+        "priority": priority,
         "url": url,
       };
 

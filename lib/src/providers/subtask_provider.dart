@@ -96,7 +96,7 @@ class SubtaskProvider {
     final decodedData = json.decode(utf8.decode(resp.bodyBytes));
 
     if (decodedData == null) return 0;
-    print(decodedData);
+
     final result = decodedData['result'];
 
     return (result > 0) ? result : 0;

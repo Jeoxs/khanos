@@ -6,7 +6,7 @@ import 'package:kanboard/src/preferences/user_preferences.dart';
 class TagProvider {
   final _prefs = new UserPreferences();
 
-  Future<List<TagModel>> getTags() async {
+  Future<List<TagModel>> getAllTags() async {
     final Map<String, dynamic> parameters = {
       "jsonrpc": "2.0",
       "method": "getAllTags",
@@ -30,12 +30,14 @@ class TagProvider {
 
     var results = decodedData['result'];
 
-    if (decodedData == null) return [];
+    if (decodedData == null || decodedData.isEmpty) return [];
 
-    TagModel tag = TagModel();
-    results.forEach((id, name) {
-      tag.id = id.toString();
-      tag.name = name.toString();
+    results.forEach((element) {
+      TagModel tag = TagModel();
+      tag.id = element['id'].toString();
+      tag.name = element['name'].toString();
+      tag.projectId = element['projectId'].toString();
+      tag.projectId = element['projectId'].toString();
       tags.add(tag);
     });
     return tags;
@@ -65,17 +67,58 @@ class TagProvider {
     final decodedData = json.decode(utf8.decode(resp.bodyBytes));
     final List<TagModel> tags = [];
 
-    var results = decodedData['result'];
+    List results = decodedData['result'];
 
     if (decodedData == null) return [];
 
-    TagModel tag = TagModel();
-    results.forEach((id, name) {
-      tag.id = id.toString();
-      tag.name = name.toString();
+    results.forEach((element) {
+      TagModel tag = TagModel();
+      tag.id = element['id'].toString();
+      tag.name = element['name'].toString();
+      tag.projectId = element['projectId'].toString();
+      tag.projectId = element['projectId'].toString();
       tags.add(tag);
     });
 
+    return tags;
+  }
+
+  Future<List<TagModel>> getDefaultTags() async {
+    final Map<String, dynamic> parameters = {
+      "jsonrpc": "2.0",
+      "method": "getAllTags",
+      "id": 45253426
+    };
+
+    final credentials = "${_prefs.username}:${_prefs.password}";
+
+    Codec<String, String> stringToBase64 = utf8.fuse(base64);
+
+    String encoded = stringToBase64.encode(credentials);
+
+    final resp = await http.post(
+      Uri.parse(_prefs.endpoint),
+      headers: <String, String>{"Authorization": "Basic $encoded"},
+      body: json.encode(parameters),
+    );
+
+    final decodedData = json.decode(utf8.decode(resp.bodyBytes));
+    final List<TagModel> tags = [];
+
+    var results = decodedData['result'];
+
+    if (decodedData == null || decodedData.isEmpty) return [];
+
+    results.forEach((element) {
+      if (element['project_id'] == '0') {
+        TagModel tag = TagModel();
+        tag.id = element['id'].toString();
+        tag.name = element['name'].toString();
+        tag.projectId = element['projectId'].toString();
+        tag.projectId = element['projectId'].toString();
+        tags.add(tag);
+      }
+    });
     return tags;
   }
 

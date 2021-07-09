@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:kanboard/src/models/column_model.dart';
+import 'package:kanboard/src/models/project_model.dart';
 import 'package:kanboard/src/models/tag_model.dart';
 import 'package:kanboard/src/models/task_model.dart';
 import 'package:kanboard/src/models/user_model.dart';
@@ -9,6 +10,7 @@ import 'package:kanboard/src/providers/tag_provider.dart';
 import 'package:kanboard/src/providers/task_provider.dart';
 import 'package:kanboard/src/providers/user_provider.dart';
 import 'package:kanboard/src/utils/datetime_utils.dart';
+import 'package:kanboard/src/utils/utils.dart';
 import 'package:kanboard/src/utils/widgets_utils.dart';
 import 'package:kanboard/src/utils/theme_utils.dart';
 
@@ -19,8 +21,11 @@ class TaskPage extends StatefulWidget {
 
 class _TaskPageState extends State<TaskPage> {
   TaskModel task = new TaskModel();
-  Map<String, ColumnModel> projectColumns = {};
+  List<ColumnModel> projectColumns = [];
+  List<TagModel> _tags = [];
+  ProjectModel project;
   final taskProvider = new TaskProvider();
+  final tagProvider = new TagProvider();
   final subtaskProvider = new SubtaskProvider();
   final userProvider = new UserProvider();
   final columnProvider = new ColumnProvider();
@@ -28,23 +33,42 @@ class _TaskPageState extends State<TaskPage> {
   @override
   Widget build(BuildContext context) {
     final Map taskArgs = ModalRoute.of(context).settings.arguments;
-    final String projectName = taskArgs['project_name'];
+    // final String projectName = taskArgs['project_name'];
+    project = taskArgs['project'];
     if (taskArgs['task'] != null) {
       task = taskArgs['task'];
     }
 
-    final Map<String, dynamic> appBarArguments = {
-      'context': context,
-      'icon': Icons.playlist_add_check_rounded,
-      'route': 'subtask',
-      'arguments': {'task': task}
-    };
-
     return Scaffold(
-      appBar: normalAppBar(projectName, appBarArguments),
+      appBar: normalAppBar(project.name),
       body: Container(
           width: double.infinity,
           child: task.id == null ? _taskForm() : _taskInfo()),
+      floatingActionButton: Column(
+        mainAxisAlignment: MainAxisAlignment.end,
+        children: [
+          FloatingActionButton(
+            heroTag: "subtaskListHero",
+            onPressed: () {
+              Navigator.pushNamed(context, 'subtask',
+                  arguments: {'task': task});
+            },
+            child: Icon(Icons.playlist_add_check_rounded),
+          ),
+          SizedBox(height: 10.0),
+          FloatingActionButton(
+            heroTag: "editTaskHero",
+            onPressed: () async {
+              Navigator.pushNamed(context, 'taskForm', arguments: {
+                'task': task,
+                'project': project,
+                'tags': _tags,
+              }).then((_) => setState(() {}));
+            },
+            child: Icon(Icons.edit),
+          ),
+        ],
+      ),
     );
   }
 
@@ -196,10 +220,10 @@ class _TaskPageState extends State<TaskPage> {
         future: TagProvider().getTagsByTask(int.parse(taskId)),
         builder: (BuildContext context, AsyncSnapshot snapshot) {
           if (snapshot.hasData) {
-            List<TagModel> tags = snapshot.data;
-            if (tags.length > 0) {
+            _tags = snapshot.data;
+            if (_tags.length > 0) {
               List<Widget> chips = [];
-              tags.forEach((tag) {
+              _tags.forEach((tag) {
                 chips.add(Chip(
                   backgroundColor: CustomColors.HeaderBlueLight,
                   elevation: 4.0,

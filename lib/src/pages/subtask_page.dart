@@ -18,7 +18,6 @@ class _SubtaskPageState extends State<SubtaskPage> {
   TaskModel task = new TaskModel();
   final taskProvider = new TaskProvider();
   final subtaskProvider = new SubtaskProvider();
-  bool _enabled = true;
 
   @override
   Widget build(BuildContext context) {

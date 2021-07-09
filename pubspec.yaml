@@ -23,6 +23,8 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+  flutter_localizations:
+    sdk: flutter  
 
 
   # The following adds the Cupertino Icons font to your application.
@@ -43,6 +45,8 @@ dependencies:
       url: https://github.com/TinyProgrammers/GradientAppBar.git
   flutter_slidable: "^0.6.0"
   scoped_model: ^1.0.1
+  flutter_material_color_picker: ^1.0.5
+  flutter_datetime_picker: 
 
 dev_dependencies:
   flutter_test:

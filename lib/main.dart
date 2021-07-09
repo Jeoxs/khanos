@@ -4,9 +4,11 @@ import 'package:kanboard/src/pages/login_page.dart';
 import 'package:kanboard/src/pages/new_subtask_page.dart';
 import 'package:kanboard/src/pages/project_page.dart';
 import 'package:kanboard/src/pages/subtask_page.dart';
+import 'package:kanboard/src/pages/task_form.dart';
 import 'package:kanboard/src/pages/task_page.dart';
 import 'package:kanboard/src/pages/welcome_page.dart';
 import 'package:kanboard/src/preferences/user_preferences.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -43,16 +45,25 @@ class MyApp extends StatelessWidget {
 
     return MaterialApp(
       debugShowCheckedModeBanner: false,
+      localizationsDelegates: [
+        GlobalMaterialLocalizations.delegate,
+        GlobalWidgetsLocalizations.delegate
+      ],
+      supportedLocales: [
+        const Locale('en', 'US'),
+        const Locale('es', 'ES'),
+      ],
       title: 'Flutter Demo',
       initialRoute: _initialRoute,
       routes: {
         'home': (BuildContext context) => HomePage(),
         'project': (BuildContext context) => ProjectPage(),
         'task': (BuildContext context) => TaskPage(),
+        'taskForm': (BuildContext context) => TaskFormPage(),
         'subtask': (BuildContext context) => SubtaskPage(),
+        'newSubtask': (BuildContext context) => NewSubtaskPage(),
         'welcome': (BuildContext context) => WelcomePage(),
         'login': (BuildContext context) => LoginPage(),
-        'newSubtask': (BuildContext context) => NewSubtaskPage(),
       },
       theme: ThemeData(
         // This is the theme of your application.

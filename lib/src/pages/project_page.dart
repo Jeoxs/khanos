@@ -37,6 +37,13 @@ class _ProjectPageState extends State<ProjectPage> {
           width: double.infinity,
           padding: EdgeInsets.only(top: 20.0),
           child: project.id == null ? _projectForm() : _projectInfo()),
+      floatingActionButton: FloatingActionButton(
+        child: Icon(Icons.add),
+        onPressed: () {
+          Navigator.pushNamed(context, 'taskForm',
+              arguments: {'project': project}).then((_) => setState(() {}));
+        },
+      ),
     );
   }
 
@@ -72,10 +79,7 @@ class _ProjectPageState extends State<ProjectPage> {
 
   Widget _taskList(int projectId) {
     return FutureBuilder(
-        future: Future.wait([
-          taskProvider.getTasks(projectId, 1),
-          columnProvider.getColumns(projectId)
-        ]),
+        future: Future.wait([taskProvider.getTasks(projectId, 1)]),
         builder: (BuildContext context, AsyncSnapshot<List<dynamic>> snapshot) {
           if (snapshot.hasData) {
             final List<TaskModel> tasks = snapshot.data[0];
@@ -89,7 +93,7 @@ class _ProjectPageState extends State<ProjectPage> {
                         onTap: () {
                           Navigator.pushNamed(context, 'task', arguments: {
                             'task': tasks[i],
-                            'project_name': project.name
+                            'project': project
                           });
                         },
                         child: _taskElement(
