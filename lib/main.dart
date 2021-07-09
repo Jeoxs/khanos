@@ -53,7 +53,7 @@ class MyApp extends StatelessWidget {
         const Locale('en', 'US'),
         const Locale('es', 'ES'),
       ],
-      title: 'Flutter Demo',
+      title: 'Khanos - Kanboard Client',
       initialRoute: _initialRoute,
       routes: {
         'home': (BuildContext context) => HomePage(),
