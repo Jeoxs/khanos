@@ -194,7 +194,7 @@ class _SubtaskPageState extends State<SubtaskPage> {
         _subtaskIcon = Icon(Icons.check_box_outline_blank);
         break;
       case "1":
-        _subtaskIcon = Icon(Icons.watch_later_outlined);
+        _subtaskIcon = Icon(Icons.access_time_rounded);
         break;
       case "2":
         _subtaskIcon = Icon(Icons.check_box_outlined);

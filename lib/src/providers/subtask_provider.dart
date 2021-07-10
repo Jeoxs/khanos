@@ -47,6 +47,19 @@ class SubtaskProvider {
   }
 
   Future<bool> processSubtask(SubtaskModel subtask) async {
+    String newSubTaskStatus;
+    switch (subtask.status) {
+      case "0":
+        newSubTaskStatus = "1";
+        break;
+      case "1":
+        newSubTaskStatus = "2";
+        break;
+      case "2":
+        newSubTaskStatus = "0";
+        break;
+      default:
+    }
     final Map<String, dynamic> parameters = {
       "jsonrpc": "2.0",
       "method": "updateSubtask",
@@ -54,7 +67,7 @@ class SubtaskProvider {
       "params": {
         "id": subtask.id,
         "task_id": subtask.taskId,
-        "status": subtask.status == "2" ? 0 : 2
+        "status": newSubTaskStatus
       }
     };
 
