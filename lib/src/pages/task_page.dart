@@ -132,7 +132,7 @@ class _TaskPageState extends State<TaskPage> {
                             color: Colors.blueGrey),
                       ),
                       Text(
-                          'Created: ${getDateTimeFromEpoch("dd/MM/yy - HH:mm", task.dateCreation)}'),
+                          'Created: ${getStringDateTimeFromEpoch("dd/MM/yy - HH:mm", task.dateCreation)}'),
                     ]),
                     SizedBox(height: 20.0),
                     Row(children: [
@@ -142,7 +142,7 @@ class _TaskPageState extends State<TaskPage> {
                             Icon(Icons.calendar_today, color: Colors.blueGrey),
                       ),
                       Text(
-                          'Modified: ${getDateTimeFromEpoch("dd/MM/yy - HH:mm", task.dateModification)}'),
+                          'Modified: ${getStringDateTimeFromEpoch("dd/MM/yy - HH:mm", task.dateModification)}'),
                     ]),
                     SizedBox(height: 20.0),
                     Row(children: [
@@ -171,6 +171,29 @@ class _TaskPageState extends State<TaskPage> {
                       Text('Spent: ${task.timeSpent} hours')
                     ]),
                     SizedBox(height: 20.0),
+                    task.dateStarted != '0'
+                        ? Row(children: [
+                            Padding(
+                              padding: const EdgeInsets.only(right: 10.0),
+                              child: Icon(Icons.calendar_today,
+                                  color: Colors.blueGrey),
+                            ),
+                            Text(
+                                'Created: ${getStringDateTimeFromEpoch("dd/MM/yy - HH:mm", task.dateStarted)}'),
+                          ])
+                        : Container(),
+                    SizedBox(height: 20.0),
+                    task.dateDue != '0'
+                        ? Row(children: [
+                            Padding(
+                              padding: const EdgeInsets.only(right: 10.0),
+                              child: Icon(Icons.calendar_today,
+                                  color: Colors.blueGrey),
+                            ),
+                            Text(
+                                'Modified: ${getStringDateTimeFromEpoch("dd/MM/yy - HH:mm", task.dateDue)}'),
+                          ])
+                        : Container(),
                     Row(
                       children: [
                         Text('Tags',

@@ -34,9 +34,12 @@ class _TaskFormPageState extends State<TaskFormPage> {
   TaskModel task = new TaskModel();
   List<UserModel> _users = [];
   List<ColumnModel> _columns = [];
-  // List<TagModel> _projectTags = [];
-// List<TagModel> tags = new List.from(snapshot.data[0])
-//               ..addAll(snapshot.data[1]);
+  DateTime dateStartedLimitMin;
+  DateTime startedDateLimitMax;
+  DateTime dateDueLimitMin;
+  DateTime dueDateLimitMax;
+  DateTime currentDateDue = DateTime.now();
+  DateTime currentDateStarted = DateTime.now();
   String _title = '';
   String _description = '';
   ColorSwatch _tempTaskColor;
@@ -48,7 +51,7 @@ class _TaskFormPageState extends State<TaskFormPage> {
   String _timeEstimated = '';
   String _timeSpent = '';
   String _dateStarted = '';
-  String _dateDue = '';
+  String _dueDate = '';
   String _score = ''; // COMPLEXITY
   String _priority = '0';
   List<TagModel> _availableTags = [];
@@ -99,19 +102,23 @@ class _TaskFormPageState extends State<TaskFormPage> {
       _mainColor = TaskModel().getTaskColor(_colorId);
 
       if (task.dateDue != '0') {
-        _dateDue = getDateTimeFromEpoch("dd/MM/yyyy HH:mm", task.dateDue);
+        _dueDate = getStringDateTimeFromEpoch("dd/MM/yyyy HH:mm", task.dateDue);
         _dateDueFieldController.text =
-            getDateTimeFromEpoch("dd/MM/yy HH:mm", task.dateDue);
+            getStringDateTimeFromEpoch("dd/MM/yy HH:mm", task.dateDue);
+        startedDateLimitMax = getDateTimeFromEpoch(task.dateDue);
+        currentDateDue = getDateTimeFromEpoch(task.dateDue);
       } else {
-        _dateDue = '';
-        _dateDueFieldController.text = _dateDue;
+        _dueDate = '';
+        _dateDueFieldController.text = _dueDate;
       }
 
       if (task.dateStarted != '0') {
         _dateStarted =
-            getDateTimeFromEpoch("dd/MM/yyyy HH:mm", task.dateStarted);
+            getStringDateTimeFromEpoch("dd/MM/yyyy HH:mm", task.dateStarted);
         _dateStartedFieldController.text =
-            getDateTimeFromEpoch("dd/MM/yy HH:mm", task.dateStarted);
+            getStringDateTimeFromEpoch("dd/MM/yy HH:mm", task.dateStarted);
+        dateDueLimitMin = getDateTimeFromEpoch(task.dateStarted);
+        currentDateStarted = getDateTimeFromEpoch(task.dateStarted);
       } else {
         _dateStarted = '';
         _dateStartedFieldController.text = _dateStarted;
@@ -222,10 +229,10 @@ class _TaskFormPageState extends State<TaskFormPage> {
           Row(
             children: [
               new Flexible(
-                child: _timeSpentField(),
+                child: _timeEstimatedField(),
               ),
               new Flexible(
-                child: _timeEstimatedField(),
+                child: _timeSpentField(),
               ),
             ],
           ),
@@ -235,10 +242,10 @@ class _TaskFormPageState extends State<TaskFormPage> {
           Row(
             children: [
               new Flexible(
-                child: _dateDueSelect(context),
+                child: _datestartSelect(context),
               ),
               new Flexible(
-                child: _datestartSelect(context),
+                child: _dateDueSelect(context),
               ),
             ],
           ),
@@ -484,7 +491,7 @@ class _TaskFormPageState extends State<TaskFormPage> {
         keyboardType: TextInputType.number,
         decoration: InputDecoration(
           hintText: 'Hours (Integer)',
-          labelText: 'Time Estimated',
+          labelText: 'Estimated',
           suffixIcon: Icon(Icons.watch_later_outlined, color: Colors.blue),
         ),
         onChanged: (value) {},
@@ -546,7 +553,7 @@ class _TaskFormPageState extends State<TaskFormPage> {
         "time_spent": _timeSpent,
         "time_estimated": _timeEstimated,
         "color_id": _colorId,
-        "date_due": _dateDue,
+        "date_due": _dueDate,
         "date_started": _dateStarted,
         "priority": _priority,
         "score": _score,
@@ -572,7 +579,7 @@ class _TaskFormPageState extends State<TaskFormPage> {
         "time_spent": _timeSpent,
         "time_estimated": _timeEstimated,
         "color_id": _colorId,
-        "date_due": _dateDue,
+        "date_due": _dueDate,
         "date_started": _dateStarted,
         "priority": _priority,
         "score": _score,
@@ -691,15 +698,17 @@ class _TaskFormPageState extends State<TaskFormPage> {
     DatePicker.showDateTimePicker(
       context,
       showTitleActions: true,
-      minTime: new DateTime(2018),
-      maxTime: new DateTime(2025),
+      minTime: dateStartedLimitMin,
+      maxTime: startedDateLimitMax,
       onConfirm: (date) {
+        dateDueLimitMin = date;
+        currentDateStarted = date;
         _dateStarted = _dateStartedFieldController.text =
             DateFormat('dd/MM/yyyy HH:mm', 'en_US').format(date);
         _dateStartedFieldController.text =
             DateFormat('dd/MM/yy HH:mm', 'en_US').format(date);
       },
-      currentTime: DateTime.now(),
+      currentTime: currentDateStarted,
       locale: LocaleType.en,
     );
   }
@@ -708,15 +717,17 @@ class _TaskFormPageState extends State<TaskFormPage> {
     DatePicker.showDateTimePicker(
       context,
       showTitleActions: true,
-      minTime: new DateTime(2018),
-      maxTime: new DateTime(2025),
+      minTime: dateDueLimitMin,
+      maxTime: dueDateLimitMax,
       onConfirm: (date) {
-        _dateDue = _dateDueFieldController.text =
+        startedDateLimitMax = date;
+        currentDateDue = date;
+        _dueDate = _dateDueFieldController.text =
             DateFormat('dd/MM/yyyy HH:mm', 'en_US').format(date);
         _dateDueFieldController.text =
             DateFormat('dd/MM/yy HH:mm', 'en_US').format(date);
       },
-      currentTime: DateTime.now(),
+      currentTime: currentDateDue,
       locale: LocaleType.en,
     );
   }

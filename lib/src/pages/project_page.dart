@@ -157,7 +157,7 @@ class _ProjectPageState extends State<ProjectPage> {
                 child: Slidable(
                   actionPane: SlidableDrawerActionPane(),
                   child: _taskElement(
-                      getDateTimeFromEpoch(
+                      getStringDateTimeFromEpoch(
                           "dd/MM/yy", tasks[i].dateModification),
                       tasks[i].title,
                       TaskModel().getTaskColor(tasks[i].colorId)),
