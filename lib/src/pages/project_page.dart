@@ -152,7 +152,7 @@ class _ProjectPageState extends State<ProjectPage> {
               GestureDetector(
                 onTap: () {
                   Navigator.pushNamed(context, 'task',
-                      arguments: {'task': tasks[i], 'project': project});
+                      arguments: {'task_id': tasks[i].id, 'project': project});
                 },
                 child: Slidable(
                   actionPane: SlidableDrawerActionPane(),

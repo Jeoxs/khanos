@@ -8,6 +8,7 @@ import 'package:khanos/src/providers/column_provider.dart';
 import 'package:khanos/src/providers/tag_provider.dart';
 import 'package:khanos/src/providers/task_provider.dart';
 import 'package:khanos/src/providers/user_provider.dart';
+import 'package:khanos/src/utils/datetime_utils.dart';
 import 'package:khanos/src/utils/theme_utils.dart';
 import 'package:khanos/src/utils/utils.dart';
 import 'package:khanos/src/utils/widgets_utils.dart';
@@ -92,19 +93,37 @@ class _TaskFormPageState extends State<TaskFormPage> {
       _timeEstimatedFieldController.text = _timeEstimated;
       _colorId = task.colorId;
       _mainColor = TaskModel().getTaskColor(_colorId);
-      _dateDue = task.dateDue != '0' ? task.dateDue : '';
-      _dateDueFieldController.text = _dateDue;
-      _dateStarted = task.dateStarted != '0' ? task.dateStarted : '';
-      _dateStartedFieldController.text = _dateStarted;
+
+      if (task.dateDue != '0') {
+        _dateDue = getDateTimeFromEpoch("dd/MM/yyyy HH:mm", task.dateDue);
+        _dateDueFieldController.text =
+            getDateTimeFromEpoch("dd/MM/yy HH:mm", task.dateDue);
+      } else {
+        _dateDue = '';
+        _dateDueFieldController.text = _dateDue;
+      }
+
+      if (task.dateStarted != '0') {
+        _dateStarted =
+            getDateTimeFromEpoch("dd/MM/yyyy HH:mm", task.dateStarted);
+        _dateStartedFieldController.text =
+            getDateTimeFromEpoch("dd/MM/yy HH:mm", task.dateStarted);
+      } else {
+        _dateStarted = '';
+        _dateStartedFieldController.text = _dateStarted;
+      }
+
       _priority = task.priority;
       _score = task.score;
       _scoreFieldController.text = _score;
-      if (taskArgs.containsKey('tags'))
-        taskArgs['tags'].forEach((TagModel element) {
-          _tags.add(element.name);
-        });
-      taskArgs.removeWhere((key, value) => key == 'tags');
+      taskArgs['task'] = null;
     }
+
+    if (taskArgs.containsKey('tags'))
+      taskArgs['tags'].forEach((TagModel element) {
+        _tags.add(element.name);
+      });
+    taskArgs.removeWhere((key, value) => key == 'tags');
 
     return Scaffold(
       appBar: normalAppBar(createTask ? 'New Task' : task.title),
@@ -472,6 +491,7 @@ class _TaskFormPageState extends State<TaskFormPage> {
         textColor: Colors.white,
         onPressed: () {
           if (_formKey.currentState.validate() && _ownerId != '0') {
+            showLoaderDialog(context);
             _submitForm(context);
           } else {
             mostrarAlerta(context, 'Please, fill the Title and Owner fields!');
@@ -483,8 +503,6 @@ class _TaskFormPageState extends State<TaskFormPage> {
     _title = _titleFieldController.text;
     _description = _descriptionFieldController.text;
     _timeEstimated = _timeEstimatedFieldController.text;
-    _dateDue = _dateDueFieldController.text;
-    _dateStarted = _dateStartedFieldController.text;
     _score = _scoreFieldController.text;
 
     if (createTask) {
@@ -529,6 +547,7 @@ class _TaskFormPageState extends State<TaskFormPage> {
         "tags": _tags,
       };
       bool result = await taskProvider.updateTask(formData);
+      Navigator.pop(context);
       if (result) {
         setState(() {
           Navigator.pop(context);
@@ -644,10 +663,9 @@ class _TaskFormPageState extends State<TaskFormPage> {
       maxTime: new DateTime(2025),
       onConfirm: (date) {
         _dateStarted = _dateStartedFieldController.text =
-            DateFormat('dd/MM/yy HH:mm', 'en_US').format(date);
+            DateFormat('dd/MM/yyyy HH:mm', 'en_US').format(date);
         _dateStartedFieldController.text =
             DateFormat('dd/MM/yy HH:mm', 'en_US').format(date);
-        print(_dateStarted);
       },
       currentTime: DateTime.now(),
       locale: LocaleType.en,
@@ -662,10 +680,9 @@ class _TaskFormPageState extends State<TaskFormPage> {
       maxTime: new DateTime(2025),
       onConfirm: (date) {
         _dateDue = _dateDueFieldController.text =
-            DateFormat('dd/MM/yy HH:mm', 'en_US').format(date);
+            DateFormat('dd/MM/yyyy HH:mm', 'en_US').format(date);
         _dateDueFieldController.text =
             DateFormat('dd/MM/yy HH:mm', 'en_US').format(date);
-        print(_dateDue);
       },
       currentTime: DateTime.now(),
       locale: LocaleType.en,

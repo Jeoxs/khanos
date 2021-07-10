@@ -2,7 +2,6 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:khanos/src/models/task_model.dart';
 import 'package:khanos/src/preferences/user_preferences.dart';
-import 'package:khanos/src/utils/utils.dart';
 
 class TaskProvider {
   final _prefs = new UserPreferences();
@@ -11,8 +10,8 @@ class TaskProvider {
     final Map<String, dynamic> parameters = {
       "jsonrpc": "2.0",
       "method": "getAllTasks",
-      "id": 1,
-      "params": {"project_id": projectId, "status_id": statusId}
+      "id": 133280317,
+      "params": {"project_id": projectId, "task_id": statusId}
     };
 
     final credentials = "${_prefs.username}:${_prefs.password}";
@@ -46,6 +45,41 @@ class TaskProvider {
       tasks.add(taskTemp);
     });
     return tasks;
+  }
+
+  Future<TaskModel> getTask(int taskId) async {
+    final Map<String, dynamic> parameters = {
+      "jsonrpc": "2.0",
+      "method": "getTask",
+      "id": 700738119,
+      "params": {"task_id": taskId}
+    };
+
+    final credentials = "${_prefs.username}:${_prefs.password}";
+
+    Codec<String, String> stringToBase64 = utf8.fuse(base64);
+
+    String encoded = stringToBase64.encode(credentials);
+
+    final resp = await http.post(
+      Uri.parse(_prefs.endpoint),
+      headers: <String, String>{"Authorization": "Basic $encoded"},
+      body: json.encode(parameters),
+      encoding: Encoding.getByName("utf-8"),
+    );
+
+    final decodedData = json.decode(utf8.decode(resp.bodyBytes));
+
+    if (decodedData == null) return null;
+
+    // Check for errors
+    if (decodedData['error'] != null) {
+      return Future.error(decodedData['error']);
+    }
+
+    final TaskModel task = TaskModel.fromJson(decodedData['result']);
+
+    return task;
   }
 
   Future<int> createTask(Map<String, dynamic> args) async {
