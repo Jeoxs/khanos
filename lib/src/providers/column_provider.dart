@@ -27,11 +27,17 @@ class ColumnProvider {
     );
 
     final decodedData = json.decode(utf8.decode(resp.bodyBytes));
+
+    if (decodedData == null) return [];
+
+    // Check for errors
+    if (decodedData['error'] != null) {
+      return Future.error(decodedData['error']);
+    }
+
     final List<ColumnModel> columns = [];
 
     final List<dynamic> results = decodedData['result'];
-
-    if (decodedData == null) return [];
 
     results.forEach((column) {
       final columnTemp = ColumnModel.fromJson(column);

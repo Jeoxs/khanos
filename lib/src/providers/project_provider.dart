@@ -29,6 +29,12 @@ class ProjectProvider {
     );
 
     final decodedData = json.decode(utf8.decode(resp.bodyBytes));
+
+    // Check for errors
+    if (decodedData['error'] != null) {
+      return Future.error(decodedData['error']);
+    }
+
     final List<ProjectModel> projects = [];
 
     final List<dynamic> results = decodedData['result'];

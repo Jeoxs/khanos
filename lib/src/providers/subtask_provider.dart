@@ -27,11 +27,17 @@ class SubtaskProvider {
     );
 
     final decodedData = json.decode(utf8.decode(resp.bodyBytes));
+
+    if (decodedData == null) return [];
+
+    // Check for errors
+    if (decodedData['error'] != null) {
+      return Future.error(decodedData['error']);
+    }
+
     final List<SubtaskModel> subtasks = [];
 
     final List<dynamic> results = decodedData['result'];
-
-    if (decodedData == null) return [];
 
     results.forEach((subtask) {
       final subtTemp = SubtaskModel.fromJson(subtask);
@@ -63,6 +69,11 @@ class SubtaskProvider {
     );
 
     final decodedData = json.decode(utf8.decode(resp.bodyBytes));
+
+    // Check for errors
+    if (decodedData['error'] != null) {
+      return Future.error(decodedData['error']);
+    }
 
     final result = decodedData['result'];
 
@@ -97,6 +108,11 @@ class SubtaskProvider {
 
     if (decodedData == null) return 0;
 
+    // Check for errors
+    if (decodedData['error'] != null) {
+      return Future.error(decodedData['error']);
+    }
+
     final result = decodedData['result'];
 
     return (result > 0) ? result : 0;
@@ -123,6 +139,11 @@ class SubtaskProvider {
     final decodedData = json.decode(utf8.decode(resp.bodyBytes));
 
     if (decodedData == null) return false;
+
+    // Check for errors
+    if (decodedData['error'] != null) {
+      return Future.error(decodedData['error']);
+    }
 
     final result = decodedData['result'];
 

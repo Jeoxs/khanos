@@ -109,6 +109,11 @@ class TaskProvider {
 
     if (decodedData == null) return false;
 
+    // Check for errors
+    if (decodedData['error'] != null) {
+      return Future.error(decodedData['error']);
+    }
+
     return result;
   }
 
@@ -137,7 +142,10 @@ class TaskProvider {
 
     final decodedData = json.decode(utf8.decode(resp.bodyBytes));
 
-    print(decodedData);
+    // Check for errors
+    if (decodedData['error'] != null) {
+      return Future.error(decodedData['error']);
+    }
 
     final result = decodedData['result'];
 
