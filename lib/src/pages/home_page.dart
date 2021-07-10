@@ -75,9 +75,14 @@ class _HomePageState extends State<HomePage> {
           if (snapshot.hasError) {
             processApiError(snapshot.error);
             if (_prefs.authFlag != true) {
+              final SnackBar _snackBar = SnackBar(
+                content: const Text('Login Failed!'),
+                duration: const Duration(seconds: 5),
+              );
               @override
               void run() {
                 scheduleMicrotask(() {
+                  ScaffoldMessenger.of(context).showSnackBar(_snackBar);
                   Navigator.pushReplacementNamed(context, 'login',
                       arguments: {'error': snapshot.error});
                 });

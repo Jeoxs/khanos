@@ -1,9 +1,12 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:khanos/src/models/column_model.dart';
 import 'package:khanos/src/models/project_model.dart';
 import 'package:khanos/src/models/tag_model.dart';
 import 'package:khanos/src/models/task_model.dart';
 import 'package:khanos/src/models/user_model.dart';
+import 'package:khanos/src/preferences/user_preferences.dart';
 import 'package:khanos/src/providers/column_provider.dart';
 import 'package:khanos/src/providers/subtask_provider.dart';
 import 'package:khanos/src/providers/tag_provider.dart';
@@ -20,6 +23,8 @@ class TaskPage extends StatefulWidget {
 }
 
 class _TaskPageState extends State<TaskPage> {
+  final _prefs = new UserPreferences();
+  Map<String, dynamic> error;
   TaskModel task = new TaskModel();
   List<ColumnModel> projectColumns = [];
   List<TagModel> _tags = [];
@@ -29,10 +34,10 @@ class _TaskPageState extends State<TaskPage> {
   final subtaskProvider = new SubtaskProvider();
   final userProvider = new UserProvider();
   final columnProvider = new ColumnProvider();
-
   @override
   Widget build(BuildContext context) {
     final Map taskArgs = ModalRoute.of(context).settings.arguments;
+
     // final String projectName = taskArgs['project_name'];
     project = taskArgs['project'];
     if (taskArgs['task'] != null) {
@@ -178,6 +183,26 @@ class _TaskPageState extends State<TaskPage> {
     return FutureBuilder(
         future: UserProvider().getUser(int.parse(creatorId)),
         builder: (BuildContext context, AsyncSnapshot snapshot) {
+          if (snapshot.hasError) {
+            processApiError(snapshot.error);
+            error = snapshot.error;
+            if (_prefs.authFlag != true) {
+              final SnackBar _snackBar = SnackBar(
+                content: const Text('Login Failed!'),
+                duration: const Duration(seconds: 5),
+              );
+              @override
+              void run() {
+                scheduleMicrotask(() {
+                  ScaffoldMessenger.of(context).showSnackBar(_snackBar);
+                  Navigator.pushReplacementNamed(context, 'login',
+                      arguments: {'error': snapshot.error});
+                });
+              }
+
+              run();
+            }
+          }
           if (snapshot.hasData) {
             final UserModel user = snapshot.data;
             return _userButton(user);
@@ -219,6 +244,26 @@ class _TaskPageState extends State<TaskPage> {
     return FutureBuilder(
         future: TagProvider().getTagsByTask(int.parse(taskId)),
         builder: (BuildContext context, AsyncSnapshot snapshot) {
+          if (snapshot.hasError) {
+            processApiError(snapshot.error);
+            error = snapshot.error;
+            if (_prefs.authFlag != true) {
+              final SnackBar _snackBar = SnackBar(
+                content: const Text('Login Failed!'),
+                duration: const Duration(seconds: 5),
+              );
+              @override
+              void run() {
+                scheduleMicrotask(() {
+                  ScaffoldMessenger.of(context).showSnackBar(_snackBar);
+                  Navigator.pushReplacementNamed(context, 'login',
+                      arguments: {'error': snapshot.error});
+                });
+              }
+
+              run();
+            }
+          }
           if (snapshot.hasData) {
             _tags = snapshot.data;
             if (_tags.length > 0) {
