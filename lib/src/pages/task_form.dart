@@ -46,6 +46,7 @@ class _TaskFormPageState extends State<TaskFormPage> {
   String _ownerId = '0';
   String _columnId = '0';
   String _timeEstimated = '';
+  String _timeSpent = '';
   String _dateStarted = '';
   String _dateDue = '';
   String _score = ''; // COMPLEXITY
@@ -58,6 +59,7 @@ class _TaskFormPageState extends State<TaskFormPage> {
   TextEditingController _titleFieldController = new TextEditingController();
   TextEditingController _descriptionFieldController =
       new TextEditingController();
+  TextEditingController _timeSpentFieldController = new TextEditingController();
   TextEditingController _timeEstimatedFieldController =
       new TextEditingController();
   TextEditingController _dateStartedFieldController =
@@ -89,6 +91,8 @@ class _TaskFormPageState extends State<TaskFormPage> {
       _creatorId = task.creatorId;
       _ownerId = task.ownerId;
       _columnId = task.columnId;
+      _timeSpent = task.timeSpent;
+      _timeSpentFieldController.text = _timeSpent;
       _timeEstimated = task.timeEstimated;
       _timeEstimatedFieldController.text = _timeEstimated;
       _colorId = task.colorId;
@@ -215,7 +219,16 @@ class _TaskFormPageState extends State<TaskFormPage> {
           SizedBox(height: 10.0),
           _columnSelect(),
           SizedBox(height: 10.0),
-          _timeEstimatedField(),
+          Row(
+            children: [
+              new Flexible(
+                child: _timeSpentField(),
+              ),
+              new Flexible(
+                child: _timeEstimatedField(),
+              ),
+            ],
+          ),
           SizedBox(height: 30.0),
           _taskColorPicker(),
           SizedBox(height: 15.0),
@@ -471,7 +484,23 @@ class _TaskFormPageState extends State<TaskFormPage> {
         keyboardType: TextInputType.number,
         decoration: InputDecoration(
           hintText: 'Hours (Integer)',
-          labelText: 'Original Estimate',
+          labelText: 'Time Estimated',
+          suffixIcon: Icon(Icons.watch_later_outlined, color: Colors.blue),
+        ),
+        onChanged: (value) {},
+      ),
+    );
+  }
+
+  Widget _timeSpentField() {
+    return Container(
+      padding: EdgeInsets.symmetric(horizontal: 20.0),
+      child: TextFormField(
+        controller: _timeSpentFieldController,
+        keyboardType: TextInputType.number,
+        decoration: InputDecoration(
+          hintText: 'Hours (Integer)',
+          labelText: 'Time Spent',
           suffixIcon: Icon(Icons.watch_later_outlined, color: Colors.blue),
         ),
         onChanged: (value) {},
@@ -502,6 +531,7 @@ class _TaskFormPageState extends State<TaskFormPage> {
   _submitForm(BuildContext context) async {
     _title = _titleFieldController.text;
     _description = _descriptionFieldController.text;
+    _timeSpent = _timeSpentFieldController.text;
     _timeEstimated = _timeEstimatedFieldController.text;
     _score = _scoreFieldController.text;
 
@@ -513,6 +543,7 @@ class _TaskFormPageState extends State<TaskFormPage> {
         "creator_id": _creatorId,
         "owner_id": _ownerId,
         "column_id": _columnId,
+        "time_spent": _timeSpent,
         "time_estimated": _timeEstimated,
         "color_id": _colorId,
         "date_due": _dateDue,
@@ -538,6 +569,7 @@ class _TaskFormPageState extends State<TaskFormPage> {
         "creator_id": _creatorId,
         "owner_id": _ownerId,
         "column_id": _columnId,
+        "time_spent": _timeSpent,
         "time_estimated": _timeEstimated,
         "color_id": _colorId,
         "date_due": _dateDue,
