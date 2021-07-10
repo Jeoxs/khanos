@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:khanos/src/models/project_model.dart';
 import 'package:khanos/src/preferences/user_preferences.dart';
+import 'package:khanos/src/utils/utils.dart';
 
 class ProjectProvider {
   final _prefs = new UserPreferences();
@@ -32,7 +33,8 @@ class ProjectProvider {
 
     // Check for errors
     if (decodedData['error'] != null) {
-      return Future.error(decodedData['error']);
+      var error = processApiError(decodedData['error']);
+      return Future.error(error);
     }
 
     final List<ProjectModel> projects = [];
