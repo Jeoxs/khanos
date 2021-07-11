@@ -5,6 +5,14 @@ The format is based on [Keep a Changelog][Keep a Changelog] and this project adh
 
 ## [Released]
 
+## [1.0.4] - 2021-07-10
+### Added
+- Drawer Menu on Home Page with items
+    - Support Link to This Github Repo
+    - Logout option
+- Projects can now be deleted with Slidable feature.
+- Changed package Name as standars suggests. Note: You may want to uninstall the old app, as this one will use a new Package name.
+
 ## [1.0.3] - 2021-07-10
 ### Added
 - Redirect to Login Screen if login credentials fails, notifying the user with a notification Bar at the bottom.
@@ -51,6 +59,7 @@ The format is based on [Keep a Changelog][Keep a Changelog] and this project adh
 <!-- Versions -->
 [Released]: https://github.com/Jeoxs/khanos/releases
 
+[1.0.3]: https://github.com/Jeoxs/khanos/compare/v1.0.3...v1.0.4
 [1.0.3]: https://github.com/Jeoxs/khanos/compare/v1.0.2...v1.0.3
 [1.0.2]: https://github.com/Jeoxs/khanos/compare/v1.0.1...v1.0.2
 [1.0.1]: https://github.com/Jeoxs/khanos/compare/v1.0...v1.0.1
