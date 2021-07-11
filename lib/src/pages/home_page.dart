@@ -1,10 +1,12 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:khanos/src/preferences/user_preferences.dart';
+import 'package:khanos/src/providers/dark_theme_provider.dart';
 import 'package:khanos/src/providers/user_provider.dart';
 import 'package:khanos/src/utils/theme_utils.dart';
 import 'package:khanos/src/utils/utils.dart';
 import 'package:khanos/src/utils/widgets_utils.dart';
+import 'package:provider/provider.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:khanos/src/models/project_model.dart';
 import 'package:khanos/src/providers/column_provider.dart';
@@ -22,14 +24,26 @@ class _HomePageState extends State<HomePage> {
   final projectProvider = new ProjectProvider();
   final columnProvider = new ColumnProvider();
   final userProvider = new UserProvider();
+  bool _darkTheme;
+  ThemeData currentThemeData;
+
+  @override
+  void initState() {
+    _darkTheme = _prefs.darkTheme;
+    super.initState();
+  }
+
   int projectsAmount;
   @override
   Widget build(BuildContext context) {
+    currentThemeData =
+        _darkTheme == true ? ThemeData.dark() : ThemeData.light();
     return Scaffold(
       appBar: normalAppBar('Khanos'),
       body: projectList(context),
       drawer: _homeDrawer(),
       floatingActionButton: FloatingActionButton(
+        backgroundColor: Colors.blue,
         child: Icon(Icons.add),
         onPressed: () => Navigator.of(context)
             .pushNamed('newProject')
@@ -183,7 +197,7 @@ class _HomePageState extends State<HomePage> {
   Widget _projectElement(String title, String description) {
     description = description != null ? description : 'No description';
     return Container(
-      margin: EdgeInsets.symmetric(horizontal: 10.0, vertical: 10.0),
+      margin: EdgeInsets.symmetric(horizontal: 10.0, vertical: 8.0),
       padding: EdgeInsets.symmetric(vertical: 20.0, horizontal: 30.0),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -203,17 +217,16 @@ class _HomePageState extends State<HomePage> {
       decoration: BoxDecoration(
         gradient: LinearGradient(
           stops: [0.015, 0.015],
-          colors: [Colors.green, Colors.white],
+          colors: [Colors.blue, currentThemeData.cardColor],
         ),
         borderRadius: BorderRadius.all(
           Radius.circular(5.0),
         ),
         boxShadow: [
           BoxShadow(
-            color: CustomColors.GreyBorder,
-            blurRadius: 10.0,
-            spreadRadius: 5.0,
-            offset: Offset(0.0, 0.0),
+            color: currentThemeData.shadowColor,
+            blurRadius: 4,
+            offset: Offset(1.5, 1.5),
           ),
         ],
       ),
@@ -231,6 +244,7 @@ class _HomePageState extends State<HomePage> {
   }
 
   Widget _homeDrawer() {
+    var _themeProvider = Provider.of<ThemeChanger>(context);
     return Container(
       child: Drawer(
         child: ListView(
@@ -280,6 +294,17 @@ class _HomePageState extends State<HomePage> {
                   top: 140.0,
                   left: 100.0),
             ]),
+            SwitchListTile(
+              activeColor: Colors.blue,
+              value: _darkTheme,
+              title: Text('Dark Mode'),
+              onChanged: (value) {
+                _themeProvider.setTheme(value ? darkTheme : lightTheme);
+                prefs.darkTheme = value;
+                _darkTheme = value;
+                setState(() {});
+              },
+            ),
             ListTile(
                 leading: Icon(Icons.support, color: Colors.blue),
                 title: Text('Support'),

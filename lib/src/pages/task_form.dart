@@ -32,6 +32,10 @@ class _TaskFormPageState extends State<TaskFormPage> {
 
   ProjectModel project = new ProjectModel();
   TaskModel task = new TaskModel();
+
+  bool _darkTheme;
+  ThemeData currentThemeData;
+
   List<UserModel> _users = [];
   List<ColumnModel> _columns = [];
   DateTime dateStartedLimitMin;
@@ -79,6 +83,8 @@ class _TaskFormPageState extends State<TaskFormPage> {
 
   @override
   Widget build(BuildContext context) {
+    currentThemeData =
+        _darkTheme == true ? ThemeData.dark() : ThemeData.light();
     final Map taskArgs = ModalRoute.of(context).settings.arguments;
     project = taskArgs['project'];
     _users = taskArgs['usersData'];
@@ -777,9 +783,11 @@ class _TaskFormPageState extends State<TaskFormPage> {
       List<Widget> chips = [];
       _availableTags.forEach((tag) {
         chips.add(InputChip(
-          backgroundColor: CustomColors.HeaderBlueLight,
+          backgroundColor: Colors.blue,
           elevation: 4.0,
-          label: Text(tag.name),
+          label: Text(
+            tag.name,
+          ),
           selected: _tags.contains(tag.name) ? true : false,
           onSelected: (bool selected) {
             setState(() {
