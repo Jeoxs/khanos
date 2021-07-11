@@ -48,7 +48,7 @@ dependencies:
   scoped_model: ^1.0.1
   flutter_material_color_picker: ^1.0.5
   flutter_datetime_picker: 
-  flushbar: ^1.10.4
+  url_launcher: ^6.0.9
 
 dev_dependencies:
   flutter_test:
