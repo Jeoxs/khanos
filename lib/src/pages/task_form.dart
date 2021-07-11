@@ -8,6 +8,7 @@ import 'package:khanos/src/providers/column_provider.dart';
 import 'package:khanos/src/providers/tag_provider.dart';
 import 'package:khanos/src/providers/task_provider.dart';
 import 'package:khanos/src/providers/user_provider.dart';
+import 'package:khanos/src/utils/datetime_utils.dart';
 import 'package:khanos/src/utils/theme_utils.dart';
 import 'package:khanos/src/utils/utils.dart';
 import 'package:khanos/src/utils/widgets_utils.dart';
@@ -33,9 +34,12 @@ class _TaskFormPageState extends State<TaskFormPage> {
   TaskModel task = new TaskModel();
   List<UserModel> _users = [];
   List<ColumnModel> _columns = [];
-  // List<TagModel> _projectTags = [];
-// List<TagModel> tags = new List.from(snapshot.data[0])
-//               ..addAll(snapshot.data[1]);
+  DateTime dateStartedLimitMin;
+  DateTime startedDateLimitMax;
+  DateTime dateDueLimitMin;
+  DateTime dueDateLimitMax;
+  DateTime currentDateDue = DateTime.now();
+  DateTime currentDateStarted = DateTime.now();
   String _title = '';
   String _description = '';
   ColorSwatch _tempTaskColor;
@@ -45,8 +49,9 @@ class _TaskFormPageState extends State<TaskFormPage> {
   String _ownerId = '0';
   String _columnId = '0';
   String _timeEstimated = '';
+  String _timeSpent = '';
   String _dateStarted = '';
-  String _dateDue = '';
+  String _dueDate = '';
   String _score = ''; // COMPLEXITY
   String _priority = '0';
   List<TagModel> _availableTags = [];
@@ -57,6 +62,7 @@ class _TaskFormPageState extends State<TaskFormPage> {
   TextEditingController _titleFieldController = new TextEditingController();
   TextEditingController _descriptionFieldController =
       new TextEditingController();
+  TextEditingController _timeSpentFieldController = new TextEditingController();
   TextEditingController _timeEstimatedFieldController =
       new TextEditingController();
   TextEditingController _dateStartedFieldController =
@@ -88,23 +94,47 @@ class _TaskFormPageState extends State<TaskFormPage> {
       _creatorId = task.creatorId;
       _ownerId = task.ownerId;
       _columnId = task.columnId;
+      _timeSpent = task.timeSpent;
+      _timeSpentFieldController.text = _timeSpent;
       _timeEstimated = task.timeEstimated;
       _timeEstimatedFieldController.text = _timeEstimated;
       _colorId = task.colorId;
       _mainColor = TaskModel().getTaskColor(_colorId);
-      _dateDue = task.dateDue != '0' ? task.dateDue : '';
-      _dateDueFieldController.text = _dateDue;
-      _dateStarted = task.dateStarted != '0' ? task.dateStarted : '';
-      _dateStartedFieldController.text = _dateStarted;
+
+      if (task.dateDue != '0') {
+        _dueDate = getStringDateTimeFromEpoch("dd/MM/yyyy HH:mm", task.dateDue);
+        _dateDueFieldController.text =
+            getStringDateTimeFromEpoch("dd/MM/yy HH:mm", task.dateDue);
+        startedDateLimitMax = getDateTimeFromEpoch(task.dateDue);
+        currentDateDue = getDateTimeFromEpoch(task.dateDue);
+      } else {
+        _dueDate = '';
+        _dateDueFieldController.text = _dueDate;
+      }
+
+      if (task.dateStarted != '0') {
+        _dateStarted =
+            getStringDateTimeFromEpoch("dd/MM/yyyy HH:mm", task.dateStarted);
+        _dateStartedFieldController.text =
+            getStringDateTimeFromEpoch("dd/MM/yy HH:mm", task.dateStarted);
+        dateDueLimitMin = getDateTimeFromEpoch(task.dateStarted);
+        currentDateStarted = getDateTimeFromEpoch(task.dateStarted);
+      } else {
+        _dateStarted = '';
+        _dateStartedFieldController.text = _dateStarted;
+      }
+
       _priority = task.priority;
       _score = task.score;
       _scoreFieldController.text = _score;
-      if (taskArgs.containsKey('tags'))
-        taskArgs['tags'].forEach((TagModel element) {
-          _tags.add(element.name);
-        });
-      taskArgs.removeWhere((key, value) => key == 'tags');
+      taskArgs['task'] = null;
     }
+
+    if (taskArgs.containsKey('tags'))
+      taskArgs['tags'].forEach((TagModel element) {
+        _tags.add(element.name);
+      });
+    taskArgs.removeWhere((key, value) => key == 'tags');
 
     return Scaffold(
       appBar: normalAppBar(createTask ? 'New Task' : task.title),
@@ -196,17 +226,26 @@ class _TaskFormPageState extends State<TaskFormPage> {
           SizedBox(height: 10.0),
           _columnSelect(),
           SizedBox(height: 10.0),
-          _timeEstimatedField(),
+          Row(
+            children: [
+              new Flexible(
+                child: _timeEstimatedField(),
+              ),
+              new Flexible(
+                child: _timeSpentField(),
+              ),
+            ],
+          ),
           SizedBox(height: 30.0),
           _taskColorPicker(),
           SizedBox(height: 15.0),
           Row(
             children: [
               new Flexible(
-                child: _dateDueSelect(context),
+                child: _datestartSelect(context),
               ),
               new Flexible(
-                child: _datestartSelect(context),
+                child: _dateDueSelect(context),
               ),
             ],
           ),
@@ -452,7 +491,23 @@ class _TaskFormPageState extends State<TaskFormPage> {
         keyboardType: TextInputType.number,
         decoration: InputDecoration(
           hintText: 'Hours (Integer)',
-          labelText: 'Original Estimate',
+          labelText: 'Estimated',
+          suffixIcon: Icon(Icons.watch_later_outlined, color: Colors.blue),
+        ),
+        onChanged: (value) {},
+      ),
+    );
+  }
+
+  Widget _timeSpentField() {
+    return Container(
+      padding: EdgeInsets.symmetric(horizontal: 20.0),
+      child: TextFormField(
+        controller: _timeSpentFieldController,
+        keyboardType: TextInputType.number,
+        decoration: InputDecoration(
+          hintText: 'Hours (Integer)',
+          labelText: 'Time Spent',
           suffixIcon: Icon(Icons.watch_later_outlined, color: Colors.blue),
         ),
         onChanged: (value) {},
@@ -472,6 +527,7 @@ class _TaskFormPageState extends State<TaskFormPage> {
         textColor: Colors.white,
         onPressed: () {
           if (_formKey.currentState.validate() && _ownerId != '0') {
+            showLoaderDialog(context);
             _submitForm(context);
           } else {
             mostrarAlerta(context, 'Please, fill the Title and Owner fields!');
@@ -482,9 +538,8 @@ class _TaskFormPageState extends State<TaskFormPage> {
   _submitForm(BuildContext context) async {
     _title = _titleFieldController.text;
     _description = _descriptionFieldController.text;
+    _timeSpent = _timeSpentFieldController.text;
     _timeEstimated = _timeEstimatedFieldController.text;
-    _dateDue = _dateDueFieldController.text;
-    _dateStarted = _dateStartedFieldController.text;
     _score = _scoreFieldController.text;
 
     if (createTask) {
@@ -495,9 +550,10 @@ class _TaskFormPageState extends State<TaskFormPage> {
         "creator_id": _creatorId,
         "owner_id": _ownerId,
         "column_id": _columnId,
+        "time_spent": _timeSpent,
         "time_estimated": _timeEstimated,
         "color_id": _colorId,
-        "date_due": _dateDue,
+        "date_due": _dueDate,
         "date_started": _dateStarted,
         "priority": _priority,
         "score": _score,
@@ -520,15 +576,17 @@ class _TaskFormPageState extends State<TaskFormPage> {
         "creator_id": _creatorId,
         "owner_id": _ownerId,
         "column_id": _columnId,
+        "time_spent": _timeSpent,
         "time_estimated": _timeEstimated,
         "color_id": _colorId,
-        "date_due": _dateDue,
+        "date_due": _dueDate,
         "date_started": _dateStarted,
         "priority": _priority,
         "score": _score,
         "tags": _tags,
       };
       bool result = await taskProvider.updateTask(formData);
+      Navigator.pop(context);
       if (result) {
         setState(() {
           Navigator.pop(context);
@@ -640,16 +698,17 @@ class _TaskFormPageState extends State<TaskFormPage> {
     DatePicker.showDateTimePicker(
       context,
       showTitleActions: true,
-      minTime: new DateTime(2018),
-      maxTime: new DateTime(2025),
+      minTime: dateStartedLimitMin,
+      maxTime: startedDateLimitMax,
       onConfirm: (date) {
+        dateDueLimitMin = date;
+        currentDateStarted = date;
         _dateStarted = _dateStartedFieldController.text =
-            DateFormat('dd/MM/yy HH:mm', 'en_US').format(date);
+            DateFormat('dd/MM/yyyy HH:mm', 'en_US').format(date);
         _dateStartedFieldController.text =
             DateFormat('dd/MM/yy HH:mm', 'en_US').format(date);
-        print(_dateStarted);
       },
-      currentTime: DateTime.now(),
+      currentTime: currentDateStarted,
       locale: LocaleType.en,
     );
   }
@@ -658,16 +717,17 @@ class _TaskFormPageState extends State<TaskFormPage> {
     DatePicker.showDateTimePicker(
       context,
       showTitleActions: true,
-      minTime: new DateTime(2018),
-      maxTime: new DateTime(2025),
+      minTime: dateDueLimitMin,
+      maxTime: dueDateLimitMax,
       onConfirm: (date) {
-        _dateDue = _dateDueFieldController.text =
-            DateFormat('dd/MM/yy HH:mm', 'en_US').format(date);
+        startedDateLimitMax = date;
+        currentDateDue = date;
+        _dueDate = _dateDueFieldController.text =
+            DateFormat('dd/MM/yyyy HH:mm', 'en_US').format(date);
         _dateDueFieldController.text =
             DateFormat('dd/MM/yy HH:mm', 'en_US').format(date);
-        print(_dateDue);
       },
-      currentTime: DateTime.now(),
+      currentTime: currentDateDue,
       locale: LocaleType.en,
     );
   }

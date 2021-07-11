@@ -26,11 +26,17 @@ class UserProvider {
     );
 
     final decodedData = json.decode(utf8.decode(resp.bodyBytes));
+
+    if (decodedData == null) return [];
+
+    // Check for errors
+    if (decodedData['error'] != null) {
+      return Future.error(decodedData['error']);
+    }
+
     final List<UserModel> users = [];
 
     final List<dynamic> results = decodedData['result'];
-
-    if (decodedData == null) return [];
 
     results.forEach((user) {
       final userTemp = UserModel.fromJson(user);
@@ -61,11 +67,17 @@ class UserProvider {
     );
 
     final decodedData = json.decode(utf8.decode(resp.bodyBytes));
+
+    if (decodedData == null) return null;
+
+    // Check for errors
+    if (decodedData['error'] != null) {
+      return Future.error(decodedData['error']);
+    }
+
     UserModel user;
 
     user = UserModel.fromJson(decodedData['result']);
-
-    if (decodedData == null) return null;
 
     return user;
   }

@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:khanos/src/models/project_model.dart';
 import 'package:khanos/src/preferences/user_preferences.dart';
+import 'package:khanos/src/utils/utils.dart';
 
 class ProjectProvider {
   final _prefs = new UserPreferences();
@@ -12,8 +13,8 @@ class ProjectProvider {
   Future<List<ProjectModel>> getProjects(BuildContext context) async {
     final Map<String, dynamic> parameters = {
       "jsonrpc": "2.0",
-      "method": "getAllProjects",
-      "id": 1
+      "method": "getmyProjects",
+      "id": 2134420212
     };
 
     final credentials = "${_prefs.username}:${_prefs.password}";
@@ -29,6 +30,13 @@ class ProjectProvider {
     );
 
     final decodedData = json.decode(utf8.decode(resp.bodyBytes));
+
+    // Check for errors
+    if (decodedData['error'] != null) {
+      var error = processApiError(decodedData['error']);
+      return Future.error(error);
+    }
+
     final List<ProjectModel> projects = [];
 
     final List<dynamic> results = decodedData['result'];

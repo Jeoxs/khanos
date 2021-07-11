@@ -1,6 +1,10 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
+import 'package:khanos/src/preferences/user_preferences.dart';
 import 'package:khanos/src/providers/user_provider.dart';
 import 'package:khanos/src/utils/theme_utils.dart';
+import 'package:khanos/src/utils/utils.dart';
 import 'package:khanos/src/utils/widgets_utils.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:khanos/src/models/project_model.dart';
@@ -13,6 +17,7 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  final _prefs = new UserPreferences();
   final projectProvider = new ProjectProvider();
   final columnProvider = new ColumnProvider();
   final userProvider = new UserProvider();
@@ -67,6 +72,30 @@ class _HomePageState extends State<HomePage> {
         future: projectProvider.getProjects(context),
         builder:
             (BuildContext context, AsyncSnapshot<List<ProjectModel>> snapshot) {
+          if (snapshot.hasError) {
+            processApiError(snapshot.error);
+            if (_prefs.authFlag != true) {
+              final SnackBar _snackBar = SnackBar(
+                content: const Text('Login Failed!'),
+                duration: const Duration(seconds: 5),
+              );
+              @override
+              void run() {
+                scheduleMicrotask(() {
+                  ScaffoldMessenger.of(context).showSnackBar(_snackBar);
+                  Navigator.pushReplacementNamed(context, 'login',
+                      arguments: {'error': snapshot.error});
+                });
+              }
+
+              run();
+            } else {
+              return Container(
+                  width: double.infinity,
+                  padding: EdgeInsets.only(top: 20.0),
+                  child: errorPage(snapshot.error));
+            }
+          }
           if (snapshot.hasData) {
             final projects = snapshot.data;
             projectsAmount = projects.length;

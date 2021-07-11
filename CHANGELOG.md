@@ -5,6 +5,22 @@ The format is based on [Keep a Changelog][Keep a Changelog] and this project adh
 
 ## [Released]
 
+## [1.0.3] - 2021-07-10
+### Added
+- Redirect to Login Screen if login credentials fails, notifying the user with a notification Bar at the bottom.
+- Added Spent Time Field for Tasks
+- Added "In Progress" Status for Subtasks. Now Subtasks have all the 3 status (undone, progress, completed).
+- Added TimeTracking start/end for subtasks when started/completed
+
+### Changed
+- Changed task Page loading animation design.
+
+### Fixed 
+- Fixed Validation of response data from Server and added handling
+- Fixed Color Picker from Task Form
+- Fixed DateTime Fields in Task Form, adding a Limit date/time depending on Start/Due date selection
+- Home Screen shows projects by User
+
 ## [1.0.2] - 2021-07-09
 ### Added
 - Added Validation to API errors 403 Forbidden in Project Page
@@ -35,6 +51,7 @@ The format is based on [Keep a Changelog][Keep a Changelog] and this project adh
 <!-- Versions -->
 [Released]: https://github.com/Jeoxs/khanos/releases
 
+[1.0.3]: https://github.com/Jeoxs/khanos/compare/v1.0.2...v1.0.3
 [1.0.2]: https://github.com/Jeoxs/khanos/compare/v1.0.1...v1.0.2
 [1.0.1]: https://github.com/Jeoxs/khanos/compare/v1.0...v1.0.1
 [1.0]: https://github.com/Jeoxs/khanos/releases/v1.0

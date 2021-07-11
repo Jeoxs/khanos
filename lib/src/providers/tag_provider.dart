@@ -26,11 +26,17 @@ class TagProvider {
     );
 
     final decodedData = json.decode(utf8.decode(resp.bodyBytes));
+
+    if (decodedData == null || decodedData.isEmpty) return [];
+
+    // Check for errors
+    if (decodedData['error'] != null) {
+      return Future.error(decodedData['error']);
+    }
+
     final List<TagModel> tags = [];
 
     var results = decodedData['result'];
-
-    if (decodedData == null || decodedData.isEmpty) return [];
 
     results.forEach((element) {
       TagModel tag = TagModel();
@@ -65,11 +71,17 @@ class TagProvider {
     );
 
     final decodedData = json.decode(utf8.decode(resp.bodyBytes));
+
+    if (decodedData == null) return [];
+
+    // Check for errors
+    if (decodedData['error'] != null) {
+      return Future.error(decodedData['error']);
+    }
+
     final List<TagModel> tags = [];
 
     List results = decodedData['result'];
-
-    if (decodedData == null) return [];
 
     results.forEach((element) {
       TagModel tag = TagModel();
@@ -103,11 +115,17 @@ class TagProvider {
     );
 
     final decodedData = json.decode(utf8.decode(resp.bodyBytes));
+
+    if (decodedData == null || decodedData.isEmpty) return [];
+
+    // Check for errors
+    if (decodedData['error'] != null) {
+      return Future.error(decodedData['error']);
+    }
+
     final List<TagModel> tags = [];
 
     var results = decodedData['result'];
-
-    if (decodedData == null || decodedData.isEmpty) return [];
 
     results.forEach((element) {
       if (element['project_id'] == '0') {
@@ -145,11 +163,16 @@ class TagProvider {
 
     final decodedData = json.decode(utf8.decode(resp.bodyBytes));
 
+    if (decodedData == null) return [];
+
+    // Check for errors
+    if (decodedData['error'] != null) {
+      return Future.error(decodedData['error']);
+    }
+
     final List<TagModel> tags = [];
 
     var results = decodedData['result'];
-
-    if (decodedData == null) return [];
 
     results.forEach((id, name) {
       TagModel tag = TagModel();

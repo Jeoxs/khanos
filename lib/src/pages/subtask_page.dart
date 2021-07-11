@@ -1,7 +1,10 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:khanos/src/models/subtask_model.dart';
 import 'package:khanos/src/models/task_model.dart';
+import 'package:khanos/src/preferences/user_preferences.dart';
 import 'package:khanos/src/providers/subtask_provider.dart';
 import 'package:khanos/src/providers/task_provider.dart';
 import 'package:khanos/src/utils/utils.dart';
@@ -15,6 +18,8 @@ class SubtaskPage extends StatefulWidget {
 }
 
 class _SubtaskPageState extends State<SubtaskPage> {
+  final _prefs = new UserPreferences();
+  Map<String, dynamic> error;
   TaskModel task = new TaskModel();
   final taskProvider = new TaskProvider();
   final subtaskProvider = new SubtaskProvider();
@@ -43,6 +48,31 @@ class _SubtaskPageState extends State<SubtaskPage> {
     return FutureBuilder(
         future: subtaskProvider.getSubtasks(taskId),
         builder: (BuildContext context, AsyncSnapshot<List<dynamic>> snapshot) {
+          if (snapshot.hasError) {
+            processApiError(snapshot.error);
+            error = snapshot.error;
+            if (_prefs.authFlag != true) {
+              final SnackBar _snackBar = SnackBar(
+                content: const Text('Login Failed!'),
+                duration: const Duration(seconds: 5),
+              );
+              @override
+              void run() {
+                scheduleMicrotask(() {
+                  ScaffoldMessenger.of(context).showSnackBar(_snackBar);
+                  Navigator.pushReplacementNamed(context, 'login',
+                      arguments: {'error': snapshot.error});
+                });
+              }
+
+              run();
+            } else {
+              return Container(
+                  width: double.infinity,
+                  padding: EdgeInsets.only(top: 20.0),
+                  child: errorPage(snapshot.error));
+            }
+          }
           if (snapshot.hasData) {
             final List<SubtaskModel> subtasks = snapshot.data;
             if (subtasks.length > 0) {
@@ -66,6 +96,7 @@ class _SubtaskPageState extends State<SubtaskPage> {
                         return GestureDetector(
                           onTap: () async {
                             showLoaderDialog(context);
+
                             await subtaskProvider.processSubtask(subtasks[i]);
                             setState(() {
                               Navigator.pop(context);
@@ -73,8 +104,8 @@ class _SubtaskPageState extends State<SubtaskPage> {
                           },
                           child: Slidable(
                             actionPane: SlidableDrawerActionPane(),
-                            child: _taskElement(
-                                subtasks[i].title, subtasks[i].status),
+                            child: _taskElement(subtasks[i].title,
+                                subtasks[i].status, subtasks[i].id),
                             secondaryActions: <Widget>[
                               SlideAction(
                                 child: Container(
@@ -157,14 +188,14 @@ class _SubtaskPageState extends State<SubtaskPage> {
         });
   }
 
-  Widget _taskElement(String title, String status) {
+  Widget _taskElement(String title, String status, String subtaskId) {
     Icon _subtaskIcon;
     switch (status) {
       case "0":
         _subtaskIcon = Icon(Icons.check_box_outline_blank);
         break;
       case "1":
-        _subtaskIcon = Icon(Icons.watch_later_outlined);
+        _subtaskIcon = Icon(Icons.access_time_rounded);
         break;
       case "2":
         _subtaskIcon = Icon(Icons.check_box_outlined);
@@ -187,6 +218,7 @@ class _SubtaskPageState extends State<SubtaskPage> {
                 ),
                 overflow: TextOverflow.ellipsis),
           ),
+          // _getTaskTimeSpent(int.parse(subtaskId)),
         ],
       ),
       decoration: BoxDecoration(
@@ -217,5 +249,30 @@ class _SubtaskPageState extends State<SubtaskPage> {
     } else {
       mostrarAlerta(context, 'Something went Wront!');
     }
+  }
+
+  _getTaskTimeSpent(int subtaskId) {
+    return FutureBuilder(
+      future: SubtaskProvider().getSubtaskTimeSpent(subtaskId),
+      builder: (BuildContext context, AsyncSnapshot snapshot) {
+        if (snapshot.hasData) {
+          return Container(
+            child: Text('${snapshot.data}h spent',
+                style: TextStyle(
+                  fontSize: 13,
+                ),
+                overflow: TextOverflow.ellipsis),
+          );
+        } else {
+          return Container(
+            child: Text('0h spent',
+                style: TextStyle(
+                  fontSize: 13,
+                ),
+                overflow: TextOverflow.ellipsis),
+          );
+        }
+      },
+    );
   }
 }
