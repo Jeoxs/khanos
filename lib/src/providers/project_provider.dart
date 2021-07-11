@@ -13,8 +13,8 @@ class ProjectProvider {
   Future<List<ProjectModel>> getProjects(BuildContext context) async {
     final Map<String, dynamic> parameters = {
       "jsonrpc": "2.0",
-      "method": "getAllProjects",
-      "id": 1
+      "method": "getmyProjects",
+      "id": 2134420212
     };
 
     final credentials = "${_prefs.username}:${_prefs.password}";
