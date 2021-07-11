@@ -1,4 +1,4 @@
-package gojaponte.com.khanos
+package com.gojaponte.khanos
 
 import io.flutter.embedding.android.FlutterActivity
 

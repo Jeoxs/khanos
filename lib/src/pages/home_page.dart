@@ -10,6 +10,7 @@ import 'package:shimmer/shimmer.dart';
 import 'package:khanos/src/models/project_model.dart';
 import 'package:khanos/src/providers/column_provider.dart';
 import 'package:khanos/src/providers/project_provider.dart';
+import 'package:flutter_slidable/flutter_slidable.dart';
 
 class HomePage extends StatefulWidget {
   @override
@@ -27,6 +28,12 @@ class _HomePageState extends State<HomePage> {
     return Scaffold(
       appBar: normalAppBar('Khanos'),
       body: projectList(context),
+      floatingActionButton: FloatingActionButton(
+        child: Icon(Icons.add),
+        onPressed: () => Navigator.of(context)
+            .pushNamed('newProject')
+            .then((_) => setState(() {})),
+      ),
     );
   }
 
@@ -120,8 +127,31 @@ class _HomePageState extends State<HomePage> {
                         return GestureDetector(
                           onTap: () => Navigator.pushNamed(context, 'project',
                               arguments: {'project': projects[i]}),
-                          child: _projectElement(
+                          child: Slidable(
+                            actionPane: SlidableDrawerActionPane(),
+                            child: _projectElement(
                               projects[i].name, projects[i].description),
+                            secondaryActions: <Widget>[
+                              SlideAction(
+                                child: Container(
+                                  padding: EdgeInsets.only(bottom: 10),
+                                  child: Container(
+                                    height: 35,
+                                    width: 35,
+                                    decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(50),
+                                        color: CustomColors.TrashRedBackground),
+                                    child:
+                                        Image.asset('assets/images/trash.png'),
+                                  ),
+                                ),
+                                onTap: () {
+                                  showLoaderDialog(context);
+                                  _removeProject(projects[i].id);
+                                },
+                              ),
+                            ],
+                          ),                          
                         );
                       }),
                 ),
@@ -187,5 +217,15 @@ class _HomePageState extends State<HomePage> {
         ],
       ),
     );
+  }
+
+  void _removeProject(String projectId) async {
+    bool result = await projectProvider.removeProject(int.parse(projectId));
+    Navigator.pop(context);
+    if (result) {
+      setState(() {});
+    } else {
+      mostrarAlerta(context, 'Something went Wront!');
+    }
   }
 }
