@@ -51,9 +51,11 @@ class SubtaskProvider {
     switch (subtask.status) {
       case "0":
         newSubTaskStatus = "1";
+        await setSubtaskStartTime(int.parse(subtask.id));
         break;
       case "1":
         newSubTaskStatus = "2";
+        await setSubtaskEndTime(int.parse(subtask.id));
         break;
       case "2":
         newSubTaskStatus = "0";
@@ -91,6 +93,120 @@ class SubtaskProvider {
     final result = decodedData['result'];
 
     return result;
+  }
+
+  Future<bool> setSubtaskStartTime(int subtaskId, [int userId]) async {
+    List args = [subtaskId];
+
+    if (userId != null) {
+      args.add(userId);
+    }
+
+    final Map<String, dynamic> parameters = {
+      "jsonrpc": "2.0",
+      "method": "setSubtaskStartTime",
+      "id": 1168991769,
+      "params": args
+    };
+
+    Codec<String, String> stringToBase64 = utf8.fuse(base64);
+    final credentials = "${_prefs.username}:${_prefs.password}";
+    String encoded = stringToBase64.encode(credentials);
+
+    final resp = await http.post(
+      Uri.parse(_prefs.endpoint),
+      headers: <String, String>{"Authorization": "Basic $encoded"},
+      body: json.encode(parameters),
+    );
+
+    final decodedData = json.decode(utf8.decode(resp.bodyBytes));
+
+    // Check for errors
+    if (decodedData['error'] != null) {
+      return Future.error(decodedData['error']);
+    }
+
+    final result = decodedData['result'];
+
+    return result;
+  }
+
+  Future<bool> setSubtaskEndTime(int subtaskId, [int userId]) async {
+    List args = [subtaskId];
+
+    if (userId != null) {
+      args.add(userId);
+    }
+
+    final Map<String, dynamic> parameters = {
+      "jsonrpc": "2.0",
+      "method": "setSubtaskEndTime",
+      "id": 1026607603,
+      "params": args
+    };
+
+    Codec<String, String> stringToBase64 = utf8.fuse(base64);
+    final credentials = "${_prefs.username}:${_prefs.password}";
+    String encoded = stringToBase64.encode(credentials);
+
+    final resp = await http.post(
+      Uri.parse(_prefs.endpoint),
+      headers: <String, String>{"Authorization": "Basic $encoded"},
+      body: json.encode(parameters),
+    );
+
+    final decodedData = json.decode(utf8.decode(resp.bodyBytes));
+
+    // Check for errors
+    if (decodedData['error'] != null) {
+      return Future.error(decodedData['error']);
+    }
+
+    final result = decodedData['result'];
+
+    return result;
+  }
+
+  Future<int> getSubtaskTimeSpent(int subtaskId, [int userId]) async {
+    List args = [subtaskId];
+
+    if (userId != null) {
+      args.add(userId);
+    } else {
+      args.add(0);
+    }
+
+    final Map<String, dynamic> parameters = {
+      "jsonrpc": "2.0",
+      "method": "getSubtaskTimeSpent",
+      "id": 738527378,
+      "params": [179, 0]
+    };
+
+    print(parameters);
+
+    Codec<String, String> stringToBase64 = utf8.fuse(base64);
+    final credentials = "${_prefs.username}:${_prefs.password}";
+    String encoded = stringToBase64.encode(credentials);
+
+    final resp = await http.post(
+      Uri.parse(_prefs.endpoint),
+      headers: <String, String>{"Authorization": "Basic $encoded"},
+      body: json.encode(parameters),
+    );
+
+    final decodedData = json.decode(utf8.decode(resp.bodyBytes));
+
+    print(decodedData);
+
+    // Check for errors
+    if (decodedData['error'] != null) {
+      return Future.error(decodedData['error']);
+    }
+
+    final result = decodedData['result'];
+
+    return (result > 0) ? result : 0;
   }
 
   Future<int> createSubtask(

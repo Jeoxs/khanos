@@ -103,8 +103,8 @@ class _SubtaskPageState extends State<SubtaskPage> {
                           },
                           child: Slidable(
                             actionPane: SlidableDrawerActionPane(),
-                            child: _taskElement(
-                                subtasks[i].title, subtasks[i].status),
+                            child: _taskElement(subtasks[i].title,
+                                subtasks[i].status, subtasks[i].id),
                             secondaryActions: <Widget>[
                               SlideAction(
                                 child: Container(
@@ -187,7 +187,7 @@ class _SubtaskPageState extends State<SubtaskPage> {
         });
   }
 
-  Widget _taskElement(String title, String status) {
+  Widget _taskElement(String title, String status, String subtaskId) {
     Icon _subtaskIcon;
     switch (status) {
       case "0":
@@ -208,7 +208,7 @@ class _SubtaskPageState extends State<SubtaskPage> {
         children: <Widget>[
           _subtaskIcon,
           Container(
-            width: 250,
+            width: 150,
             child: Text(title,
                 style: TextStyle(
                   fontSize: 15,
@@ -217,6 +217,7 @@ class _SubtaskPageState extends State<SubtaskPage> {
                 ),
                 overflow: TextOverflow.ellipsis),
           ),
+          _getTaskTimeSpent(int.parse(subtaskId)),
         ],
       ),
       decoration: BoxDecoration(
@@ -247,5 +248,30 @@ class _SubtaskPageState extends State<SubtaskPage> {
     } else {
       mostrarAlerta(context, 'Something went Wront!');
     }
+  }
+
+  _getTaskTimeSpent(int subtaskId) {
+    return FutureBuilder(
+      future: SubtaskProvider().getSubtaskTimeSpent(subtaskId),
+      builder: (BuildContext context, AsyncSnapshot snapshot) {
+        if (snapshot.hasData) {
+          return Container(
+            child: Text('${snapshot.data}h spent',
+                style: TextStyle(
+                  fontSize: 13,
+                ),
+                overflow: TextOverflow.ellipsis),
+          );
+        } else {
+          return Container(
+            child: Text('0h spent',
+                style: TextStyle(
+                  fontSize: 13,
+                ),
+                overflow: TextOverflow.ellipsis),
+          );
+        }
+      },
+    );
   }
 }
