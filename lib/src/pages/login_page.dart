@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:khanos/src/preferences/user_preferences.dart';
 import 'package:khanos/src/providers/auth_provider.dart';
 import 'package:khanos/src/utils/utils.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 class LoginPage extends StatefulWidget {
   // final usuarioProvider = new UsuarioProvider();
@@ -18,9 +17,9 @@ class _LoginPageState extends State<LoginPage> {
   String endPoint = '';
   String username = '';
   String password = '';
-  TextEditingController _endPointController = new TextEditingController();
-  TextEditingController _usernameController = new TextEditingController();
-  TextEditingController _passwordController = new TextEditingController();
+  // TextEditingController _endPointController = new TextEditingController();
+  // TextEditingController _usernameController = new TextEditingController();
+  // TextEditingController _passwordController = new TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -85,7 +84,7 @@ class _LoginPageState extends State<LoginPage> {
     return Container(
       padding: EdgeInsets.symmetric(horizontal: 20.0),
       child: TextFormField(
-          controller: _endPointController,
+          initialValue: _prefs.endpoint,
           decoration: InputDecoration(
             icon:
                 Icon(Icons.swap_horizontal_circle_outlined, color: Colors.blue),
@@ -108,7 +107,7 @@ class _LoginPageState extends State<LoginPage> {
     return Container(
       padding: EdgeInsets.symmetric(horizontal: 20.0),
       child: TextFormField(
-          controller: _usernameController,
+          initialValue: _prefs.username,
           decoration: InputDecoration(
             icon: Icon(Icons.alternate_email, color: Colors.blue),
             hintText: 'cloudstrife',
@@ -130,7 +129,7 @@ class _LoginPageState extends State<LoginPage> {
     return Container(
       padding: EdgeInsets.symmetric(horizontal: 20.0),
       child: TextFormField(
-          controller: _passwordController,
+          initialValue: _prefs.password,
           obscureText: true,
           decoration: InputDecoration(
               icon: Icon(Icons.lock_outline, color: Colors.blue),
@@ -173,21 +172,28 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   _login(BuildContext context) async {
-    final String _endPoint = _endPointController.text;
-    final String _username = _usernameController.text;
-    final String _password = _passwordController.text;
+    if (endPoint == '') endPoint = _prefs.endpoint;
+    if (username == '') username = _prefs.username;
+    if (password == '') password = _prefs.password;
 
-    bool authResult =
-        await AuthProvider().login(_endPoint, _username, _password);
-
-    Navigator.pop(context);
-    if (authResult) {
+    await AuthProvider().login(endPoint, username, password).then((value) {
+      Navigator.pop(context);
       setState(() {
         Navigator.pushReplacementNamed(context, 'home');
       });
-    } else {
-      mostrarAlerta(context, 'Couldn\'t connect to your server!');
-    }
+    }).catchError((error) {
+      Navigator.pop(context);
+      mostrarAlerta(context, 'Error: ${error['message']}');
+    });
+
+    // Navigator.pop(context);
+    // if (authResult) {
+    //   setState(() {
+    //     Navigator.pushReplacementNamed(context, 'home');
+    //   });
+    // } else {
+    //   mostrarAlerta(context, 'Couldn\'t connect to your server!');
+    // }
   }
 
   Widget _createFondo(BuildContext context) {

@@ -37,9 +37,14 @@ class AuthProvider {
       return false;
     }
 
-    final List<dynamic> results = decodedData['result'];
-
     if (decodedData == null) return false;
+
+    // Check for errors
+    if (decodedData['error'] != null) {
+      return Future.error(decodedData['error']);
+    }
+
+    final List<dynamic> results = decodedData['result'];
 
     if (results != null) {
       _prefs.endpoint = endpoint;

@@ -1,7 +1,10 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:khanos/src/models/column_model.dart';
 import 'package:khanos/src/models/project_model.dart';
 import 'package:khanos/src/models/task_model.dart';
+import 'package:khanos/src/preferences/user_preferences.dart';
 import 'package:khanos/src/providers/column_provider.dart';
 import 'package:khanos/src/providers/project_provider.dart';
 import 'package:khanos/src/providers/task_provider.dart';
@@ -18,6 +21,7 @@ class ProjectPage extends StatefulWidget {
 }
 
 class _ProjectPageState extends State<ProjectPage> {
+  final _prefs = new UserPreferences();
   Map<String, dynamic> error;
   ProjectModel project = new ProjectModel();
   Map<String, ColumnModel> projectColumns = {};
@@ -37,13 +41,31 @@ class _ProjectPageState extends State<ProjectPage> {
         future: Future.wait([taskProvider.getTasks(int.parse(project.id), 1)]),
         builder: (BuildContext context, AsyncSnapshot<List<dynamic>> snapshot) {
           if (snapshot.hasError) {
+            processApiError(snapshot.error);
             error = snapshot.error;
-            return Scaffold(
-                appBar: normalAppBar(project.name),
-                body: Container(
-                    width: double.infinity,
-                    padding: EdgeInsets.only(top: 20.0),
-                    child: errorPage(snapshot.error)));
+            if (_prefs.authFlag != true) {
+              final SnackBar _snackBar = SnackBar(
+                content: const Text('Login Failed!'),
+                duration: const Duration(seconds: 5),
+              );
+              @override
+              void run() {
+                scheduleMicrotask(() {
+                  ScaffoldMessenger.of(context).showSnackBar(_snackBar);
+                  Navigator.pushReplacementNamed(context, 'login',
+                      arguments: {'error': snapshot.error});
+                });
+              }
+
+              run();
+            } else {
+              return Scaffold(
+                  appBar: normalAppBar(project.name),
+                  body: Container(
+                      width: double.infinity,
+                      padding: EdgeInsets.only(top: 20.0),
+                      child: errorPage(snapshot.error)));
+            }
           }
           if (snapshot.hasData) {
             final List<TaskModel> tasks = snapshot.data[0];
@@ -130,12 +152,12 @@ class _ProjectPageState extends State<ProjectPage> {
               GestureDetector(
                 onTap: () {
                   Navigator.pushNamed(context, 'task',
-                      arguments: {'task': tasks[i], 'project': project});
+                      arguments: {'task_id': tasks[i].id, 'project': project});
                 },
                 child: Slidable(
                   actionPane: SlidableDrawerActionPane(),
                   child: _taskElement(
-                      getDateTimeFromEpoch(
+                      getStringDateTimeFromEpoch(
                           "dd/MM/yy", tasks[i].dateModification),
                       tasks[i].title,
                       TaskModel().getTaskColor(tasks[i].colorId)),
