@@ -100,6 +100,8 @@ class SubtaskProvider {
 
     if (userId != null) {
       args.add(userId);
+    } else {
+      args.add(0);
     }
 
     final Map<String, dynamic> parameters = {
@@ -136,6 +138,8 @@ class SubtaskProvider {
 
     if (userId != null) {
       args.add(userId);
+    } else {
+      args.add(0);
     }
 
     final Map<String, dynamic> parameters = {
@@ -167,7 +171,7 @@ class SubtaskProvider {
     return result;
   }
 
-  Future<int> getSubtaskTimeSpent(int subtaskId, [int userId]) async {
+  Future<double> getSubtaskTimeSpent(int subtaskId, [int userId]) async {
     List args = [subtaskId];
 
     if (userId != null) {
@@ -180,7 +184,7 @@ class SubtaskProvider {
       "jsonrpc": "2.0",
       "method": "getSubtaskTimeSpent",
       "id": 738527378,
-      "params": [179, 0]
+      "params": args
     };
 
     print(parameters);
@@ -197,12 +201,12 @@ class SubtaskProvider {
 
     final decodedData = json.decode(utf8.decode(resp.bodyBytes));
 
-    print(decodedData);
-
     // Check for errors
     if (decodedData['error'] != null) {
       return Future.error(decodedData['error']);
     }
+
+    print(decodedData);
 
     final result = decodedData['result'];
 

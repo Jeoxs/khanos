@@ -96,6 +96,7 @@ class _SubtaskPageState extends State<SubtaskPage> {
                         return GestureDetector(
                           onTap: () async {
                             showLoaderDialog(context);
+
                             await subtaskProvider.processSubtask(subtasks[i]);
                             setState(() {
                               Navigator.pop(context);
@@ -208,7 +209,7 @@ class _SubtaskPageState extends State<SubtaskPage> {
         children: <Widget>[
           _subtaskIcon,
           Container(
-            width: 150,
+            width: 250,
             child: Text(title,
                 style: TextStyle(
                   fontSize: 15,
@@ -217,7 +218,7 @@ class _SubtaskPageState extends State<SubtaskPage> {
                 ),
                 overflow: TextOverflow.ellipsis),
           ),
-          _getTaskTimeSpent(int.parse(subtaskId)),
+          // _getTaskTimeSpent(int.parse(subtaskId)),
         ],
       ),
       decoration: BoxDecoration(
