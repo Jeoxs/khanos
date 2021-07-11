@@ -35,10 +35,7 @@ dependencies:
   http: 
   image_picker:
   mime_type:
-  shared_preferences:
-  json_rpc_2:
-  web_socket_channel:
-  pedantic:
+  shared_preferences:  
   intl:
   shimmer:
   gradient_app_bar:
