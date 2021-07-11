@@ -1,5 +1,4 @@
 import 'dart:async';
-
 import 'package:flutter/material.dart';
 import 'package:khanos/src/preferences/user_preferences.dart';
 import 'package:khanos/src/providers/user_provider.dart';
@@ -10,6 +9,8 @@ import 'package:shimmer/shimmer.dart';
 import 'package:khanos/src/models/project_model.dart';
 import 'package:khanos/src/providers/column_provider.dart';
 import 'package:khanos/src/providers/project_provider.dart';
+import 'package:flutter_slidable/flutter_slidable.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class HomePage extends StatefulWidget {
   @override
@@ -27,6 +28,13 @@ class _HomePageState extends State<HomePage> {
     return Scaffold(
       appBar: normalAppBar('Khanos'),
       body: projectList(context),
+      drawer: _homeDrawer(),
+      floatingActionButton: FloatingActionButton(
+        child: Icon(Icons.add),
+        onPressed: () => Navigator.of(context)
+            .pushNamed('newProject')
+            .then((_) => setState(() {})),
+      ),
     );
   }
 
@@ -120,8 +128,31 @@ class _HomePageState extends State<HomePage> {
                         return GestureDetector(
                           onTap: () => Navigator.pushNamed(context, 'project',
                               arguments: {'project': projects[i]}),
-                          child: _projectElement(
-                              projects[i].name, projects[i].description),
+                          child: Slidable(
+                            actionPane: SlidableDrawerActionPane(),
+                            child: _projectElement(
+                                projects[i].name, projects[i].description),
+                            secondaryActions: <Widget>[
+                              SlideAction(
+                                child: Container(
+                                  padding: EdgeInsets.only(bottom: 10),
+                                  child: Container(
+                                    height: 35,
+                                    width: 35,
+                                    decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(50),
+                                        color: CustomColors.TrashRedBackground),
+                                    child:
+                                        Image.asset('assets/images/trash.png'),
+                                  ),
+                                ),
+                                onTap: () {
+                                  showLoaderDialog(context);
+                                  _removeProject(projects[i].id);
+                                },
+                              ),
+                            ],
+                          ),
                         );
                       }),
                 ),
@@ -187,5 +218,97 @@ class _HomePageState extends State<HomePage> {
         ],
       ),
     );
+  }
+
+  void _removeProject(String projectId) async {
+    bool result = await projectProvider.removeProject(int.parse(projectId));
+    Navigator.pop(context);
+    if (result) {
+      setState(() {});
+    } else {
+      mostrarAlerta(context, 'Something went Wront!');
+    }
+  }
+
+  Widget _homeDrawer() {
+    return Container(
+      child: Drawer(
+        child: ListView(
+          padding: EdgeInsets.zero,
+          children: <Widget>[
+            Stack(children: [
+              DrawerHeader(
+                child: Container(),
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                    begin: Alignment.topLeft,
+                    end: Alignment.bottomRight,
+                    colors: [
+                      CustomColors.HeaderBlueDark,
+                      CustomColors.HeaderBlueLight
+                    ],
+                  ),
+                  // color: Colors.blueAccent,
+                ),
+              ),
+              CustomPaint(
+                painter: CircleOne(),
+              ),
+              Positioned(
+                child: Center(
+                  child: Container(
+                    margin: EdgeInsets.only(top: 30.0),
+                    height: 130.0,
+                    width: 130.0,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(100),
+                      image: DecorationImage(
+                          image: AssetImage(
+                              'assets/images/khanos_transparent.png')),
+                    ),
+                  ),
+                ),
+              ),
+              Positioned(
+                  child: Center(
+                    child: Text('Khanos',
+                        style: TextStyle(
+                          fontSize: 30.0,
+                          color: Colors.white,
+                        )),
+                  ),
+                  top: 140.0,
+                  left: 100.0),
+            ]),
+            ListTile(
+                leading: Icon(Icons.support, color: Colors.blue),
+                title: Text('Support'),
+                onTap: () {
+                  _launchGithubURL();
+                }),
+            ListTile(
+              leading: Icon(Icons.logout, color: Colors.blue),
+              title: Text('Logout'),
+              onTap: () {
+                _prefs.authFlag = false;
+                _prefs.userId = 0;
+                Navigator.of(context)
+                    .pushNamedAndRemoveUntil('login', (route) => false);
+              },
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  _launchGithubURL() async {
+    print('here');
+    const url = 'https://github.com/Jeoxs/khanos';
+    if (await canLaunch(url)) {
+      await launch(url);
+    } else {
+      throw 'Could not launch $url';
+    }
   }
 }

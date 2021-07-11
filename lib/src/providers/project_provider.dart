@@ -47,7 +47,76 @@ class ProjectProvider {
       final projTemp = ProjectModel.fromJson(project);
       projects.add(projTemp);
     });
-    // print(decodedData['result']);
+
     return projects;
+  }
+
+  Future<int> createProject(
+      String name, String identifier, String description) async {
+    final Map<String, dynamic> parameters = {
+      "jsonrpc": "2.0",
+      "method": "createProject",
+      "id": 1797076613,
+      "params": {
+        "name": name,
+        "owner_id": _prefs.userId,
+        "description": description
+      }
+    };
+
+    Codec<String, String> stringToBase64 = utf8.fuse(base64);
+    final credentials = "${_prefs.username}:${_prefs.password}";
+    String encoded = stringToBase64.encode(credentials);
+
+    final resp = await http.post(
+      Uri.parse(_prefs.endpoint),
+      headers: <String, String>{"Authorization": "Basic $encoded"},
+      body: json.encode(parameters),
+    );
+
+    final decodedData = json.decode(utf8.decode(resp.bodyBytes));
+
+    if (decodedData == null || decodedData['result'] == false) return 0;
+
+    // Check for errors
+    if (decodedData['error'] != null) {
+      return Future.error(decodedData['error']);
+    }
+
+    final result = decodedData['result'];
+
+    return (result > 0) ? result : 0;
+  }
+
+  Future<bool> removeProject(int projectId) async {
+    final Map<String, dynamic> parameters = {
+      "jsonrpc": "2.0",
+      "method": "removeProject",
+      "id": 46285125,
+      "params": {"project_id": projectId}
+    };
+
+    Codec<String, String> stringToBase64 = utf8.fuse(base64);
+    final credentials = "${_prefs.username}:${_prefs.password}";
+    String encoded = stringToBase64.encode(credentials);
+
+    final resp = await http.post(
+      Uri.parse(_prefs.endpoint),
+      headers: <String, String>{"Authorization": "Basic $encoded"},
+      body: json.encode(parameters),
+    );
+
+    final decodedData = json.decode(utf8.decode(resp.bodyBytes));
+
+    if (decodedData == null) return false;
+
+    // Check for errors
+    if (decodedData['error'] != null) {
+      return Future.error(decodedData['error']);
+    }
+
+    final result = decodedData['result'];
+
+    return result;
   }
 }

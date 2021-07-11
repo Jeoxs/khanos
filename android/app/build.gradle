@@ -39,7 +39,7 @@ android {
     }
 
     defaultConfig {
-        applicationId "gojaponte.com.khanos"
+        applicationId "com.gojaponte.khanos"
         minSdkVersion 16
         targetSdkVersion 30
         versionCode flutterVersionCode.toInteger()

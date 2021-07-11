@@ -43,6 +43,14 @@ class UserPreferences {
     _prefs.setString('username', value);
   }
 
+  get userId {
+    return _prefs.getInt('userId') ?? 0;
+  }
+
+  set userId(int id) {
+    _prefs.setInt('userId', id);
+  }
+
   // GET y SET del nombre
   get password {
     return _prefs.getString('password') ?? '';

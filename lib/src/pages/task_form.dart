@@ -560,7 +560,7 @@ class _TaskFormPageState extends State<TaskFormPage> {
         "tags": _tags,
       };
       int newTaskId = await taskProvider.createTask(formData);
-
+      Navigator.pop(context);
       if (newTaskId > 0) {
         setState(() {
           Navigator.pop(context);
