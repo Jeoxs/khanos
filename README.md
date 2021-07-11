@@ -10,7 +10,7 @@ A native app developed with Flutter framework which connects to the Kanboard API
 
 ## Install
 
-Download the latest release from github or
+Download the latest release from github
 
 ## Features
 
