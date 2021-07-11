@@ -38,6 +38,7 @@ dependencies:
   shared_preferences:  
   intl:
   shimmer:
+  boardview:
   provider: ^5.0.0
   path_provider: ^2.0.1
   gradient_app_bar:
