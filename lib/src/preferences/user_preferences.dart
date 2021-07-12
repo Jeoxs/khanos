@@ -25,7 +25,6 @@ class UserPreferences {
     this._prefs = await SharedPreferences.getInstance();
   }
 
-  // GET y SET del nombre
   get endpoint {
     return _prefs.getString('endpoint') ?? '';
   }
@@ -34,7 +33,6 @@ class UserPreferences {
     _prefs.setString('endpoint', value);
   }
 
-  // GET y SET del nombre
   get username {
     return _prefs.getString('username') ?? '';
   }
@@ -51,7 +49,6 @@ class UserPreferences {
     _prefs.setInt('userId', id);
   }
 
-  // GET y SET del nombre
   get password {
     return _prefs.getString('password') ?? '';
   }
@@ -66,5 +63,13 @@ class UserPreferences {
 
   set authFlag(bool value) {
     _prefs.setBool('authFlag', value);
+  }
+
+  get darkTheme {
+    return _prefs.getBool('darkTheme') ?? false;
+  }
+
+  set darkTheme(bool value) {
+    _prefs.setBool('darkTheme', value);
   }
 }

@@ -23,9 +23,19 @@ class _SubtaskPageState extends State<SubtaskPage> {
   TaskModel task = new TaskModel();
   final taskProvider = new TaskProvider();
   final subtaskProvider = new SubtaskProvider();
+  bool _darkTheme;
+  ThemeData currentThemeData;
+
+  @override
+  void initState() {
+    _darkTheme = _prefs.darkTheme;
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
+    currentThemeData =
+        _darkTheme == true ? ThemeData.dark() : ThemeData.light();
     final Map taskArgs = ModalRoute.of(context).settings.arguments;
     task = taskArgs['task'];
     return Scaffold(
@@ -35,6 +45,7 @@ class _SubtaskPageState extends State<SubtaskPage> {
         child: _subtaskList(int.parse(task.id)),
       ),
       floatingActionButton: FloatingActionButton(
+        backgroundColor: Colors.blue,
         child: Icon(Icons.add),
         onPressed: () {
           Navigator.pushNamed(context, 'newSubtask', arguments: {'task': task})
@@ -224,17 +235,19 @@ class _SubtaskPageState extends State<SubtaskPage> {
       decoration: BoxDecoration(
         gradient: LinearGradient(
           stops: [0.015, 0.015],
-          colors: [(status == "2" ? Colors.grey : Colors.blue), Colors.white],
+          colors: [
+            (status == "2" ? Colors.grey : Colors.blue),
+            currentThemeData.cardColor
+          ],
         ),
         borderRadius: BorderRadius.all(
           Radius.circular(5.0),
         ),
         boxShadow: [
           BoxShadow(
-            color: CustomColors.GreyBorder,
-            blurRadius: 10.0,
-            spreadRadius: 5.0,
-            offset: Offset(0.0, 0.0),
+            color: currentThemeData.shadowColor,
+            blurRadius: 4,
+            offset: Offset(1.5, 1.5),
           ),
         ],
       ),

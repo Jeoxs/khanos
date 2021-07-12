@@ -36,8 +36,19 @@ class _TaskPageState extends State<TaskPage> {
   final subtaskProvider = new SubtaskProvider();
   final userProvider = new UserProvider();
   final columnProvider = new ColumnProvider();
+  bool _darkTheme;
+  ThemeData currentThemeData;
+
+  @override
+  void initState() {
+    _darkTheme = _prefs.darkTheme;
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
+    currentThemeData =
+        _darkTheme == true ? ThemeData.dark() : ThemeData.light();
     final Map taskArgs = ModalRoute.of(context).settings.arguments;
 
     // final String projectName = taskArgs['project_name'];
@@ -51,6 +62,7 @@ class _TaskPageState extends State<TaskPage> {
         mainAxisAlignment: MainAxisAlignment.end,
         children: [
           FloatingActionButton(
+            backgroundColor: Colors.blue,
             heroTag: "subtaskListHero",
             onPressed: () {
               Navigator.pushNamed(context, 'subtask',
@@ -60,6 +72,7 @@ class _TaskPageState extends State<TaskPage> {
           ),
           SizedBox(height: 10.0),
           FloatingActionButton(
+            backgroundColor: Colors.blue,
             heroTag: "editTaskHero",
             onPressed: () async {
               Navigator.pushNamed(context, 'taskForm', arguments: {
@@ -326,9 +339,11 @@ class _TaskPageState extends State<TaskPage> {
               List<Widget> chips = [];
               _tags.forEach((tag) {
                 chips.add(Chip(
-                  backgroundColor: CustomColors.HeaderBlueLight,
+                  backgroundColor: Colors.blue,
                   elevation: 4.0,
-                  label: Text(tag.name),
+                  label: Text(
+                    tag.name,
+                  ),
                 ));
               });
               return Wrap(spacing: 5.0, children: chips);

@@ -21,6 +21,8 @@ class ProjectPage extends StatefulWidget {
 }
 
 class _ProjectPageState extends State<ProjectPage> {
+  bool _darkTheme;
+  ThemeData currentThemeData;
   final _prefs = new UserPreferences();
   Map<String, dynamic> error;
   ProjectModel project = new ProjectModel();
@@ -29,8 +31,17 @@ class _ProjectPageState extends State<ProjectPage> {
   final taskProvider = new TaskProvider();
   final columnProvider = new ColumnProvider();
   Widget floatingAction;
+
+  @override
+  void initState() {
+    _darkTheme = _prefs.darkTheme;
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
+    currentThemeData =
+        _darkTheme == true ? ThemeData.dark() : ThemeData.light();
     final Map projectArgs = ModalRoute.of(context).settings.arguments;
 
     if (projectArgs['project'] != null) {
@@ -76,6 +87,7 @@ class _ProjectPageState extends State<ProjectPage> {
                   padding: EdgeInsets.only(top: 20.0),
                   child: _projectInfo(tasks)),
               floatingActionButton: FloatingActionButton(
+                backgroundColor: Colors.blue,
                 child: Icon(Icons.add),
                 onPressed: () {
                   Navigator.pushNamed(context, 'taskForm',
@@ -235,17 +247,16 @@ class _ProjectPageState extends State<ProjectPage> {
       decoration: BoxDecoration(
         gradient: LinearGradient(
           stops: [0.015, 0.015],
-          colors: [color, Colors.white],
+          colors: [color, currentThemeData.cardColor],
         ),
         borderRadius: BorderRadius.all(
           Radius.circular(5.0),
         ),
         boxShadow: [
           BoxShadow(
-            color: CustomColors.GreyBorder,
-            blurRadius: 10.0,
-            spreadRadius: 5.0,
-            offset: Offset(0.0, 0.0),
+            color: currentThemeData.shadowColor,
+            blurRadius: 4,
+            offset: Offset(1.5, 1.5),
           ),
         ],
       ),

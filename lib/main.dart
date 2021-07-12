@@ -10,12 +10,36 @@ import 'package:khanos/src/pages/task_page.dart';
 import 'package:khanos/src/pages/welcome_page.dart';
 import 'package:khanos/src/preferences/user_preferences.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:khanos/src/providers/dark_theme_provider.dart';
+import 'package:provider/provider.dart';
+import 'package:provider/single_child_widget.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   final prefs = new UserPreferences();
   await prefs.initPrefs();
 
+  runApp(MyApp());
+}
+
+class MyApp extends StatefulWidget {
+  @override
+  _MyAppState createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> {
+  @override
+  Widget build(BuildContext context) {
+    return MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (_) => ThemeChanger(lightTheme)),
+      ],
+      child: MaterialAppWithTheme(),
+    );
+  }
+}
+
+class MaterialAppWithTheme extends StatelessWidget {
   final Map<String, dynamic> preferences = {
     'endpoint': prefs.endpoint,
     'username': prefs.username,
@@ -23,16 +47,10 @@ void main() async {
     'authFlag': prefs.authFlag
   };
 
-  runApp(MyApp(preferences));
-}
-
-class MyApp extends StatelessWidget {
-  MyApp(this.preferences);
-  final Map<String, dynamic> preferences;
-
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
+    final theme = Provider.of<ThemeChanger>(context);
     String _initialRoute = '';
 
     if (preferences['endpoint'] == '' ||
@@ -68,9 +86,7 @@ class MyApp extends StatelessWidget {
         'login': (BuildContext context) => LoginPage(),
         'newProject': (BuildContext context) => NewProjectPage()
       },
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-      ),
+      theme: theme.getTheme,
     );
   }
 }
