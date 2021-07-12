@@ -49,10 +49,7 @@ class _ProjectPageState extends State<ProjectPage> {
       // projectColumns = projectArgs['columns'];
     }
     return FutureBuilder(
-        future: Future.wait([
-          taskProvider.getTasks(int.parse(project.id), 1),
-          columnProvider.getColumns(project.id),
-        ]),
+        future: Future.wait([taskProvider.getTasks(int.parse(project.id), 1)]),
         builder: (BuildContext context, AsyncSnapshot<List<dynamic>> snapshot) {
           if (snapshot.hasError) {
             processApiError(snapshot.error);
@@ -83,13 +80,12 @@ class _ProjectPageState extends State<ProjectPage> {
           }
           if (snapshot.hasData) {
             final List<TaskModel> tasks = snapshot.data[0];
-            final List<ColumnModel> columns = snapshot.data[1];
             return Scaffold(
               appBar: normalAppBar(project.name),
               body: Container(
                   width: double.infinity,
                   padding: EdgeInsets.only(top: 20.0),
-                  child: _projectInfo(tasks, columns)),
+                  child: _projectInfo(tasks)),
               floatingActionButton: FloatingActionButton(
                 backgroundColor: Colors.blue,
                 child: Icon(Icons.add),
@@ -117,7 +113,7 @@ class _ProjectPageState extends State<ProjectPage> {
                                 return Column(
                                   children: [
                                     _taskElement('01/01/1970', 'Task #$index',
-                                        Colors.grey, 'Column'),
+                                        Colors.grey),
                                     Divider(height: 2.0),
                                   ],
                                 );
@@ -133,7 +129,7 @@ class _ProjectPageState extends State<ProjectPage> {
         });
   }
 
-  Widget _projectInfo(List<TaskModel> tasks, List<ColumnModel> columns) {
+  Widget _projectInfo(List<TaskModel> tasks) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
@@ -153,16 +149,15 @@ class _ProjectPageState extends State<ProjectPage> {
           ),
         ),
         SizedBox(height: 20.0),
-        _taskList(tasks, columns),
+        _taskList(tasks),
       ],
     );
   }
 
-  Widget _taskList(List<TaskModel> tasks, List<ColumnModel> columns) {
+  Widget _taskList(List<TaskModel> tasks) {
     if (tasks.length > 0) {
       return Expanded(
         child: ListView.builder(
-          padding: EdgeInsets.only(top: 10.0, bottom: 80.0),
           itemCount: tasks.length,
           itemBuilder: (BuildContext context, int i) {
             return new Column(children: [
@@ -177,11 +172,7 @@ class _ProjectPageState extends State<ProjectPage> {
                       getStringDateTimeFromEpoch(
                           "dd/MM/yy", tasks[i].dateModification),
                       tasks[i].title,
-                      TaskModel().getTaskColor(tasks[i].colorId),
-                      columns
-                          .firstWhere(
-                              (element) => element.id == tasks[i].columnId)
-                          .title),
+                      TaskModel().getTaskColor(tasks[i].colorId)),
                   secondaryActions: <Widget>[
                     SlideAction(
                       child: Container(
@@ -235,29 +226,21 @@ class _ProjectPageState extends State<ProjectPage> {
     }
   }
 
-  Widget _taskElement(
-      String timeUpdated, String title, Color color, String columnTitle) {
+  Widget _taskElement(String timeUpdated, String title, Color color) {
     return Container(
       margin: EdgeInsets.fromLTRB(20, 0, 20, 15),
-      padding: EdgeInsets.fromLTRB(25, 13, 5, 13),
+      padding: EdgeInsets.fromLTRB(5, 13, 5, 13),
       child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: <Widget>[
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                timeUpdated,
-              ),
-              Container(
-                  width: 100.0,
-                  child: Text(columnTitle, overflow: TextOverflow.clip)),
-            ],
+          Text(
+            timeUpdated,
           ),
           Container(
-            width: 200,
+            width: 180,
             child: Text(title,
-                style: TextStyle(fontSize: 15), overflow: TextOverflow.clip),
+                style: TextStyle(fontSize: 15),
+                overflow: TextOverflow.ellipsis),
           ),
         ],
       ),
