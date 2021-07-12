@@ -5,6 +5,10 @@ The format is based on [Keep a Changelog][Keep a Changelog] and this project adh
 
 ## [Released]
 
+## [1.0.5] - 2021-07-11
+### Added
+- Dark Mode
+
 ## [1.0.4] - 2021-07-10
 ### Added
 - Drawer Menu on Home Page with items
@@ -59,7 +63,8 @@ The format is based on [Keep a Changelog][Keep a Changelog] and this project adh
 <!-- Versions -->
 [Released]: https://github.com/Jeoxs/khanos/releases
 
-[1.0.3]: https://github.com/Jeoxs/khanos/compare/v1.0.3...v1.0.4
+[1.0.5]: https://github.com/Jeoxs/khanos/compare/v1.0.4...v1.0.5
+[1.0.4]: https://github.com/Jeoxs/khanos/compare/v1.0.3...v1.0.4
 [1.0.3]: https://github.com/Jeoxs/khanos/compare/v1.0.2...v1.0.3
 [1.0.2]: https://github.com/Jeoxs/khanos/compare/v1.0.1...v1.0.2
 [1.0.1]: https://github.com/Jeoxs/khanos/compare/v1.0...v1.0.1
