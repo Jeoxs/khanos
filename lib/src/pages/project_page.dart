@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:gradient_app_bar/gradient_app_bar.dart';
 import 'package:khanos/src/models/column_model.dart';
 import 'package:khanos/src/models/project_model.dart';
 import 'package:khanos/src/models/task_model.dart';
@@ -84,20 +85,40 @@ class _ProjectPageState extends State<ProjectPage> {
           if (snapshot.hasData) {
             final List<TaskModel> tasks = snapshot.data[0];
             final List<ColumnModel> columns = snapshot.data[1];
+
             return Scaffold(
               appBar: normalAppBar(project.name),
               body: Container(
                   width: double.infinity,
                   padding: EdgeInsets.only(top: 20.0),
                   child: _projectInfo(tasks, columns)),
-              floatingActionButton: FloatingActionButton(
-                backgroundColor: Colors.blue,
-                child: Icon(Icons.add),
-                onPressed: () {
-                  Navigator.pushNamed(context, 'taskForm',
-                          arguments: {'project': project})
-                      .then((_) => setState(() {}));
-                },
+              floatingActionButton: Column(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  FloatingActionButton(
+                    backgroundColor: Colors.blue,
+                    child: Icon(Icons.view_column),
+                    heroTag: "kanbanHero",
+                    onPressed: () {
+                      Navigator.pushNamed(context, 'kanban', arguments: {
+                        'project': project,
+                        'tasks': tasks,
+                        'columns': columns
+                      }).then((_) => setState(() {}));
+                    },
+                  ),
+                  SizedBox(height: 10.0),
+                  FloatingActionButton(
+                    backgroundColor: Colors.blue,
+                    child: Icon(Icons.add),
+                    heroTag: "newTaskHero",
+                    onPressed: () {
+                      Navigator.pushNamed(context, 'taskForm',
+                              arguments: {'project': project})
+                          .then((_) => setState(() {}));
+                    },
+                  ),
+                ],
               ),
             );
           } else {
@@ -299,23 +320,14 @@ class _ProjectPageState extends State<ProjectPage> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(''),
-              // Container(
-              //     width: 100.0,
-              //     child: Text('', overflow: TextOverflow.clip)),
             ],
           ),
           Container(
             width: 200,
-            // child: Text(title,
-            //     style: TextStyle(fontSize: 15), overflow: TextOverflow.clip),
           ),
         ],
       ),
       decoration: BoxDecoration(
-        // gradient: LinearGradient(
-        //   stops: [0.015, 0.015],
-        //   // colors: [color, currentThemeData.cardColor],
-        // ),
         borderRadius: BorderRadius.all(
           Radius.circular(5.0),
         ),

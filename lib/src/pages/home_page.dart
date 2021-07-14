@@ -306,11 +306,26 @@ class _HomePageState extends State<HomePage> {
               },
             ),
             ListTile(
-                leading: Icon(Icons.support, color: Colors.blue),
-                title: Text('Support'),
-                onTap: () {
-                  _launchGithubURL();
-                }),
+              leading: Icon(Icons.support, color: Colors.blue),
+              title: Text('Help & Feedback'),
+              onTap: () {
+                _launchGithubURL();
+              },
+            ),
+            ListTile(
+              leading: Icon(Icons.coffee, color: Colors.blue),
+              title: Text('Show your support'),
+              onTap: () {
+                _launchBuyMeACoffee();
+              },
+            ),
+            ListTile(
+              leading: Icon(Icons.contact_support_outlined, color: Colors.blue),
+              title: Text('About Khanos'),
+              onTap: () {
+                Navigator.pushNamed(context, 'about');
+              },
+            ),
             ListTile(
               leading: Icon(Icons.logout, color: Colors.blue),
               title: Text('Logout'),
@@ -330,6 +345,16 @@ class _HomePageState extends State<HomePage> {
   _launchGithubURL() async {
     print('here');
     const url = 'https://github.com/Jeoxs/khanos';
+    if (await canLaunch(url)) {
+      await launch(url);
+    } else {
+      throw 'Could not launch $url';
+    }
+  }
+
+  _launchBuyMeACoffee() async {
+    print('here');
+    const url = 'https://buymeacoffee.com/joseaponte';
     if (await canLaunch(url)) {
       await launch(url);
     } else {

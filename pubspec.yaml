@@ -49,6 +49,7 @@ dependencies:
   flutter_material_color_picker: ^1.0.5
   flutter_datetime_picker: 
   url_launcher: ^6.0.9
+  package_info:
 
 dev_dependencies:
   flutter_test:

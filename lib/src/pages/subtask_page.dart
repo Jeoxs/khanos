@@ -115,7 +115,7 @@ class _SubtaskPageState extends State<SubtaskPage> {
                           },
                           child: Slidable(
                             actionPane: SlidableDrawerActionPane(),
-                            child: _taskElement(subtasks[i].title,
+                            child: _subtaskElement(subtasks[i].title,
                                 subtasks[i].status, subtasks[i].id),
                             secondaryActions: <Widget>[
                               SlideAction(
@@ -199,7 +199,7 @@ class _SubtaskPageState extends State<SubtaskPage> {
         });
   }
 
-  Widget _taskElement(String title, String status, String subtaskId) {
+  Widget _subtaskElement(String title, String status, String subtaskId) {
     Icon _subtaskIcon;
     switch (status) {
       case "0":
@@ -227,7 +227,7 @@ class _SubtaskPageState extends State<SubtaskPage> {
                   decoration:
                       (status == "2" ? TextDecoration.lineThrough : null),
                 ),
-                overflow: TextOverflow.ellipsis),
+                overflow: TextOverflow.clip),
           ),
           // _getTaskTimeSpent(int.parse(subtaskId)),
         ],
