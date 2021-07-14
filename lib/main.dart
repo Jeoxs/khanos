@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:khanos/src/pages/about_page.dart';
 import 'package:khanos/src/pages/home_page.dart';
+import 'package:khanos/src/pages/kanban_page.dart';
 import 'package:khanos/src/pages/login_page.dart';
 import 'package:khanos/src/pages/new_project_page.dart';
 import 'package:khanos/src/pages/new_subtask_page.dart';
@@ -84,7 +86,9 @@ class MaterialAppWithTheme extends StatelessWidget {
         'newSubtask': (BuildContext context) => NewSubtaskPage(),
         'welcome': (BuildContext context) => WelcomePage(),
         'login': (BuildContext context) => LoginPage(),
-        'newProject': (BuildContext context) => NewProjectPage()
+        'newProject': (BuildContext context) => NewProjectPage(),
+        'kanban': (BuildContext context) => KanbanPage(),
+        'about': (BuildContext context) => AboutPage(),
       },
       theme: theme.getTheme,
     );

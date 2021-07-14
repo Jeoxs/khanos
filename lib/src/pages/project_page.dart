@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:gradient_app_bar/gradient_app_bar.dart';
 import 'package:khanos/src/models/column_model.dart';
 import 'package:khanos/src/models/project_model.dart';
 import 'package:khanos/src/models/task_model.dart';
@@ -49,7 +50,10 @@ class _ProjectPageState extends State<ProjectPage> {
       // projectColumns = projectArgs['columns'];
     }
     return FutureBuilder(
-        future: Future.wait([taskProvider.getTasks(int.parse(project.id), 1)]),
+        future: Future.wait([
+          taskProvider.getTasks(int.parse(project.id), 1),
+          columnProvider.getColumns(project.id),
+        ]),
         builder: (BuildContext context, AsyncSnapshot<List<dynamic>> snapshot) {
           if (snapshot.hasError) {
             processApiError(snapshot.error);
@@ -80,20 +84,41 @@ class _ProjectPageState extends State<ProjectPage> {
           }
           if (snapshot.hasData) {
             final List<TaskModel> tasks = snapshot.data[0];
+            final List<ColumnModel> columns = snapshot.data[1];
+
             return Scaffold(
               appBar: normalAppBar(project.name),
               body: Container(
                   width: double.infinity,
                   padding: EdgeInsets.only(top: 20.0),
-                  child: _projectInfo(tasks)),
-              floatingActionButton: FloatingActionButton(
-                backgroundColor: Colors.blue,
-                child: Icon(Icons.add),
-                onPressed: () {
-                  Navigator.pushNamed(context, 'taskForm',
-                          arguments: {'project': project})
-                      .then((_) => setState(() {}));
-                },
+                  child: _projectInfo(tasks, columns)),
+              floatingActionButton: Column(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  FloatingActionButton(
+                    backgroundColor: Colors.blue,
+                    child: Icon(Icons.view_column),
+                    heroTag: "kanbanHero",
+                    onPressed: () {
+                      Navigator.pushNamed(context, 'kanban', arguments: {
+                        'project': project,
+                        'tasks': tasks,
+                        'columns': columns
+                      }).then((_) => setState(() {}));
+                    },
+                  ),
+                  SizedBox(height: 10.0),
+                  FloatingActionButton(
+                    backgroundColor: Colors.blue,
+                    child: Icon(Icons.add),
+                    heroTag: "newTaskHero",
+                    onPressed: () {
+                      Navigator.pushNamed(context, 'taskForm',
+                              arguments: {'project': project})
+                          .then((_) => setState(() {}));
+                    },
+                  ),
+                ],
               ),
             );
           } else {
@@ -112,9 +137,7 @@ class _ProjectPageState extends State<ProjectPage> {
                               itemBuilder: (context, index) {
                                 return Column(
                                   children: [
-                                    _taskElement('01/01/1970', 'Task #$index',
-                                        Colors.grey),
-                                    Divider(height: 2.0),
+                                    _shimmerTaskElement(),
                                   ],
                                 );
                               }),
@@ -129,7 +152,7 @@ class _ProjectPageState extends State<ProjectPage> {
         });
   }
 
-  Widget _projectInfo(List<TaskModel> tasks) {
+  Widget _projectInfo(List<TaskModel> tasks, List<ColumnModel> columns) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
@@ -149,15 +172,16 @@ class _ProjectPageState extends State<ProjectPage> {
           ),
         ),
         SizedBox(height: 20.0),
-        _taskList(tasks),
+        _taskList(tasks, columns),
       ],
     );
   }
 
-  Widget _taskList(List<TaskModel> tasks) {
+  Widget _taskList(List<TaskModel> tasks, List<ColumnModel> columns) {
     if (tasks.length > 0) {
       return Expanded(
         child: ListView.builder(
+          padding: EdgeInsets.only(top: 10.0, bottom: 80.0),
           itemCount: tasks.length,
           itemBuilder: (BuildContext context, int i) {
             return new Column(children: [
@@ -172,7 +196,11 @@ class _ProjectPageState extends State<ProjectPage> {
                       getStringDateTimeFromEpoch(
                           "dd/MM/yy", tasks[i].dateModification),
                       tasks[i].title,
-                      TaskModel().getTaskColor(tasks[i].colorId)),
+                      TaskModel().getTaskColor(tasks[i].colorId),
+                      columns
+                          .firstWhere(
+                              (element) => element.id == tasks[i].columnId)
+                          .title),
                   secondaryActions: <Widget>[
                     SlideAction(
                       child: Container(
@@ -226,21 +254,29 @@ class _ProjectPageState extends State<ProjectPage> {
     }
   }
 
-  Widget _taskElement(String timeUpdated, String title, Color color) {
+  Widget _taskElement(
+      String timeUpdated, String title, Color color, String columnTitle) {
     return Container(
       margin: EdgeInsets.fromLTRB(20, 0, 20, 15),
-      padding: EdgeInsets.fromLTRB(5, 13, 5, 13),
+      padding: EdgeInsets.fromLTRB(25, 13, 5, 13),
       child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: <Widget>[
-          Text(
-            timeUpdated,
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                timeUpdated,
+              ),
+              Container(
+                  width: 100.0,
+                  child: Text(columnTitle, overflow: TextOverflow.clip)),
+            ],
           ),
           Container(
-            width: 180,
+            width: 200,
             child: Text(title,
-                style: TextStyle(fontSize: 15),
-                overflow: TextOverflow.ellipsis),
+                style: TextStyle(fontSize: 15), overflow: TextOverflow.clip),
           ),
         ],
       ),
@@ -271,5 +307,38 @@ class _ProjectPageState extends State<ProjectPage> {
     } else {
       mostrarAlerta(context, 'Something went Wront!');
     }
+  }
+
+  Widget _shimmerTaskElement() {
+    return Container(
+      margin: EdgeInsets.fromLTRB(20, 0, 20, 15),
+      padding: EdgeInsets.fromLTRB(25, 13, 5, 13),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: <Widget>[
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(''),
+            ],
+          ),
+          Container(
+            width: 200,
+          ),
+        ],
+      ),
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.all(
+          Radius.circular(5.0),
+        ),
+        boxShadow: [
+          BoxShadow(
+            color: currentThemeData.shadowColor,
+            blurRadius: 4,
+            offset: Offset(1.5, 1.5),
+          ),
+        ],
+      ),
+    );
   }
 }
