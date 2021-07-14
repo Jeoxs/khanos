@@ -5,6 +5,19 @@ The format is based on [Keep a Changelog][Keep a Changelog] and this project adh
 
 ## [Released]
 
+## [1.0.6] - 2021-07-13
+### Added
+- Kanban Functionality. Now you can drag tasks in Kanban View among columns.
+- Added About Page
+- Added developer's support link.
+
+### Changed
+- Wrapped Tasks/subtasks card's titles text to show full title of task, instead of excerpt
+
+### Fixed
+- Going back to login when logging in.
+
+
 ## [1.0.5] - 2021-07-11
 ### Added
 - Dark Mode
@@ -63,6 +76,7 @@ The format is based on [Keep a Changelog][Keep a Changelog] and this project adh
 <!-- Versions -->
 [Released]: https://github.com/Jeoxs/khanos/releases
 
+[1.0.6]: https://github.com/Jeoxs/khanos/compare/v1.0.5...v1.0.6
 [1.0.5]: https://github.com/Jeoxs/khanos/compare/v1.0.4...v1.0.5
 [1.0.4]: https://github.com/Jeoxs/khanos/compare/v1.0.3...v1.0.4
 [1.0.3]: https://github.com/Jeoxs/khanos/compare/v1.0.2...v1.0.3

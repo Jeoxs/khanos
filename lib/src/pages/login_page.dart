@@ -179,7 +179,7 @@ class _LoginPageState extends State<LoginPage> {
     await AuthProvider().login(endPoint, username, password).then((value) {
       Navigator.pop(context);
       setState(() {
-        Navigator.pushReplacementNamed(context, 'home');
+        Navigator.pushNamedAndRemoveUntil(context, 'home', (route) => false);
       });
     }).catchError((error) {
       Navigator.pop(context);

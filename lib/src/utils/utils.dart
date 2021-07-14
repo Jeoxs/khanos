@@ -49,7 +49,7 @@ showLoaderDialog(BuildContext context) {
 Map<String, dynamic> processApiError(Map<String, dynamic> error) {
   int errorCode = error['code'];
   String errorMessage = error['message'];
-  int id;
+  int id = 0;
 
   if (error['id'] != null) {
     id = error['id'];
