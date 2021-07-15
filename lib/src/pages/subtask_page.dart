@@ -106,6 +106,7 @@ class _SubtaskPageState extends State<SubtaskPage> {
                       itemBuilder: (BuildContext context, int i) {
                         return GestureDetector(
                           onTap: () async {
+                            Feedback.forTap(context);
                             showLoaderDialog(context);
 
                             await subtaskProvider.processSubtask(subtasks[i]);

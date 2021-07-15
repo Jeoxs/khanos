@@ -141,8 +141,12 @@ class _HomePageState extends State<HomePage> {
                       itemCount: projects.length,
                       itemBuilder: (BuildContext context, int i) {
                         return GestureDetector(
-                          onTap: () => Navigator.pushNamed(context, 'project',
-                              arguments: {'project': projects[i]}),
+                          onTap: () {
+                            Feedback.forTap(context);
+                            Navigator.pushNamed(context, 'project',
+                                    arguments: {'project': projects[i]})
+                                .then((_) => setState(() {}));
+                          },
                           child: Slidable(
                             actionPane: SlidableDrawerActionPane(),
                             child: _projectElement(

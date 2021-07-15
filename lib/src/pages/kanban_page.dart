@@ -144,6 +144,7 @@ class _KanbanPageState extends State<KanbanPage> {
         setState(() {});
       },
       onTapItem: (int listIndex, int itemIndex, BoardItemState state) async {
+        Feedback.forTap(context);
         Navigator.pushNamed(context, 'task', arguments: {
           'task_id': itemObject.taskContent.id,
           'project': _project
