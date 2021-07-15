@@ -39,7 +39,7 @@ _showAboutInfo(BuildContext context) {
                 ),
                 SizedBox(height: 15),
                 Text(
-                  'Version: 1.0.6',
+                  'Version: 1.0.7',
                   style: TextStyle(
                       fontSize: 17,
                       fontWeight: FontWeight.w400,

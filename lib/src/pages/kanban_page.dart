@@ -55,8 +55,8 @@ class _KanbanPageState extends State<KanbanPage> {
 
       List<BoardItemObject> columnObjects = [];
       if (columnTasks.isNotEmpty) {
+        columnTasks.sort((a, b) => a.position.compareTo(b.position));
         columnTasks.forEach((element) {
-          print(element.title);
           columnObjects
               .add(BoardItemObject(title: element.title, taskContent: element));
         });
@@ -87,6 +87,7 @@ class _KanbanPageState extends State<KanbanPage> {
 
   Widget _createBoardList(BoardListObject list) {
     List<BoardItem> items = [];
+
     for (int i = 0; i < list.items.length; i++) {
       items.insert(i, buildBoardItem(list.items[i]) as BoardItem);
     }
@@ -128,12 +129,14 @@ class _KanbanPageState extends State<KanbanPage> {
           int oldItemIndex, BoardItemState state) async {
         //Used to update our local item data
         var item = _listData[oldListIndex].items[oldItemIndex];
-
+        print('Position -> oldItemIndex: $oldItemIndex, itemIndex: $itemIndex');
+        print(
+            'Position -> ${itemObject.taskContent.title} - ${itemObject.taskContent.position}');
         bool updateResult = await taskProvider.moveTaskPosition({
           'task_id': itemObject.taskContent.id,
           'project_id': itemObject.taskContent.projectId,
           'column_id': _listData[listIndex].columnContent.id,
-          'position': itemObject.taskContent.position,
+          'position': itemIndex + 1,
           'swimlane_id': itemObject.taskContent.swimlaneId,
         });
 
@@ -144,6 +147,7 @@ class _KanbanPageState extends State<KanbanPage> {
         setState(() {});
       },
       onTapItem: (int listIndex, int itemIndex, BoardItemState state) async {
+        Feedback.forTap(context);
         Navigator.pushNamed(context, 'task', arguments: {
           'task_id': itemObject.taskContent.id,
           'project': _project

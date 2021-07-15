@@ -101,11 +101,12 @@ class _SubtaskPageState extends State<SubtaskPage> {
                   ),
                   Expanded(
                     child: ListView.builder(
-                      padding: EdgeInsets.only(top: 20, bottom: 80),
+                      padding: EdgeInsets.only(top: 20, bottom: 140),
                       itemCount: subtasks.length,
                       itemBuilder: (BuildContext context, int i) {
                         return GestureDetector(
                           onTap: () async {
+                            Feedback.forTap(context);
                             showLoaderDialog(context);
 
                             await subtaskProvider.processSubtask(subtasks[i]);
@@ -116,7 +117,7 @@ class _SubtaskPageState extends State<SubtaskPage> {
                           child: Slidable(
                             actionPane: SlidableDrawerActionPane(),
                             child: _subtaskElement(subtasks[i].title,
-                                subtasks[i].status, subtasks[i].id),
+                                subtasks[i].status, subtasks[i].timeSpent),
                             secondaryActions: <Widget>[
                               SlideAction(
                                 child: Container(
@@ -199,8 +200,9 @@ class _SubtaskPageState extends State<SubtaskPage> {
         });
   }
 
-  Widget _subtaskElement(String title, String status, String subtaskId) {
+  Widget _subtaskElement(String title, String status, String timeSpent) {
     Icon _subtaskIcon;
+
     switch (status) {
       case "0":
         _subtaskIcon = Icon(Icons.check_box_outline_blank);
@@ -212,6 +214,7 @@ class _SubtaskPageState extends State<SubtaskPage> {
         _subtaskIcon = Icon(Icons.check_box_outlined);
         break;
     }
+
     return Container(
       margin: EdgeInsets.fromLTRB(20, 0, 20, 15),
       padding: EdgeInsets.fromLTRB(5, 13, 5, 13),
@@ -219,6 +222,7 @@ class _SubtaskPageState extends State<SubtaskPage> {
         mainAxisAlignment: MainAxisAlignment.spaceAround,
         children: <Widget>[
           _subtaskIcon,
+          Text('${timeSpent}h'),
           Container(
             width: 250,
             child: Text(title,

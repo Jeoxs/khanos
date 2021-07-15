@@ -185,7 +185,7 @@ class CircleOne extends CustomPainter {
 
   @override
   void paint(Canvas canvas, Size size) {
-    canvas.drawCircle(Offset(28.0, 0.0), 99.0, _paint);
+    canvas.drawCircle(Offset(28.0, 0.0), 79.0, _paint);
   }
 
   @override

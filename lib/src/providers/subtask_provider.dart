@@ -177,7 +177,7 @@ class SubtaskProvider {
     if (userId != null) {
       args.add(userId);
     } else {
-      args.add(0);
+      args.add(_prefs.userId);
     }
 
     final Map<String, dynamic> parameters = {
