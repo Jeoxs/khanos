@@ -138,6 +138,8 @@ class _TaskPageState extends State<TaskPage> {
                       ],
                     ),
                     SizedBox(height: 20.0),
+                    _closeTaskButton(),
+                    SizedBox(height: 20.0),
                     Row(children: [
                       Padding(
                         padding: const EdgeInsets.only(right: 10.0),
@@ -161,9 +163,18 @@ class _TaskPageState extends State<TaskPage> {
                     Row(children: [
                       Padding(
                         padding: const EdgeInsets.only(right: 10.0),
-                        child: Icon(Icons.person, color: Colors.blueGrey),
+                        child: Icon(Icons.security_rounded,
+                            color: Colors.blueGrey),
                       ),
                       _getUserFullName(task.creatorId),
+                    ]),
+                    SizedBox(height: 20.0),
+                    Row(children: [
+                      Padding(
+                        padding: const EdgeInsets.only(right: 10.0),
+                        child: Icon(Icons.person, color: Colors.blueGrey),
+                      ),
+                      _getUserFullName(task.ownerId),
                     ]),
                     SizedBox(height: 20.0),
                     Row(children: [
@@ -281,6 +292,51 @@ class _TaskPageState extends State<TaskPage> {
         });
   }
 
+  void _closeTask(String taskId) async {
+    bool result = await taskProvider.closeTask(int.parse(taskId));
+    Navigator.pop(context);
+    if (result) {
+      setState(() {
+        Navigator.pop(context);
+      });
+    } else {
+      mostrarAlerta(context, 'Something went Wront!');
+    }
+  }
+
+  Widget _closeTaskButton() {
+    return GestureDetector(
+      onTap: () {
+        showLoaderDialog(context);
+        Feedback.forTap(context);
+        _closeTask(task.id);
+      },
+      child: Container(
+        margin: EdgeInsets.only(right: 10),
+        alignment: Alignment.center,
+        child: Text(
+          'Close Task',
+          style: TextStyle(color: Colors.white),
+        ),
+        padding: EdgeInsets.symmetric(vertical: 5, horizontal: 10),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.all(
+            Radius.circular(5),
+          ),
+          color: CustomColors.TrashRed,
+          boxShadow: [
+            BoxShadow(
+              color: CustomColors.TrashRed,
+              blurRadius: 4.0,
+              spreadRadius: 1.0,
+              offset: Offset(0.0, 0.0),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
   Widget _userButton(UserModel user) {
     return GestureDetector(
       onTap: () {},
@@ -298,9 +354,9 @@ class _TaskPageState extends State<TaskPage> {
           color: CustomColors.BlueShadow,
           boxShadow: [
             BoxShadow(
-              color: CustomColors.GreenShadow,
-              blurRadius: 5.0,
-              spreadRadius: 3.0,
+              color: CustomColors.BlueDark,
+              blurRadius: 4.0,
+              spreadRadius: 1.0,
               offset: Offset(0.0, 0.0),
             ),
           ],
@@ -374,6 +430,30 @@ class _TaskPageState extends State<TaskPage> {
                               fontSize: 22, fontStyle: FontStyle.normal)),
                     ),
                   ],
+                ),
+                SizedBox(height: 20.0),
+                Container(
+                  margin: EdgeInsets.only(right: 10),
+                  alignment: Alignment.center,
+                  child: Text(
+                    'Close Task',
+                    style: TextStyle(color: Colors.white),
+                  ),
+                  padding: EdgeInsets.symmetric(vertical: 5, horizontal: 10),
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.all(
+                      Radius.circular(5),
+                    ),
+                    color: CustomColors.TrashRed,
+                    boxShadow: [
+                      BoxShadow(
+                        color: CustomColors.TrashRed,
+                        blurRadius: 4.0,
+                        spreadRadius: 1.0,
+                        offset: Offset(0.0, 0.0),
+                      ),
+                    ],
+                  ),
                 ),
                 SizedBox(height: 20.0),
                 Row(children: [
