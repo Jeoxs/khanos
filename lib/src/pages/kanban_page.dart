@@ -128,12 +128,14 @@ class _KanbanPageState extends State<KanbanPage> {
           int oldItemIndex, BoardItemState state) async {
         //Used to update our local item data
         var item = _listData[oldListIndex].items[oldItemIndex];
-
+        print('Position -> oldItemIndex: $oldItemIndex, itemIndex: $itemIndex');
+        print(
+            'Position -> ${itemObject.taskContent.title} - ${itemObject.taskContent.position}');
         bool updateResult = await taskProvider.moveTaskPosition({
           'task_id': itemObject.taskContent.id,
           'project_id': itemObject.taskContent.projectId,
           'column_id': _listData[listIndex].columnContent.id,
-          'position': itemObject.taskContent.position,
+          'position': itemIndex + 1,
           'swimlane_id': itemObject.taskContent.swimlaneId,
         });
 
