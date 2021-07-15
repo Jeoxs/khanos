@@ -46,7 +46,6 @@ class _KanbanPageState extends State<KanbanPage> {
     final Map kanbanArgs = ModalRoute.of(context).settings.arguments;
 
     List<TaskModel> tasks = kanbanArgs['tasks'];
-    tasks.sort((a, b) => a.position.compareTo(b.position));
     List<ColumnModel> columns = kanbanArgs['columns'];
     _project = kanbanArgs['project'];
 
@@ -56,8 +55,8 @@ class _KanbanPageState extends State<KanbanPage> {
 
       List<BoardItemObject> columnObjects = [];
       if (columnTasks.isNotEmpty) {
+        columnTasks.sort((a, b) => a.position.compareTo(b.position));
         columnTasks.forEach((element) {
-          print(element.title);
           columnObjects
               .add(BoardItemObject(title: element.title, taskContent: element));
         });
