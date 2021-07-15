@@ -9,6 +9,7 @@ The format is based on [Keep a Changelog][Keep a Changelog] and this project adh
 ### Added
 - Close Task Functionality
 - Sound Feedback when tapping Cards
+- Time Spent for Subtasks
 
 ### Fixed
 - Cards Can be re-arranged inside column on Kanban
