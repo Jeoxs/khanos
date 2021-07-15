@@ -291,18 +291,17 @@ class _ProjectPageState extends State<ProjectPage> {
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(
-                timeUpdated,
-              ),
               Container(
                   width: 100.0,
                   child: Text(columnTitle, overflow: TextOverflow.clip)),
+              Text('Mod: ' + timeUpdated, style: TextStyle(fontSize: 12.0)),
             ],
           ),
           Container(
             width: 200,
             child: Text(title,
-                style: TextStyle(fontSize: 15), overflow: TextOverflow.clip),
+                style: TextStyle(fontSize: 15, fontWeight: FontWeight.w600),
+                overflow: TextOverflow.clip),
           ),
         ],
       ),
