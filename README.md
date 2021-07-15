@@ -1,3 +1,6 @@
+![Version](https://img.shields.io/badge/version-v1.0.7-red)
+[![Follow on Twitter](https://img.shields.io/badge/twitter-@thejoseaponte-blue.svg)](https://twitter.com/thejoseaponte)
+[![Download Khanos](https://img.shields.io/badge/download-khanos-green)](https://github.com/Jeoxs/khanos/releases)
 
 [<p align="center"><img src="https://user-images.githubusercontent.com/1626493/125200977-3a0fe480-e23b-11eb-8112-f3ccbe1f9bb4.png"
       alt="Get it now on the Releases Page"
@@ -10,15 +13,16 @@ A native app developed with Flutter framework which connects to the Kanboard API
 
 ## Install
 
-Download the latest release from github
+Download the latest release from github [Here](https://github.com/Jeoxs/khanos/releases)!
 
 ## Features
 
 What's all the bells and whistles this project can perform?
 * Create/Delete Projects.
-* Create/Modify/Delete Tasks.
-* Create/Modify/Delete Subtasjs
+* Create/Modify/Delete/Close Tasks.
+* Create/Modify/Delete Subtasks
 * Mark subtasks as Completed
+* Kanban for Projects
 * More features coming soon!
 
 ## Screnshots

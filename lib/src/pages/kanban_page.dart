@@ -55,8 +55,8 @@ class _KanbanPageState extends State<KanbanPage> {
 
       List<BoardItemObject> columnObjects = [];
       if (columnTasks.isNotEmpty) {
+        columnTasks.sort((a, b) => a.position.compareTo(b.position));
         columnTasks.forEach((element) {
-          print(element.title);
           columnObjects
               .add(BoardItemObject(title: element.title, taskContent: element));
         });
@@ -87,6 +87,7 @@ class _KanbanPageState extends State<KanbanPage> {
 
   Widget _createBoardList(BoardListObject list) {
     List<BoardItem> items = [];
+
     for (int i = 0; i < list.items.length; i++) {
       items.insert(i, buildBoardItem(list.items[i]) as BoardItem);
     }

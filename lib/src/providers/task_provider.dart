@@ -43,7 +43,7 @@ class TaskProvider {
     results.forEach((task) {
       final taskTemp = TaskModel.fromJson(task);
       tasks.add(taskTemp);
-    });
+    });    
     return tasks;
   }
 
@@ -202,7 +202,7 @@ class TaskProvider {
     );
 
     final decodedData = json.decode(utf8.decode(resp.bodyBytes));
-
+    print(decodedData);
     final result = decodedData['result'];
 
     if (decodedData == null) return false;

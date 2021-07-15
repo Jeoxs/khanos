@@ -87,7 +87,7 @@ class _ProjectPageState extends State<ProjectPage> {
           if (snapshot.hasData) {
             final List<TaskModel> tasks = snapshot.data[0];
             final List<ColumnModel> columns = snapshot.data[1];
-
+            tasks.sort((a, b) => a.id.compareTo(b.id));
             return Scaffold(
               appBar: normalAppBar(project.name),
               body: Container(
@@ -291,18 +291,17 @@ class _ProjectPageState extends State<ProjectPage> {
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(
-                timeUpdated,
-              ),
               Container(
                   width: 100.0,
                   child: Text(columnTitle, overflow: TextOverflow.clip)),
+              Text('Mod: ' + timeUpdated, style: TextStyle(fontSize: 12.0)),
             ],
           ),
           Container(
             width: 200,
             child: Text(title,
-                style: TextStyle(fontSize: 15), overflow: TextOverflow.clip),
+                style: TextStyle(fontSize: 15, fontWeight: FontWeight.w600),
+                overflow: TextOverflow.clip),
           ),
         ],
       ),
