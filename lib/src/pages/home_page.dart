@@ -43,6 +43,7 @@ class _HomePageState extends State<HomePage> {
       body: projectList(context),
       drawer: _homeDrawer(),
       floatingActionButton: FloatingActionButton(
+        heroTag: "addHero",
         backgroundColor: Colors.blue,
         child: Icon(Icons.add),
         onPressed: () => Navigator.of(context)

@@ -111,7 +111,7 @@ class _ProjectPageState extends State<ProjectPage> {
                   FloatingActionButton(
                     backgroundColor: Colors.blue,
                     child: Icon(Icons.add),
-                    heroTag: "newTaskHero",
+                    heroTag: "addHero",
                     onPressed: () {
                       Navigator.pushNamed(context, 'taskForm',
                               arguments: {'project': project})
@@ -181,7 +181,7 @@ class _ProjectPageState extends State<ProjectPage> {
     if (tasks.length > 0) {
       return Expanded(
         child: ListView.builder(
-          padding: EdgeInsets.only(top: 10.0, bottom: 80.0),
+          padding: EdgeInsets.only(top: 10.0, bottom: 140.0),
           itemCount: tasks.length,
           itemBuilder: (BuildContext context, int i) {
             return new Column(children: [
