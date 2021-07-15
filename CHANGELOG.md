@@ -5,6 +5,18 @@ The format is based on [Keep a Changelog][Keep a Changelog] and this project adh
 
 ## [Released]
 
+## [1.0.7] - 2021-07-15
+### Added
+- Close Task Functionality
+- Sound Feedback when tapping Cards
+
+### Fixed
+- Cards Can be re-arranged inside column on Kanban
+- Bottom padding on Tasks/Subtasks lists.
+- Lowered Circle decoration in AppBar to fix overlaping in dark Mode
+- Fixed Project Page task List not refreshing when updating the task
+
+
 ## [1.0.6] - 2021-07-13
 ### Added
 - Kanban Functionality. Now you can drag tasks in Kanban View among columns.
