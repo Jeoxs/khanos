@@ -101,11 +101,12 @@ class _SubtaskPageState extends State<SubtaskPage> {
                   ),
                   Expanded(
                     child: ListView.builder(
-                      padding: EdgeInsets.only(top: 20, bottom: 80),
+                      padding: EdgeInsets.only(top: 20, bottom: 140),
                       itemCount: subtasks.length,
                       itemBuilder: (BuildContext context, int i) {
                         return GestureDetector(
                           onTap: () async {
+                            Feedback.forTap(context);
                             showLoaderDialog(context);
 
                             await subtaskProvider.processSubtask(subtasks[i]);

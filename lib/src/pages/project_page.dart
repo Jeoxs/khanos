@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:gradient_app_bar/gradient_app_bar.dart';
 import 'package:khanos/src/models/column_model.dart';
@@ -22,6 +23,7 @@ class ProjectPage extends StatefulWidget {
 }
 
 class _ProjectPageState extends State<ProjectPage> {
+  LongPressStartDetails details;
   bool _darkTheme;
   ThemeData currentThemeData;
   final _prefs = new UserPreferences();
@@ -111,7 +113,7 @@ class _ProjectPageState extends State<ProjectPage> {
                   FloatingActionButton(
                     backgroundColor: Colors.blue,
                     child: Icon(Icons.add),
-                    heroTag: "newTaskHero",
+                    heroTag: "addHero",
                     onPressed: () {
                       Navigator.pushNamed(context, 'taskForm',
                               arguments: {'project': project})
@@ -181,16 +183,23 @@ class _ProjectPageState extends State<ProjectPage> {
     if (tasks.length > 0) {
       return Expanded(
         child: ListView.builder(
-          padding: EdgeInsets.only(top: 10.0, bottom: 80.0),
+          padding: EdgeInsets.only(top: 10.0, bottom: 140.0),
           itemCount: tasks.length,
           itemBuilder: (BuildContext context, int i) {
             return new Column(children: [
               GestureDetector(
                 onTap: () {
-                  Navigator.pushNamed(context, 'task',
-                      arguments: {'task_id': tasks[i].id, 'project': project});
+                  Feedback.forTap(context);
+                  Navigator.pushNamed(context, 'task', arguments: {
+                    'task_id': tasks[i].id,
+                    'project': project
+                  }).then((_) => setState(() {}));
+                },
+                onLongPressStart: (LongPressStartDetails tempDetails) {
+                  details = tempDetails;
                 },
                 child: Slidable(
+                  actionExtentRatio: 0.2,
                   actionPane: SlidableDrawerActionPane(),
                   child: _taskElement(
                       getStringDateTimeFromEpoch(
@@ -206,8 +215,25 @@ class _ProjectPageState extends State<ProjectPage> {
                       child: Container(
                         padding: EdgeInsets.only(bottom: 10),
                         child: Container(
-                          height: 35,
-                          width: 35,
+                          height: 40,
+                          width: 40,
+                          decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(50),
+                              color: Colors.blue),
+                          child: Icon(Icons.lock, color: Colors.white),
+                        ),
+                      ),
+                      onTap: () {
+                        showLoaderDialog(context);
+                        _closeTask(tasks[i].id);
+                      },
+                    ),
+                    SlideAction(
+                      child: Container(
+                        padding: EdgeInsets.only(bottom: 10),
+                        child: Container(
+                          height: 40,
+                          width: 40,
                           decoration: BoxDecoration(
                               borderRadius: BorderRadius.circular(50),
                               color: CustomColors.TrashRedBackground),
@@ -340,5 +366,15 @@ class _ProjectPageState extends State<ProjectPage> {
         ],
       ),
     );
+  }
+
+  void _closeTask(String taskId) async {
+    bool result = await taskProvider.closeTask(int.parse(taskId));
+    Navigator.pop(context);
+    if (result) {
+      setState(() {});
+    } else {
+      mostrarAlerta(context, 'Something went Wront!');
+    }
   }
 }

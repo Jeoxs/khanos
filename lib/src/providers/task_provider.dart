@@ -89,7 +89,6 @@ class TaskProvider {
       "id": 1176509098,
       "params": args
     };
-    print(parameters);
     final credentials = "${_prefs.username}:${_prefs.password}";
 
     Codec<String, String> stringToBase64 = utf8.fuse(base64);
@@ -104,7 +103,6 @@ class TaskProvider {
     );
 
     final decodedData = json.decode(utf8.decode(resp.bodyBytes));
-    print(decodedData);
     final result = decodedData['result'];
 
     if (decodedData == null) return 0;
@@ -120,8 +118,6 @@ class TaskProvider {
       "params": args
     };
 
-    print(parameters);
-
     final credentials = "${_prefs.username}:${_prefs.password}";
 
     Codec<String, String> stringToBase64 = utf8.fuse(base64);
@@ -137,7 +133,40 @@ class TaskProvider {
 
     final decodedData = json.decode(utf8.decode(resp.bodyBytes));
 
-    print(decodedData);
+    final result = decodedData['result'];
+
+    if (decodedData == null) return false;
+
+    // Check for errors
+    if (decodedData['error'] != null) {
+      return Future.error(decodedData['error']);
+    }
+
+    return result;
+  }
+
+  Future<bool> closeTask(int taskId) async {
+    final Map<String, dynamic> parameters = {
+      "jsonrpc": "2.0",
+      "method": "closeTask",
+      "id": 1654396960,
+      "params": {"task_id": taskId}
+    };
+
+    final credentials = "${_prefs.username}:${_prefs.password}";
+
+    Codec<String, String> stringToBase64 = utf8.fuse(base64);
+
+    String encoded = stringToBase64.encode(credentials);
+
+    final resp = await http.post(
+      Uri.parse(_prefs.endpoint),
+      headers: <String, String>{"Authorization": "Basic $encoded"},
+      body: json.encode(parameters),
+      encoding: Encoding.getByName("utf-8"),
+    );
+
+    final decodedData = json.decode(utf8.decode(resp.bodyBytes));
 
     final result = decodedData['result'];
 
@@ -159,8 +188,6 @@ class TaskProvider {
       "params": args
     };
 
-    print(parameters);
-
     final credentials = "${_prefs.username}:${_prefs.password}";
 
     Codec<String, String> stringToBase64 = utf8.fuse(base64);
@@ -175,8 +202,6 @@ class TaskProvider {
     );
 
     final decodedData = json.decode(utf8.decode(resp.bodyBytes));
-
-    print(decodedData);
 
     final result = decodedData['result'];
 
@@ -197,8 +222,6 @@ class TaskProvider {
       "id": 1423501287,
       "params": {"task_id": taskId}
     };
-
-    print(parameters);
 
     final credentials = "${_prefs.username}:${_prefs.password}";
 
