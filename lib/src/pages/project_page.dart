@@ -87,7 +87,7 @@ class _ProjectPageState extends State<ProjectPage> {
           if (snapshot.hasData) {
             final List<TaskModel> tasks = snapshot.data[0];
             final List<ColumnModel> columns = snapshot.data[1];
-
+            tasks.sort((a, b) => a.id.compareTo(b.id));
             return Scaffold(
               appBar: normalAppBar(project.name),
               body: Container(

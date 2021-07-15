@@ -46,6 +46,7 @@ class _KanbanPageState extends State<KanbanPage> {
     final Map kanbanArgs = ModalRoute.of(context).settings.arguments;
 
     List<TaskModel> tasks = kanbanArgs['tasks'];
+    tasks.sort((a, b) => a.position.compareTo(b.position));
     List<ColumnModel> columns = kanbanArgs['columns'];
     _project = kanbanArgs['project'];
 
@@ -87,6 +88,7 @@ class _KanbanPageState extends State<KanbanPage> {
 
   Widget _createBoardList(BoardListObject list) {
     List<BoardItem> items = [];
+
     for (int i = 0; i < list.items.length; i++) {
       items.insert(i, buildBoardItem(list.items[i]) as BoardItem);
     }
