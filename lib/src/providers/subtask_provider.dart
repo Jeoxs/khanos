@@ -187,8 +187,6 @@ class SubtaskProvider {
       "params": args
     };
 
-    print(parameters);
-
     Codec<String, String> stringToBase64 = utf8.fuse(base64);
     final credentials = "${_prefs.username}:${_prefs.password}";
     String encoded = stringToBase64.encode(credentials);
@@ -205,8 +203,6 @@ class SubtaskProvider {
     if (decodedData['error'] != null) {
       return Future.error(decodedData['error']);
     }
-
-    print(decodedData);
 
     final result = decodedData['result'];
 
@@ -281,5 +277,70 @@ class SubtaskProvider {
     final result = decodedData['result'];
 
     return result;
+  }
+
+  Future<bool> updateSubtask(
+      SubtaskModel subtask, Map<String, dynamic> args) async {
+    final Map<String, dynamic> parameters = {
+      "jsonrpc": "2.0",
+      "method": "updateSubtask",
+      "id": 191749979,
+      "params": args
+    };
+
+    Codec<String, String> stringToBase64 = utf8.fuse(base64);
+    final credentials = "${_prefs.username}:${_prefs.password}";
+    String encoded = stringToBase64.encode(credentials);
+
+    final resp = await http.post(
+      Uri.parse(_prefs.endpoint),
+      headers: <String, String>{"Authorization": "Basic $encoded"},
+      body: json.encode(parameters),
+    );
+
+    final decodedData = json.decode(utf8.decode(resp.bodyBytes));
+
+    // Check for errors
+    if (decodedData['error'] != null) {
+      return Future.error(decodedData['error']);
+    }
+
+    if (decodedData['result'] == null) return false;
+
+    final result = decodedData['result'];
+
+    return result;
+  }
+
+  Future<bool> updateSubtaskPosition(
+      SubtaskModel movingSubtask, SubtaskModel affectedSubtask) async {
+    String oldPosition = movingSubtask.position;
+    String newPosition = affectedSubtask.position;
+    bool result1 = false;
+    bool result2 = false;
+
+    Map<String, dynamic> args = {
+      'id': affectedSubtask.id,
+      'task_id': affectedSubtask.taskId,
+      'position': oldPosition
+    };
+
+    result1 = await this.updateSubtask(affectedSubtask, {
+      'id': affectedSubtask.id,
+      'task_id': affectedSubtask.taskId,
+      'position': oldPosition
+    });
+
+    result2 = await this.updateSubtask(movingSubtask, {
+      'id': movingSubtask.id,
+      'task_id': movingSubtask.taskId,
+      'position': newPosition
+    });
+
+    if (result1 && result2) {
+      return true;
+    } else {
+      return false;
+    }
   }
 }

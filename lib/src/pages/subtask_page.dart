@@ -100,11 +100,22 @@ class _SubtaskPageState extends State<SubtaskPage> {
                     ),
                   ),
                   Expanded(
-                    child: ListView.builder(
+                    child: ReorderableListView.builder(
+                      onReorder: (oldIndex, newIndex) async {
+                        Feedback.forTap(context);
+                        showLoaderDialog(context);
+
+                        await subtaskProvider.updateSubtaskPosition(
+                            subtasks[oldIndex], subtasks[newIndex]);
+                        setState(() {
+                          Navigator.pop(context);
+                        });
+                      },
                       padding: EdgeInsets.only(top: 20, bottom: 140),
                       itemCount: subtasks.length,
                       itemBuilder: (BuildContext context, int i) {
                         return GestureDetector(
+                          key: ValueKey(subtasks[i].id),
                           onTap: () async {
                             Feedback.forTap(context);
                             showLoaderDialog(context);
@@ -116,8 +127,11 @@ class _SubtaskPageState extends State<SubtaskPage> {
                           },
                           child: Slidable(
                             actionPane: SlidableDrawerActionPane(),
-                            child: _subtaskElement(subtasks[i].title,
-                                subtasks[i].status, subtasks[i].timeSpent),
+                            child: _subtaskElement(
+                                subtasks[i].title,
+                                subtasks[i].status,
+                                subtasks[i].timeSpent,
+                                subtasks[i].id),
                             secondaryActions: <Widget>[
                               SlideAction(
                                 child: Container(
@@ -200,7 +214,8 @@ class _SubtaskPageState extends State<SubtaskPage> {
         });
   }
 
-  Widget _subtaskElement(String title, String status, String timeSpent) {
+  Widget _subtaskElement(
+      String title, String status, String timeSpent, String id) {
     Icon _subtaskIcon;
 
     switch (status) {
