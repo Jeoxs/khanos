@@ -18,6 +18,7 @@ class SubtaskModel {
     this.timeSpent,
     this.taskId,
     this.userId,
+    this.position,
   });
 
   String id;
@@ -27,6 +28,7 @@ class SubtaskModel {
   String timeSpent;
   String taskId;
   String userId;
+  String position;
 
   factory SubtaskModel.fromJson(Map<String, dynamic> json) => SubtaskModel(
         id: json["id"],
@@ -36,6 +38,7 @@ class SubtaskModel {
         timeSpent: json["time_spent"],
         taskId: json["task_id"],
         userId: json["user_id"],
+        position: json["position"],
       );
 
   Map<String, dynamic> toJson() => {
@@ -46,5 +49,6 @@ class SubtaskModel {
         "time_spent": timeSpent,
         "task_id": taskId,
         "user_id": userId,
+        "position": position,
       };
 }
