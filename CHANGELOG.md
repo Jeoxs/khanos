@@ -5,6 +5,10 @@ The format is based on [Keep a Changelog][Keep a Changelog] and this project adh
 
 ## [Released]
 
+## [1.0.8] - 2021-07-16
+### Added
+- Subtasks can be Reordered by long pressing and Drag.
+
 ## [1.0.7] - 2021-07-15
 ### Added
 - Close Task Functionality
@@ -89,6 +93,8 @@ The format is based on [Keep a Changelog][Keep a Changelog] and this project adh
 <!-- Versions -->
 [Released]: https://github.com/Jeoxs/khanos/releases
 
+[1.0.6]: https://github.com/Jeoxs/khanos/compare/v1.0.7...v1.0.8
+[1.0.7]: https://github.com/Jeoxs/khanos/compare/v1.0.6...v1.0.7
 [1.0.6]: https://github.com/Jeoxs/khanos/compare/v1.0.5...v1.0.6
 [1.0.5]: https://github.com/Jeoxs/khanos/compare/v1.0.4...v1.0.5
 [1.0.4]: https://github.com/Jeoxs/khanos/compare/v1.0.3...v1.0.4
