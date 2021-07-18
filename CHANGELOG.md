@@ -8,6 +8,8 @@ The format is based on [Keep a Changelog][Keep a Changelog] and this project adh
 ## [1.0.9] - 2021-07-17
 ### Added
 - Comments section for tasks. User can add comments and remove them
+- Added Overdue Tasks page in Home
+- Added Activity Page in Home
 
 ## [1.0.8] - 2021-07-16
 ### Added

@@ -31,7 +31,7 @@ class _KanbanPageState extends State<KanbanPage> {
   //Can be used to animate to different sections of the BoardView
   BoardViewController boardViewController = new BoardViewController();
   List<BoardListObject> _listData = [];
-  List<BoardItemObject> column1Items = [];
+  List<BoardItemObject> columnItems = [];
 
   @override
   void initState() {
@@ -41,6 +41,8 @@ class _KanbanPageState extends State<KanbanPage> {
 
   @override
   Widget build(BuildContext context) {
+    _listData = [];
+    columnItems = [];
     currentThemeData =
         _darkTheme == true ? ThemeData.dark() : ThemeData.light();
     final Map kanbanArgs = ModalRoute.of(context).settings.arguments;
@@ -143,6 +145,9 @@ class _KanbanPageState extends State<KanbanPage> {
         if (updateResult) {
           _listData[oldListIndex].items.removeAt(oldItemIndex);
           _listData[listIndex].items.insert(itemIndex, item);
+          itemObject.taskContent.columnId =
+              _listData[listIndex].columnContent.id;
+          itemObject.taskContent.position = (itemIndex).toString();
         }
         setState(() {});
       },
