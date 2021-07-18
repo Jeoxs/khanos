@@ -101,6 +101,12 @@ class CommentProvider {
     );
 
     final decodedData = json.decode(utf8.decode(resp.bodyBytes));
+
+    // Check for errors
+    if (decodedData['error'] != null) {
+      return Future.error(decodedData['error']);
+    }
+
     final result = decodedData['result'];
 
     if (decodedData == null) return 0;
@@ -131,8 +137,6 @@ class CommentProvider {
 
     final decodedData = json.decode(utf8.decode(resp.bodyBytes));
 
-    final result = decodedData['result'];
-
     if (decodedData == null) return false;
 
     // Check for errors
@@ -140,7 +144,9 @@ class CommentProvider {
       return Future.error(decodedData['error']);
     }
 
-    return result;
+    final result = decodedData['result'];
+
+    return (result != false && result != null) ? result : 0;
   }
 
   Future<bool> removeComment(int commentId) async {

@@ -17,6 +17,9 @@ class CommentPage extends StatefulWidget {
 }
 
 class _CommentPageState extends State<CommentPage> {
+  TextEditingController _commentFieldController = new TextEditingController();
+  ScrollController _scrollController = ScrollController();
+  String newComment = '';
   final _prefs = new UserPreferences();
   TaskModel task = new TaskModel();
   Map<String, dynamic> error;
@@ -95,6 +98,7 @@ class _CommentPageState extends State<CommentPage> {
       children: <Widget>[
         Expanded(
           child: ListView.builder(
+              controller: _scrollController,
               itemCount: comments.length,
               itemBuilder: (BuildContext context, int i) {
                 return _commentCard(comments[i].username, comments[i].comment,
@@ -108,10 +112,11 @@ class _CommentPageState extends State<CommentPage> {
               // First child is enter comment text input
               Expanded(
                 child: TextFormField(
+                  controller: _commentFieldController,
                   autocorrect: false,
                   decoration: new InputDecoration(
                     labelText: "Add Comment",
-                    labelStyle: TextStyle(fontSize: 20.0),
+                    labelStyle: TextStyle(fontSize: 15.0),
                     fillColor: Colors.blue,
                     border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(20.0),
@@ -119,13 +124,19 @@ class _CommentPageState extends State<CommentPage> {
                         //     BorderRadius.all(Radius.zero(5.0)),
                         borderSide: BorderSide(color: Colors.purpleAccent)),
                   ),
+                  onChanged: (value) {
+                    newComment = value;
+                  },
                 ),
               ),
               // Second child is button
               IconButton(
                 icon: Icon(Icons.send, color: Colors.blue),
                 iconSize: 20.0,
-                onPressed: () {},
+                onPressed: () {
+                  showLoaderDialog(context);
+                  _addComment(context);
+                },
               )
             ])),
       ],
@@ -193,5 +204,55 @@ class _CommentPageState extends State<CommentPage> {
         ),
       ),
     );
+  }
+
+  void _addComment(BuildContext context) async {
+    FocusScope.of(context).unfocus();
+    if (newComment.isNotEmpty) {
+      int newCommentId = 0;
+
+      try {
+        newCommentId = await commentProvider.createComment({
+          "task_id": task.id,
+          "user_id": _prefs.userId,
+          "content": newComment
+        });
+      } catch (e) {
+        processApiError(e);
+        error = e;
+        if (_prefs.authFlag != true) {
+          final SnackBar _snackBar = SnackBar(
+            content: const Text('Login Failed!'),
+            duration: const Duration(seconds: 5),
+          );
+          @override
+          void run() {
+            scheduleMicrotask(() {
+              ScaffoldMessenger.of(context).showSnackBar(_snackBar);
+              Navigator.pushReplacementNamed(context, 'login',
+                  arguments: {'error': e});
+            });
+          }
+
+          run();
+        }
+      }
+
+      Navigator.pop(context);
+      _scrollController.animateTo(
+          _scrollController.position.maxScrollExtent + 200,
+          duration: Duration(seconds: 2),
+          curve: Curves.fastOutSlowIn);
+      if (newCommentId != null && newCommentId > 0) {
+        newComment = '';
+        _commentFieldController.clear();
+
+        setState(() {});
+      } else {
+        mostrarAlerta(context, 'There was some error! Please, try again!');
+      }
+    } else {
+      mostrarAlerta(context, 'Please, Fill something before send!');
+    }
   }
 }
