@@ -103,8 +103,12 @@ class _CommentPageState extends State<CommentPage> {
               controller: _scrollController,
               itemCount: comments.length,
               itemBuilder: (BuildContext context, int i) {
-                return _commentCard(comments[i].username, comments[i].comment,
-                    comments[i].dateCreation, comments[i].id);
+                return _commentCard(
+                    comments[i].username,
+                    comments[i].comment,
+                    comments[i].dateCreation,
+                    comments[i].id,
+                    comments[i].userId);
               }),
         ),
         Container(
@@ -178,10 +182,7 @@ class _CommentPageState extends State<CommentPage> {
                   ),
                 ),
                 // Second child is button
-                IconButton(
-                  icon: Icon(Icons.send, color: Colors.blue),
-                  iconSize: 20.0,
-                )
+                Icon(Icons.send, color: Colors.blue),
               ])),
           baseColor: Colors.grey[600],
           highlightColor: Colors.grey[200],
@@ -272,8 +273,8 @@ class _CommentPageState extends State<CommentPage> {
     );
   }
 
-  _commentCard(
-      String username, String comment, String dateCreated, String commentId) {
+  _commentCard(String username, String comment, String dateCreated,
+      String commentId, String userId) {
     return Card(
       elevation: 5.0,
       margin: EdgeInsets.symmetric(horizontal: 20.0, vertical: 10.0),
@@ -312,27 +313,29 @@ class _CommentPageState extends State<CommentPage> {
                   ],
                 ),
                 Spacer(),
-                PopupMenuButton(
-                  onSelected: (value) {
-                    switch (value) {
-                      case "remove":
-                        _removeComment(commentId);
-                        break;
-                      default:
-                    }
-                  },
-                  elevation: 5.0,
-                  child: Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Icon(Icons.more_vert),
-                  ),
-                  itemBuilder: (context) => [
-                    PopupMenuItem(
-                      child: Text("Remove"),
-                      value: "remove",
-                    ),
-                  ],
-                ),
+                (int.parse(userId) == _prefs.userId)
+                    ? PopupMenuButton(
+                        onSelected: (value) {
+                          switch (value) {
+                            case "remove":
+                              _removeComment(commentId);
+                              break;
+                            default:
+                          }
+                        },
+                        elevation: 5.0,
+                        child: Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Icon(Icons.more_vert),
+                        ),
+                        itemBuilder: (context) => [
+                          PopupMenuItem(
+                            child: Text("Remove"),
+                            value: "remove",
+                          ),
+                        ],
+                      )
+                    : Container(),
               ],
             ),
             Align(

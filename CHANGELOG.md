@@ -5,6 +5,10 @@ The format is based on [Keep a Changelog][Keep a Changelog] and this project adh
 
 ## [Released]
 
+## [1.0.9] - 2021-07-17
+### Added
+- Comments section for tasks. User can add comments and remove them
+
 ## [1.0.8] - 2021-07-16
 ### Added
 - Subtasks can be Reordered by long pressing and Drag.
