@@ -50,6 +50,7 @@ dependencies:
   flutter_datetime_picker: 
   url_launcher: ^6.0.9
   package_info:
+  timeago: ^3.1.0
 
 dev_dependencies:
   flutter_test:
