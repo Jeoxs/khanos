@@ -8,8 +8,10 @@ import 'package:khanos/src/providers/task_provider.dart';
 import 'package:khanos/src/providers/comment_provider.dart';
 import 'package:khanos/src/providers/user_provider.dart';
 import 'package:khanos/src/utils/datetime_utils.dart';
+import 'package:khanos/src/utils/theme_utils.dart';
 import 'package:khanos/src/utils/utils.dart';
 import 'package:khanos/src/utils/widgets_utils.dart';
+import 'package:shimmer/shimmer.dart';
 
 class CommentPage extends StatefulWidget {
   @override
@@ -144,7 +146,130 @@ class _CommentPageState extends State<CommentPage> {
   }
 
   _shimmerList() {
-    return Container();
+    return Column(
+      children: [
+        Expanded(
+          child: ListView.builder(
+              controller: _scrollController,
+              itemCount: 8,
+              itemBuilder: (BuildContext context, int i) {
+                return _shimmerCard();
+              }),
+        ),
+        Shimmer.fromColors(
+          child: Container(
+              margin: EdgeInsets.symmetric(vertical: 2.0),
+              padding: EdgeInsets.symmetric(vertical: 10.0, horizontal: 10.0),
+              child: Row(mainAxisAlignment: MainAxisAlignment.end, children: [
+                // First child is enter comment text input
+                Expanded(
+                  child: TextFormField(
+                    autocorrect: false,
+                    decoration: new InputDecoration(
+                      labelText: "Add Comment",
+                      labelStyle: TextStyle(fontSize: 15.0),
+                      fillColor: Colors.blue,
+                      border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(20.0),
+                          // borderRadius:
+                          //     BorderRadius.all(Radius.zero(5.0)),
+                          borderSide: BorderSide(color: Colors.purpleAccent)),
+                    ),
+                  ),
+                ),
+                // Second child is button
+                IconButton(
+                  icon: Icon(Icons.send, color: Colors.blue),
+                  iconSize: 20.0,
+                )
+              ])),
+          baseColor: Colors.grey[600],
+          highlightColor: Colors.grey[200],
+        )
+      ],
+    );
+  }
+
+  _shimmerCard() {
+    return Card(
+      elevation: 5.0,
+      margin: EdgeInsets.symmetric(horizontal: 20.0, vertical: 10.0),
+      child: Padding(
+        padding: const EdgeInsets.symmetric(vertical: 10.0),
+        child: Column(
+          children: [
+            Row(
+              children: [
+                Shimmer.fromColors(
+                  child: Container(
+                    width: 40.0,
+                    height: 40.0,
+                    padding: EdgeInsets.all(10.0),
+                    margin: EdgeInsets.symmetric(horizontal: 10.0),
+                    child: Text('J',
+                        style: TextStyle(
+                            fontSize: 17.0, fontWeight: FontWeight.bold),
+                        textAlign: TextAlign.center),
+                    decoration: BoxDecoration(
+                      color: currentThemeData.backgroundColor,
+                      borderRadius: BorderRadius.circular(20.0),
+                    ),
+                  ),
+                  baseColor: Colors.grey[600],
+                  highlightColor: Colors.grey[500],
+                ),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Shimmer.fromColors(
+                      child: Text(
+                        'JohnDoe',
+                        style: TextStyle(
+                            fontWeight: FontWeight.bold, fontSize: 15.0),
+                      ),
+                      baseColor: Colors.grey[600],
+                      highlightColor: Colors.grey[500],
+                    ),
+                    Shimmer.fromColors(
+                      child: Text(
+                        getTimeAgo('123423335'),
+                        style: currentThemeData.textTheme.caption,
+                      ),
+                      baseColor: Colors.grey[600],
+                      highlightColor: Colors.grey[500],
+                    ),
+                  ],
+                ),
+                Spacer(),
+                Shimmer.fromColors(
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Icon(Icons.more_vert),
+                  ),
+                  baseColor: Colors.grey[600],
+                  highlightColor: Colors.grey[500],
+                ),
+              ],
+            ),
+            Align(
+              alignment: Alignment.centerLeft,
+              child: Container(
+                margin: EdgeInsets.symmetric(horizontal: 10.0, vertical: 10.0),
+                child: Shimmer.fromColors(
+                  child: Text(
+                    'A quick brown fox jumps over...',
+                    textAlign: TextAlign.start,
+                    style: currentThemeData.textTheme.bodyText1,
+                  ),
+                  baseColor: Colors.grey[600],
+                  highlightColor: Colors.grey[500],
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
   }
 
   _commentCard(
@@ -188,7 +313,14 @@ class _CommentPageState extends State<CommentPage> {
                 ),
                 Spacer(),
                 PopupMenuButton(
-                  onSelected: (_) => _removeComment(commentId),
+                  onSelected: (value) {
+                    switch (value) {
+                      case "remove":
+                        _removeComment(commentId);
+                        break;
+                      default:
+                    }
+                  },
                   elevation: 5.0,
                   child: Padding(
                     padding: const EdgeInsets.all(8.0),
@@ -199,10 +331,6 @@ class _CommentPageState extends State<CommentPage> {
                       child: Text("Remove"),
                       value: "remove",
                     ),
-                    // PopupMenuItem(
-                    //   child: Text("Second"),
-                    //   value: 2,
-                    // )
                   ],
                 ),
               ],
