@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:khanos/src/pages/about_page.dart';
+import 'package:khanos/src/pages/comment_page.dart';
 import 'package:khanos/src/pages/home_page.dart';
 import 'package:khanos/src/pages/kanban_page.dart';
 import 'package:khanos/src/pages/login_page.dart';
@@ -89,6 +90,7 @@ class MaterialAppWithTheme extends StatelessWidget {
         'newProject': (BuildContext context) => NewProjectPage(),
         'kanban': (BuildContext context) => KanbanPage(),
         'about': (BuildContext context) => AboutPage(),
+        'comment': (BuildContext context) => CommentPage(),
       },
       theme: theme.getTheme,
     );

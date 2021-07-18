@@ -58,7 +58,7 @@ class _TaskPageState extends State<TaskPage> {
     return Scaffold(
       appBar: normalAppBar(project.name),
       body: Container(width: double.infinity, child: _taskInfo()),
-      floatingActionButton: Column(
+      floatingActionButton: Row(
         mainAxisAlignment: MainAxisAlignment.end,
         children: [
           FloatingActionButton(
@@ -70,7 +70,17 @@ class _TaskPageState extends State<TaskPage> {
             },
             child: Icon(Icons.playlist_add_check_rounded),
           ),
-          SizedBox(height: 10.0),
+          SizedBox(width: 10.0),
+          FloatingActionButton(
+            backgroundColor: Colors.blue,
+            heroTag: "commentsHero",
+            onPressed: () {
+              Navigator.pushNamed(context, 'comment', arguments: {'task': task})
+                  .then((_) => setState(() {}));
+            },
+            child: Icon(Icons.comment),
+          ),
+          SizedBox(width: 10.0),
           FloatingActionButton(
             backgroundColor: Colors.blue,
             heroTag: "editTaskHero",
