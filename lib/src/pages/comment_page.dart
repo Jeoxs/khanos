@@ -102,7 +102,7 @@ class _CommentPageState extends State<CommentPage> {
               itemCount: comments.length,
               itemBuilder: (BuildContext context, int i) {
                 return _commentCard(comments[i].username, comments[i].comment,
-                    comments[i].dateCreation);
+                    comments[i].dateCreation, comments[i].id);
               }),
         ),
         Container(
@@ -147,7 +147,8 @@ class _CommentPageState extends State<CommentPage> {
     return Container();
   }
 
-  _commentCard(String username, String comment, String dateCreated) {
+  _commentCard(
+      String username, String comment, String dateCreated, String commentId) {
     return Card(
       elevation: 5.0,
       margin: EdgeInsets.symmetric(horizontal: 20.0, vertical: 10.0),
@@ -186,7 +187,24 @@ class _CommentPageState extends State<CommentPage> {
                   ],
                 ),
                 Spacer(),
-                IconButton(onPressed: () {}, icon: Icon(Icons.more_vert)),
+                PopupMenuButton(
+                  onSelected: (_) => _removeComment(commentId),
+                  elevation: 5.0,
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Icon(Icons.more_vert),
+                  ),
+                  itemBuilder: (context) => [
+                    PopupMenuItem(
+                      child: Text("Remove"),
+                      value: "remove",
+                    ),
+                    // PopupMenuItem(
+                    //   child: Text("Second"),
+                    //   value: 2,
+                    // )
+                  ],
+                ),
               ],
             ),
             Align(
@@ -253,6 +271,40 @@ class _CommentPageState extends State<CommentPage> {
       }
     } else {
       mostrarAlerta(context, 'Please, Fill something before send!');
+    }
+  }
+
+  _removeComment(String commentId) async {
+    showLoaderDialog(context);
+    bool result = false;
+    try {
+      result = await commentProvider.removeComment(int.parse(commentId));
+    } catch (e) {
+      processApiError(e);
+      error = e;
+      if (_prefs.authFlag != true) {
+        final SnackBar _snackBar = SnackBar(
+          content: const Text('Login Failed!'),
+          duration: const Duration(seconds: 5),
+        );
+        @override
+        void run() {
+          scheduleMicrotask(() {
+            ScaffoldMessenger.of(context).showSnackBar(_snackBar);
+            Navigator.pushReplacementNamed(context, 'login',
+                arguments: {'error': e});
+          });
+        }
+
+        run();
+      }
+    }
+
+    Navigator.pop(context);
+    if (result) {
+      setState(() {});
+    } else {
+      mostrarAlerta(context, 'There was some error! Please, try again!');
     }
   }
 }

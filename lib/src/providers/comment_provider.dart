@@ -154,7 +154,7 @@ class CommentProvider {
       "jsonrpc": "2.0",
       "method": "removeComment",
       "id": 328836871,
-      "params": {"task_id": commentId}
+      "params": {"comment_id": commentId}
     };
 
     final credentials = "${_prefs.username}:${_prefs.password}";
