@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:khanos/src/models/user_model.dart';
+import 'package:khanos/src/models/activity_model.dart';
 import 'package:khanos/src/preferences/user_preferences.dart';
 
 class UserProvider {
@@ -80,5 +81,49 @@ class UserProvider {
     user = UserModel.fromJson(decodedData['result']);
 
     return user;
+  }
+
+  Future<List<ActivityModel>> getMyActivityStream() async {
+    final Map<String, dynamic> parameters = {
+      "jsonrpc": "2.0",
+      "method": "getMyActivityStream",
+      "id": 1132562181
+    };
+
+    final credentials = "${_prefs.username}:${_prefs.password}";
+
+    Codec<String, String> stringToBase64 = utf8.fuse(base64);
+
+    String encoded = stringToBase64.encode(credentials);
+
+    print(encoded);
+
+    final resp = await http.post(
+      Uri.parse(_prefs.endpoint),
+      headers: <String, String>{"Authorization": "Basic $encoded"},
+      body: json.encode(parameters),
+    );
+
+    final decodedData = json.decode(utf8.decode(resp.bodyBytes));
+
+    if (decodedData == null) return [];
+
+    // Check for errors
+    if (decodedData['error'] != null) {
+      return Future.error(decodedData['error']);
+    }
+
+    final List<ActivityModel> activities = [];
+
+    final List<dynamic> results = decodedData['result'];
+
+    results.forEach((activity) {
+      final activityTemp = ActivityModel.fromJson(activity);
+
+      activities.add(activityTemp);
+    });
+
+    // print(decodedData['result']);
+    return activities;
   }
 }

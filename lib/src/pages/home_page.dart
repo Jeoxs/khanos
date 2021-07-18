@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
+import 'package:khanos/src/pages/activity_page.dart';
 import 'package:khanos/src/pages/overdue_page.dart';
 import 'package:khanos/src/preferences/user_preferences.dart';
 import 'package:khanos/src/providers/dark_theme_provider.dart';
@@ -41,6 +42,8 @@ class _HomePageState extends State<HomePage> {
     List<Widget> _children = [];
     _children.add(projectList(context));
     _children.add(OverdueTasksPage());
+    _children.add(ActivityPage());
+
     currentThemeData =
         _darkTheme == true ? ThemeData.dark() : ThemeData.light();
     return Scaffold(
@@ -67,6 +70,10 @@ class _HomePageState extends State<HomePage> {
           BottomNavigationBarItem(
             icon: new Icon(Icons.watch_later_outlined),
             label: 'Overdue Tasks',
+          ),
+          BottomNavigationBarItem(
+            icon: new Icon(Icons.list),
+            label: 'Activities',
           ),
         ],
         selectedItemColor: Colors.blue,

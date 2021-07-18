@@ -111,6 +111,13 @@ packages:
     description: flutter
     source: sdk
     version: "0.0.0"
+  flutter_dash:
+    dependency: "direct main"
+    description:
+      name: flutter_dash
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.0.1"
   flutter_datetime_picker:
     dependency: "direct main"
     description:
