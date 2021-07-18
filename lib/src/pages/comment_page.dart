@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:khanos/src/models/task_model.dart';
@@ -317,6 +318,9 @@ class _CommentPageState extends State<CommentPage> {
                     ? PopupMenuButton(
                         onSelected: (value) {
                           switch (value) {
+                            case "edit":
+                              _editCommentDialog(context, commentId, comment);
+                              break;
                             case "remove":
                               _removeComment(commentId);
                               break;
@@ -329,6 +333,10 @@ class _CommentPageState extends State<CommentPage> {
                           child: Icon(Icons.more_vert),
                         ),
                         itemBuilder: (context) => [
+                          PopupMenuItem(
+                            child: Text("Edit"),
+                            value: "edit",
+                          ),
                           PopupMenuItem(
                             child: Text("Remove"),
                             value: "remove",
@@ -431,11 +439,67 @@ class _CommentPageState extends State<CommentPage> {
       }
     }
 
-    Navigator.pop(context);
     if (result) {
-      setState(() {});
+      setState(() {
+        Navigator.pop(context);
+      });
     } else {
       mostrarAlerta(context, 'There was some error! Please, try again!');
     }
+  }
+
+  void _editCommentDialog(
+      BuildContext context, String commentId, String comment) {
+    String newEditedComment = comment;
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+            title: Text('Edit Comment'),
+            content: TextFormField(
+              keyboardType: TextInputType.multiline,
+              maxLines: null,
+              initialValue: newEditedComment,
+              onChanged: (value) {
+                newEditedComment = value;
+              },
+              decoration: new InputDecoration(
+                labelText: "Edit Comment",
+                labelStyle: TextStyle(fontSize: 15.0),
+                fillColor: Colors.blue,
+                border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(20.0),
+                    // borderRadius:
+                    //     BorderRadius.all(Radius.zero(5.0)),
+                    borderSide: BorderSide(color: Colors.purpleAccent)),
+              ),
+            ),
+            actions: <Widget>[
+              TextButton(
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                  child: Text('Cancel')),
+              TextButton(
+                  child: Text('Ok'),
+                  onPressed: () async {
+                    showLoaderDialog(context);
+                    if (newEditedComment.isNotEmpty) {
+                      bool result = await commentProvider.updateComment(
+                          {'id': commentId, 'content': newEditedComment});
+                      Navigator.of(context).pop(); // Pop out loader dialog
+                      if (result) {
+                        setState(() {});
+                        Navigator.of(context).pop(); // Pop out Editing message
+                      } else {
+                        mostrarAlerta(context, 'Something went Wrong');
+                      }
+                    } else {
+                      mostrarAlerta(context, 'Comment Message cannot be Empty');
+                    }
+                  }),
+            ]);
+      },
+    );
   }
 }
