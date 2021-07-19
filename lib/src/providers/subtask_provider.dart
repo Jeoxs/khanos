@@ -319,12 +319,6 @@ class SubtaskProvider {
     bool result1 = false;
     bool result2 = false;
 
-    Map<String, dynamic> args = {
-      'id': affectedSubtask.id,
-      'task_id': affectedSubtask.taskId,
-      'position': oldPosition
-    };
-
     result1 = await this.updateSubtask(affectedSubtask, {
       'id': affectedSubtask.id,
       'task_id': affectedSubtask.taskId,

@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:khanos/src/utils/theme_utils.dart';
 import 'package:khanos/src/utils/widgets_utils.dart';
-import 'package:package_info/package_info.dart';
 
 class AboutPage extends StatelessWidget {
   @override

@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:khanos/src/models/column_model.dart';
 import 'package:khanos/src/utils/board_item_object.dart';
 

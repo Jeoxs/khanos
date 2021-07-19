@@ -149,16 +149,12 @@ class _LoginPageState extends State<LoginPage> {
   Widget _createBoton(BuildContext context) {
     return StreamBuilder(
       builder: (BuildContext context, AsyncSnapshot snapshot) {
-        return RaisedButton(
+        return ElevatedButton(
+            style: ButtonStyle(elevation: MaterialStateProperty.all(5.0)),
             child: Container(
               padding: EdgeInsets.symmetric(horizontal: 80.0, vertical: 15.0),
               child: Text('Login'),
             ),
-            shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(5.0)),
-            elevation: 0.0,
-            color: Colors.blue,
-            textColor: Colors.white,
             onPressed: () {
               if (_formKey.currentState.validate()) {
                 showLoaderDialog(context);

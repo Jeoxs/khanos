@@ -13,6 +13,7 @@ import 'package:khanos/src/utils/board_item_object.dart';
 import 'package:khanos/src/utils/board_list_object.dart';
 import 'package:khanos/src/utils/widgets_utils.dart';
 
+// ignore: must_be_immutable
 class KanbanPage extends StatefulWidget {
   List<TaskModel> tasks;
 
