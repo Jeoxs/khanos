@@ -136,9 +136,14 @@ class _ActivityPageState extends State<ActivityPage> {
                         Container(
                           width: MediaQuery.of(context).size.width * 0.70,
                           child: Shimmer.fromColors(
-                              child: Text(
-                                  'The quick brown fox jumps over the lazy dog',
-                                  overflow: TextOverflow.clip),
+                              child: Container(
+                                width: 200,
+                                height: 20,
+                                decoration: BoxDecoration(
+                                  color: Colors.grey,
+                                  borderRadius: BorderRadius.circular(5),
+                                ),
+                              ),
                               baseColor: Colors.grey,
                               highlightColor: Colors.grey[300]),
                         ),
