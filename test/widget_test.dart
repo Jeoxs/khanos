@@ -15,15 +15,9 @@ void main() async {
   final prefs = new UserPreferences();
   await prefs.initPrefs();
 
-  final Map<String, dynamic> preferences = {
-    'endpoint': prefs.endpoint,
-    'username': prefs.username,
-    'password': prefs.password,
-    'authFlag': prefs.authFlag
-  };
   testWidgets('Counter increments smoke test', (WidgetTester tester) async {
     // Build our app and trigger a frame.
-    await tester.pumpWidget(MyApp(preferences));
+    await tester.pumpWidget(MyApp());
 
     // Verify that our counter starts at 0.
     expect(find.text('0'), findsOneWidget);

@@ -68,7 +68,7 @@ class AuthProvider {
     try {
       decodedData =
           json.decode(utf8.decode(resp.bodyBytes)) as Map<String, dynamic>;
-    } on FormatException catch (e) {
+    } on FormatException catch (_) {
       return false;
     }
 

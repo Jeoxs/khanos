@@ -28,7 +28,6 @@ class _TaskPageState extends State<TaskPage> {
   Map<String, dynamic> error;
   TaskModel task = new TaskModel();
   int taskId;
-  int ProjectId;
   List<ColumnModel> projectColumns = [];
   List<TagModel> _tags = [];
   ProjectModel project;

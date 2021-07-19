@@ -116,6 +116,7 @@ class _NewSubtaskPageState extends State<NewSubtaskPage> {
           // margin: EdgeInsets.only(left: 40.0),
           padding: EdgeInsets.symmetric(horizontal: 20.0),
           child: DropdownButtonFormField(
+            onTap: () {FocusScope.of(context).requestFocus(new FocusNode());},
             icon: Padding(
               padding: const EdgeInsets.only(right: 12),
               child: Icon(Icons.person, color: Colors.blue),
@@ -149,22 +150,22 @@ class _NewSubtaskPageState extends State<NewSubtaskPage> {
   }
 
   Widget _submitButton() {
-    return RaisedButton(
-        child: Container(
-          padding: EdgeInsets.symmetric(horizontal: 50.0, vertical: 15.0),
-          child: Text('Create'),
-        ),
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5.0)),
-        elevation: 0.0,
-        color: Colors.blue,
-        textColor: Colors.white,
-        onPressed: () {
-          if (_formKey.currentState.validate()) {
-            _createSubtask(context);
-          } else {
-            mostrarAlerta(context, 'Please fill required fields');
-          }
-        });
+    return ElevatedButton(
+      style: ButtonStyle(
+        elevation: MaterialStateProperty.all(5.0),
+      ),
+      child: Container(
+        padding: EdgeInsets.symmetric(horizontal: 50.0, vertical: 15.0),
+        child: Text('Create'),
+      ),
+      onPressed: () {
+        if (_formKey.currentState.validate()) {
+          _createSubtask(context);
+        } else {
+          mostrarAlerta(context, 'Please fill required Fields');
+        }
+      },
+    );
   }
 
   _createSubtask(BuildContext context) async {

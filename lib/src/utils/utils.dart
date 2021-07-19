@@ -3,7 +3,7 @@ import 'package:khanos/src/preferences/user_preferences.dart';
 import 'package:khanos/src/utils/theme_utils.dart';
 
 final _prefs = new UserPreferences();
-
+ScrollController scrollController = new ScrollController();
 bool isNumeric(String s) {
   if (s.isEmpty) return false;
 
@@ -20,8 +20,59 @@ void mostrarAlerta(BuildContext context, String mensaje) {
           title: Text('Alert'),
           content: Text(mensaje),
           actions: <Widget>[
-            FlatButton(
+            TextButton(
                 child: Text('Ok'),
+                onPressed: () => Navigator.of(context).pop()),
+          ]);
+    },
+  );
+}
+
+void showChangelog(BuildContext context) {
+  showDialog(
+    context: context,
+    builder: (context) {
+      return AlertDialog(
+          scrollable: true,
+          title: Text('Welcome!'),
+          content: Text(
+              'Welcome to version 1.0.9! You can see what\'s new in the Changelog Section.'),
+          actions: <Widget>[
+            TextButton(
+                child: Text('View Changes'),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                  Navigator.pushNamed(context, 'changelog');
+                }),
+            TextButton(
+                child: Text('Maybe Later'),
+                onPressed: () => Navigator.of(context).pop()),
+          ]);
+    },
+  );
+}
+
+void showSlideTutorial(BuildContext context) {
+  showDialog(
+    context: context,
+    builder: (context) {
+      return AlertDialog(
+          scrollable: true,
+          title: Text('You should know...'),
+          content: Column(
+            children: [
+              Container(
+                  margin: EdgeInsets.only(bottom: 10.0),
+                  child: Text(
+                      'You can slide Projects, tasks and subtasks cards to get additional options')),
+              ClipRRect(
+                  borderRadius: BorderRadius.circular(5.0),
+                  child: Image.asset('assets/images/slide_tutorial.png')),
+            ],
+          ),
+          actions: <Widget>[
+            TextButton(
+                child: Text('Got it!'),
                 onPressed: () => Navigator.of(context).pop()),
           ]);
     },

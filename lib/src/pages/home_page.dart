@@ -39,6 +39,11 @@ class _HomePageState extends State<HomePage> {
   int projectsAmount;
   @override
   Widget build(BuildContext context) {
+    if (_prefs.newInstall == true) {
+      Future.delayed(Duration.zero, () => showChangelog(context));
+      _prefs.newInstall = false;
+    }
+
     List<Widget> _children = [];
     _children.add(projectList(context));
     _children.add(OverdueTasksPage());
@@ -352,6 +357,13 @@ class _HomePageState extends State<HomePage> {
               title: Text('Show your support'),
               onTap: () {
                 _launchBuyMeACoffee();
+              },
+            ),
+            ListTile(
+              leading: Icon(Icons.bolt, color: Colors.blue),
+              title: Text('What\'s New'),
+              onTap: () {
+                Navigator.pushNamed(context, 'changelog');
               },
             ),
             ListTile(

@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:khanos/src/utils/theme_utils.dart';
 import 'package:khanos/src/utils/widgets_utils.dart';
-import 'package:package_info/package_info.dart';
 
 class AboutPage extends StatelessWidget {
   @override
@@ -35,11 +34,11 @@ _showAboutInfo(BuildContext context) {
                   style: TextStyle(
                       fontSize: 22,
                       fontWeight: FontWeight.w500,
-                      color: CustomColors.TextHeader),
+                      color: CustomColors.TextSubHeader),
                 ),
                 SizedBox(height: 15),
                 Text(
-                  'Version: 1.0.9',
+                  'Version: 1.1.0',
                   style: TextStyle(
                       fontSize: 17,
                       fontWeight: FontWeight.w400,

@@ -48,7 +48,7 @@ class _TaskFormPageState extends State<TaskFormPage> {
   String _description = '';
   ColorSwatch _tempTaskColor;
   Color _mainColor = Colors.blue;
-  String _colorId = '';
+  String _colorId = 'blue';
   String _creatorId = '0';
   String _ownerId = '0';
   String _columnId = '0';
@@ -412,6 +412,9 @@ class _TaskFormPageState extends State<TaskFormPage> {
       // margin: EdgeInsets.only(left: 40.0),
       padding: EdgeInsets.symmetric(horizontal: 20.0),
       child: DropdownButtonFormField(
+        onTap: () {
+          FocusScope.of(context).requestFocus(new FocusNode());
+        },
         icon: Padding(
           padding: const EdgeInsets.only(right: 12),
           child: Icon(Icons.person_pin_circle_outlined, color: Colors.blue),
@@ -444,6 +447,9 @@ class _TaskFormPageState extends State<TaskFormPage> {
       // margin: EdgeInsets.only(left: 40.0),
       padding: EdgeInsets.symmetric(horizontal: 20.0),
       child: DropdownButtonFormField(
+        onTap: () {
+          FocusScope.of(context).requestFocus(new FocusNode());
+        },
         icon: Padding(
           padding: const EdgeInsets.only(right: 12),
           child: Icon(Icons.person, color: Colors.blue),
@@ -475,6 +481,9 @@ class _TaskFormPageState extends State<TaskFormPage> {
       // margin: EdgeInsets.only(left: 40.0),
       padding: EdgeInsets.symmetric(horizontal: 20.0),
       child: DropdownButtonFormField(
+        onTap: () {
+          FocusScope.of(context).requestFocus(new FocusNode());
+        },
         icon: Padding(
           padding: const EdgeInsets.only(right: 12),
           child: Icon(Icons.view_column, color: Colors.blue),
@@ -522,15 +531,12 @@ class _TaskFormPageState extends State<TaskFormPage> {
   }
 
   Widget _submitButton() {
-    return RaisedButton(
+    return ElevatedButton(
         child: Container(
           padding: EdgeInsets.symmetric(horizontal: 50.0, vertical: 15.0),
           child: Text(createTask ? 'Create' : 'Update'),
         ),
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5.0)),
-        elevation: 0.0,
-        color: Colors.blue,
-        textColor: Colors.white,
+        style: ButtonStyle(elevation: MaterialStateProperty.all(5.0)),
         onPressed: () {
           if (_formKey.currentState.validate() && _ownerId != '0') {
             showLoaderDialog(context);
@@ -655,7 +661,10 @@ class _TaskFormPageState extends State<TaskFormPage> {
               decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(20.0), color: _mainColor),
             ),
-            onTap: _openMainColorPicker,
+            onTap: () {
+              FocusScope.of(context).requestFocus(new FocusNode());
+              _openMainColorPicker();
+            },
           ),
         ],
       ),
@@ -743,6 +752,9 @@ class _TaskFormPageState extends State<TaskFormPage> {
       // margin: EdgeInsets.only(left: 40.0),
       padding: EdgeInsets.only(left: 20.0, right: 10.0),
       child: DropdownButtonFormField(
+        onTap: () {
+          FocusScope.of(context).requestFocus(new FocusNode());
+        },
         icon: Padding(
           padding: const EdgeInsets.only(right: 12),
           child: Icon(Icons.star_border, color: Colors.blue),

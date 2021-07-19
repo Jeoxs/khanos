@@ -1,4 +1,4 @@
-![Version](https://img.shields.io/badge/version-v1.0.9-red)
+![Version](https://img.shields.io/badge/version-v1.1.0-red)
 [![Follow on Twitter](https://img.shields.io/badge/twitter-@thejoseaponte-blue.svg)](https://twitter.com/thejoseaponte)
 [![Download Khanos](https://img.shields.io/badge/download-khanos-green)](https://github.com/Jeoxs/khanos/releases)
 

@@ -2,7 +2,6 @@ import 'dart:async';
 
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'package:gradient_app_bar/gradient_app_bar.dart';
 import 'package:khanos/src/models/column_model.dart';
 import 'package:khanos/src/models/project_model.dart';
 import 'package:khanos/src/models/task_model.dart';
@@ -39,6 +38,11 @@ class _ProjectPageState extends State<ProjectPage> {
   void initState() {
     _darkTheme = _prefs.darkTheme;
     super.initState();
+
+    if (_prefs.firstTime == true) {
+      Future.delayed(Duration.zero, () => showSlideTutorial(context));
+      _prefs.firstTime = false;
+    }
   }
 
   @override
