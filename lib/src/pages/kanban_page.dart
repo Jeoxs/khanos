@@ -7,6 +7,7 @@ import 'package:khanos/src/models/column_model.dart';
 import 'package:khanos/src/models/project_model.dart';
 import 'package:khanos/src/models/task_model.dart';
 import 'package:khanos/src/preferences/user_preferences.dart';
+import 'package:khanos/src/providers/project_provider.dart';
 import 'package:khanos/src/providers/task_provider.dart';
 import 'package:khanos/src/utils/board_item_object.dart';
 import 'package:khanos/src/utils/board_list_object.dart';
@@ -25,7 +26,10 @@ class _KanbanPageState extends State<KanbanPage> {
   bool _darkTheme;
   ThemeData currentThemeData;
   final taskProvider = new TaskProvider();
+  final projectProvider = new ProjectProvider();
   final _prefs = new UserPreferences();
+  List<TaskModel> tasks;
+  List<ColumnModel> columns;
   ProjectModel _project;
 
   //Can be used to animate to different sections of the BoardView
@@ -46,10 +50,12 @@ class _KanbanPageState extends State<KanbanPage> {
     currentThemeData =
         _darkTheme == true ? ThemeData.dark() : ThemeData.light();
     final Map kanbanArgs = ModalRoute.of(context).settings.arguments;
-
-    List<TaskModel> tasks = kanbanArgs['tasks'];
-    List<ColumnModel> columns = kanbanArgs['columns'];
     _project = kanbanArgs['project'];
+    columns = kanbanArgs['columns'];
+    if (kanbanArgs['tasks'] != null) {
+      tasks = kanbanArgs['tasks'];
+      kanbanArgs['tasks'] = null;
+    }
 
     columns.forEach((col) {
       List<TaskModel> columnTasks =
@@ -67,15 +73,13 @@ class _KanbanPageState extends State<KanbanPage> {
           title: col.title, items: columnObjects, columnContent: col));
     });
 
-    ProjectModel project = kanbanArgs['project'];
-
     List<BoardList> _lists = [];
     for (int i = 0; i < _listData.length; i++) {
       _lists.add(_createBoardList(_listData[i]) as BoardList);
     }
 
     return Scaffold(
-      appBar: normalAppBar(project.name),
+      appBar: normalAppBar(_project.name),
       body: _getKanban(_lists),
     );
   }
@@ -131,9 +135,6 @@ class _KanbanPageState extends State<KanbanPage> {
           int oldItemIndex, BoardItemState state) async {
         //Used to update our local item data
         var item = _listData[oldListIndex].items[oldItemIndex];
-        print('Position -> oldItemIndex: $oldItemIndex, itemIndex: $itemIndex');
-        print(
-            'Position -> ${itemObject.taskContent.title} - ${itemObject.taskContent.position}');
         bool updateResult = await taskProvider.moveTaskPosition({
           'task_id': itemObject.taskContent.id,
           'project_id': itemObject.taskContent.projectId,
@@ -147,7 +148,14 @@ class _KanbanPageState extends State<KanbanPage> {
           _listData[listIndex].items.insert(itemIndex, item);
           itemObject.taskContent.columnId =
               _listData[listIndex].columnContent.id;
-          itemObject.taskContent.position = (itemIndex).toString();
+          tasks[tasks.indexWhere(
+                  (element) => element.id == itemObject.taskContent.id)]
+              .columnId = _listData[listIndex].columnContent.id;
+          tasks[tasks.indexWhere(
+                  (element) => element.id == itemObject.taskContent.id)]
+              .position = (itemIndex + 1).toString();
+          tasks = taskProvider.getTasks(int.parse(_project.id), 1)
+              as List<TaskModel>;
         }
         setState(() {});
       },
