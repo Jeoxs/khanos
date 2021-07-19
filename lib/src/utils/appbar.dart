@@ -8,7 +8,6 @@ class KhanosAppBar extends StatefulWidget {
 
   final Map<String, dynamic> arguments;
 
-
   KhanosAppBar({this.title, this.arguments});
 
   @override
@@ -33,7 +32,7 @@ class _KhanosAppBarState extends State<KhanosAppBar> {
       appBarButton = Container();
     }
     return PreferredSize(
-      // preferredSize: Size.fromHeight(60.0),
+      preferredSize: Size.fromHeight(60.0),
       child: GradientAppBar(
         flexibleSpace: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,

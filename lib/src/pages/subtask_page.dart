@@ -282,29 +282,4 @@ class _SubtaskPageState extends State<SubtaskPage> {
       mostrarAlerta(context, 'Something went Wront!');
     }
   }
-
-  _getTaskTimeSpent(int subtaskId) {
-    return FutureBuilder(
-      future: SubtaskProvider().getSubtaskTimeSpent(subtaskId),
-      builder: (BuildContext context, AsyncSnapshot snapshot) {
-        if (snapshot.hasData) {
-          return Container(
-            child: Text('${snapshot.data}h spent',
-                style: TextStyle(
-                  fontSize: 13,
-                ),
-                overflow: TextOverflow.ellipsis),
-          );
-        } else {
-          return Container(
-            child: Text('0h spent',
-                style: TextStyle(
-                  fontSize: 13,
-                ),
-                overflow: TextOverflow.ellipsis),
-          );
-        }
-      },
-    );
-  }
 }

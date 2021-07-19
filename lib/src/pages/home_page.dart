@@ -1,6 +1,5 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
-import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:khanos/src/pages/activity_page.dart';
 import 'package:khanos/src/pages/overdue_page.dart';
 import 'package:khanos/src/preferences/user_preferences.dart';

@@ -522,15 +522,12 @@ class _TaskFormPageState extends State<TaskFormPage> {
   }
 
   Widget _submitButton() {
-    return RaisedButton(
+    return ElevatedButton(
         child: Container(
           padding: EdgeInsets.symmetric(horizontal: 50.0, vertical: 15.0),
           child: Text(createTask ? 'Create' : 'Update'),
         ),
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5.0)),
-        elevation: 0.0,
-        color: Colors.blue,
-        textColor: Colors.white,
+        style: ButtonStyle(elevation: MaterialStateProperty.all(5.0)),
         onPressed: () {
           if (_formKey.currentState.validate() && _ownerId != '0') {
             showLoaderDialog(context);

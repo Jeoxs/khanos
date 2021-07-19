@@ -3,7 +3,7 @@ import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:khanos/src/utils/widgets_utils.dart';
 
 class ChangelogPage extends StatelessWidget {
-  ScrollController scrollController = new ScrollController();
+  final ScrollController scrollController = new ScrollController();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -13,7 +13,7 @@ class ChangelogPage extends StatelessWidget {
   }
 
   _showChangelog() {
-    String changelog = """
+    final String changelog = """
 
 ## Version 1.0.9
 ### **Added** 🚀 

@@ -21,8 +21,6 @@ class _NewProjectPageState extends State<NewProjectPage> {
   TextEditingController _nameFieldController = new TextEditingController();
   TextEditingController _descriptionFieldController =
       new TextEditingController();
-  TextEditingController _identifierFieldController =
-      new TextEditingController();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -66,23 +64,6 @@ class _NewProjectPageState extends State<NewProjectPage> {
               return 'Please type a Project name';
             }
             return null;
-          }),
-    );
-  }
-
-  Widget _identifierField() {
-    return Container(
-      padding: EdgeInsets.symmetric(horizontal: 20.0),
-      child: TextFormField(
-          controller: _identifierFieldController,
-          decoration: InputDecoration(
-            hintText: 'MYPROJECT',
-            labelText: 'Identifier',
-            helperText: 'The project identifier is just alphanumeric',
-            suffixIcon: Icon(Icons.outlined_flag, color: Colors.blue),
-          ),
-          onChanged: (value) {
-            _identifier = value;
           }),
     );
   }
