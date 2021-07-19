@@ -15,6 +15,19 @@ class ChangelogPage extends StatelessWidget {
   _showChangelog() {
     final String changelog = """
 
+## Version 1.1.0
+### **Added** 🚀
+- Changelog Section in Side Menu showing this Changelog
+- Added Tutorial Dialog image for Cards
+
+### **Changed** 🔄
+- Shimmer Animation colors for loading Activities
+
+### **Fixed** 🔧
+- Empty Overdue Tasks now shows the Empty Icon Image
+- Common Framework Bugs and warnings 
+  
+  
 ## Version 1.0.9
 ### **Added** 🚀 
 - Comments section for tasks. User can add comments and remove them

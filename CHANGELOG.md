@@ -5,6 +5,18 @@ The format is based on [Keep a Changelog][Keep a Changelog] and this project adh
 
 ## [Released]
 
+## [1.1.0] - 2021-07-19
+### Added
+- Changelog Section in Side Menu showing this Changelog
+- Added Tutorial Dialog image for Cards
+
+### Changed 
+- Shimmer Animation colors for loading Activities
+
+### Fixed
+- Empty Overdue Tasks now shows the Empty Icon Image
+- Common Framework Bugs and warnings
+
 ## [1.0.9] - 2021-07-18
 ### Added
 - Comments section for tasks. User can add comments and remove them
@@ -102,7 +114,9 @@ The format is based on [Keep a Changelog][Keep a Changelog] and this project adh
 <!-- Versions -->
 [Released]: https://github.com/Jeoxs/khanos/releases
 
-[1.0.6]: https://github.com/Jeoxs/khanos/compare/v1.0.7...v1.0.8
+[1.1.0]: https://github.com/Jeoxs/khanos/compare/v1.0.9...v1.1.0
+[1.0.9]: https://github.com/Jeoxs/khanos/compare/v1.0.8...v1.0.9
+[1.0.8]: https://github.com/Jeoxs/khanos/compare/v1.0.7...v1.0.8
 [1.0.7]: https://github.com/Jeoxs/khanos/compare/v1.0.6...v1.0.7
 [1.0.6]: https://github.com/Jeoxs/khanos/compare/v1.0.5...v1.0.6
 [1.0.5]: https://github.com/Jeoxs/khanos/compare/v1.0.4...v1.0.5
