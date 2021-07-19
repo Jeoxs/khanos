@@ -81,6 +81,14 @@ class UserPreferences {
     _prefs.setBool('newInstall', value);
   }
 
+  get firstTime {
+    return _prefs.getBool('firstTime');
+  }
+
+  set firstTime(bool value) {
+    _prefs.setBool('firstTime', value);
+  }
+
   get buildNumber {
     return _prefs.getString('buildNumber') ?? '';
   }

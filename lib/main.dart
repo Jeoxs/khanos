@@ -30,6 +30,10 @@ void main() async {
     prefs.newInstall = true;
   }
 
+  if (prefs.firstTime == null) {
+    prefs.firstTime = true;
+  }
+
   runApp(MyApp());
 }
 
