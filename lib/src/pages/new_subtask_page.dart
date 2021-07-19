@@ -116,6 +116,7 @@ class _NewSubtaskPageState extends State<NewSubtaskPage> {
           // margin: EdgeInsets.only(left: 40.0),
           padding: EdgeInsets.symmetric(horizontal: 20.0),
           child: DropdownButtonFormField(
+            onTap: () {FocusScope.of(context).requestFocus(new FocusNode());},
             icon: Padding(
               padding: const EdgeInsets.only(right: 12),
               child: Icon(Icons.person, color: Colors.blue),
@@ -164,7 +165,7 @@ class _NewSubtaskPageState extends State<NewSubtaskPage> {
           mostrarAlerta(context, 'Please fill required Fields');
         }
       },
-    );    
+    );
   }
 
   _createSubtask(BuildContext context) async {
