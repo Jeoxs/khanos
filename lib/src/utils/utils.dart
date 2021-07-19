@@ -52,6 +52,33 @@ void showChangelog(BuildContext context) {
   );
 }
 
+void showSlideTutorial(BuildContext context) {
+  showDialog(
+    context: context,
+    builder: (context) {
+      return AlertDialog(
+          scrollable: true,
+          title: Text('You should know...'),
+          content: Column(
+            children: [
+              Container(
+                  margin: EdgeInsets.only(bottom: 10.0),
+                  child: Text(
+                      'You can slide Projects, tasks and subtasks cards to get additional options')),
+              ClipRRect(
+                  borderRadius: BorderRadius.circular(5.0),
+                  child: Image.asset('assets/images/slide_tutorial.png')),
+            ],
+          ),
+          actions: <Widget>[
+            TextButton(
+                child: Text('Got it!'),
+                onPressed: () => Navigator.of(context).pop()),
+          ]);
+    },
+  );
+}
+
 showLoaderDialog(BuildContext context) {
   AlertDialog alert = AlertDialog(
     content: new Row(

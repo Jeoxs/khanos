@@ -43,7 +43,7 @@ class _HomePageState extends State<HomePage> {
       Future.delayed(Duration.zero, () => showChangelog(context));
       _prefs.newInstall = false;
     }
-
+    Future.delayed(Duration.zero, () => showSlideTutorial(context));
     List<Widget> _children = [];
     _children.add(projectList(context));
     _children.add(OverdueTasksPage());
