@@ -35,7 +35,7 @@ _showAboutInfo(BuildContext context) {
                   style: TextStyle(
                       fontSize: 22,
                       fontWeight: FontWeight.w500,
-                      color: CustomColors.TextHeader),
+                      color: CustomColors.TextSubHeader),
                 ),
                 SizedBox(height: 15),
                 Text(

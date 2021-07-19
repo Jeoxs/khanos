@@ -72,4 +72,20 @@ class UserPreferences {
   set darkTheme(bool value) {
     _prefs.setBool('darkTheme', value);
   }
+
+  get newInstall {
+    return _prefs.getBool('newInstall') ?? false;
+  }
+
+  set newInstall(bool value) {
+    _prefs.setBool('newInstall', value);
+  }
+
+  get buildNumber {
+    return _prefs.getString('buildNumber') ?? '';
+  }
+
+  set buildNumber(String value) {
+    _prefs.setString('buildNumber', value);
+  }
 }

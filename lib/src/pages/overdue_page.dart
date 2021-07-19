@@ -41,44 +41,90 @@ class _OverdueTasksPageState extends State<OverdueTasksPage> {
         if (snapshot.hasData) {
           tasks = snapshot.data[0];
           projects = snapshot.data[1];
-          return Column(
-            children: [
-              Container(
-                margin: EdgeInsets.only(top: 15, left: 20, bottom: 20),
-                child: Text(
-                  'Overdue Tasks',
-                  style: TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.w600,
+          if (tasks.length > 0) {
+            return Column(
+              children: [
+                Container(
+                  margin: EdgeInsets.only(top: 15, bottom: 20),
+                  child: Text(
+                    'Overdue Tasks',
+                    style: TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.w600,
+                    ),
                   ),
                 ),
-              ),
-              Expanded(
-                child: ListView.builder(
-                    itemCount: tasks.length,
-                    itemBuilder: (BuildContext context, int i) {
-                      return GestureDetector(
-                        onTap: () {
-                          Feedback.forTap(context);
-                          Navigator.pushNamed(context, 'task', arguments: {
-                            'task_id': tasks[i].id,
-                            'project': projects.firstWhere(
-                                (element) => element.id == tasks[i].projectId),
-                          }).then((_) => setState(() {}));
-                        },
-                        child: _taskElement(
-                            tasks[i].dateDue,
-                            tasks[i].title,
-                            tasks[i].colorId,
-                            projects
-                                .firstWhere((element) =>
-                                    element.id == tasks[i].projectId)
-                                .name),
-                      );
-                    }),
-              ),
-            ],
-          );
+                Expanded(
+                  child: ListView.builder(
+                      itemCount: tasks.length,
+                      itemBuilder: (BuildContext context, int i) {
+                        return GestureDetector(
+                          onTap: () {
+                            Feedback.forTap(context);
+                            Navigator.pushNamed(context, 'task', arguments: {
+                              'task_id': tasks[i].id,
+                              'project': projects.firstWhere((element) =>
+                                  element.id == tasks[i].projectId),
+                            }).then((_) => setState(() {}));
+                          },
+                          child: _taskElement(
+                              tasks[i].dateDue,
+                              tasks[i].title,
+                              tasks[i].colorId,
+                              projects
+                                  .firstWhere((element) =>
+                                      element.id == tasks[i].projectId)
+                                  .name),
+                        );
+                      }),
+                ),
+              ],
+            );
+          } else {
+            return Column(
+              children: [
+                Container(
+                  margin: EdgeInsets.only(top: 15, bottom: 20),
+                  child: Text(
+                    'Overdue Tasks',
+                    style: TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                ),
+                Center(
+                  child: Container(
+                    width: MediaQuery.of(context).size.width / 1.2,
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      mainAxisSize: MainAxisSize.min,
+                      children: <Widget>[
+                        Flexible(
+                          fit: FlexFit.loose,
+                          child: Hero(
+                            tag: 'Clipboard',
+                            child: Image.asset(
+                                'assets/images/Clipboard-empty.png'),
+                          ),
+                        ),
+                        SizedBox(
+                          height: 10.0,
+                        ),
+                        Text(
+                          'No Overdue Tasks',
+                          style: TextStyle(
+                              fontSize: 22,
+                              fontWeight: FontWeight.w500,
+                              color: CustomColors.TextSubHeader),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ],
+            );
+          }
         } else {
           return Column(
             children: [

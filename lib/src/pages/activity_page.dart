@@ -3,6 +3,7 @@ import 'package:khanos/src/models/activity_model.dart';
 import 'package:flutter_dash/flutter_dash.dart';
 import 'package:khanos/src/preferences/user_preferences.dart';
 import 'package:khanos/src/providers/user_provider.dart';
+import 'package:khanos/src/utils/theme_utils.dart';
 import 'package:shimmer/shimmer.dart';
 
 class ActivityPage extends StatefulWidget {
@@ -130,8 +131,8 @@ class _ActivityPageState extends State<ActivityPage> {
                           ),
                           child: Shimmer.fromColors(
                               child: Icon(Icons.event, size: 30),
-                              baseColor: Colors.grey,
-                              highlightColor: Colors.grey[300]),
+                              baseColor: CustomColors.BlueDark,
+                              highlightColor: Colors.lightBlue[200]),
                         ),
                         Container(
                           width: MediaQuery.of(context).size.width * 0.70,
@@ -144,8 +145,8 @@ class _ActivityPageState extends State<ActivityPage> {
                                   borderRadius: BorderRadius.circular(5),
                                 ),
                               ),
-                              baseColor: Colors.grey,
-                              highlightColor: Colors.grey[300]),
+                              baseColor: CustomColors.BlueDark,
+                              highlightColor: Colors.lightBlue[200]),
                         ),
                       ],
                     ),
@@ -158,8 +159,8 @@ class _ActivityPageState extends State<ActivityPage> {
                               dashLength: 5,
                               dashThickness: 2,
                               dashColor: Colors.grey),
-                          baseColor: Colors.grey,
-                          highlightColor: Colors.grey[300]),
+                          baseColor: CustomColors.BlueDark,
+                          highlightColor: Colors.lightBlue[200]),
                     ),
                   ],
                 );
