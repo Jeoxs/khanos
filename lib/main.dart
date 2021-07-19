@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:khanos/src/pages/about_page.dart';
+import 'package:khanos/src/pages/changelog.dart';
 import 'package:khanos/src/pages/comment_page.dart';
 import 'package:khanos/src/pages/home_page.dart';
 import 'package:khanos/src/pages/kanban_page.dart';
@@ -15,12 +16,19 @@ import 'package:khanos/src/preferences/user_preferences.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:khanos/src/providers/dark_theme_provider.dart';
 import 'package:provider/provider.dart';
-import 'package:provider/single_child_widget.dart';
+import 'package:package_info_plus/package_info_plus.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   final prefs = new UserPreferences();
   await prefs.initPrefs();
+  PackageInfo packageInfo = await PackageInfo.fromPlatform();
+  String buildNumber = packageInfo.buildNumber;
+
+  if (buildNumber != prefs.buildNumber) {
+    prefs.buildNumber = buildNumber;
+    prefs.newInstall = true;
+  }
 
   runApp(MyApp());
 }
@@ -91,6 +99,7 @@ class MaterialAppWithTheme extends StatelessWidget {
         'kanban': (BuildContext context) => KanbanPage(),
         'about': (BuildContext context) => AboutPage(),
         'comment': (BuildContext context) => CommentPage(),
+        'changelog': (BuildContext context) => ChangelogPage(),
       },
       theme: theme.getTheme,
     );
