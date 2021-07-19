@@ -5,6 +5,15 @@ The format is based on [Keep a Changelog][Keep a Changelog] and this project adh
 
 ## [Released]
 
+## [1.0.9] - 2021-07-18
+### Added
+- Comments section for tasks. User can add comments and remove them
+- Added Overdue Tasks page in Home
+- Added Activity Page in Home
+
+### Fixed
+- Kanban Columns duplicated when moving Items
+
 ## [1.0.8] - 2021-07-16
 ### Added
 - Subtasks can be Reordered by long pressing and Drag.

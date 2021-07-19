@@ -10,7 +10,7 @@ class ProjectProvider {
 
   // final String _apiEndPoint = 'https://kanban.gojaponte.com/jsonrpc.php';
 
-  Future<List<ProjectModel>> getProjects(BuildContext context) async {
+  Future<List<ProjectModel>> getProjects() async {
     final Map<String, dynamic> parameters = {
       "jsonrpc": "2.0",
       "method": "getmyProjects",

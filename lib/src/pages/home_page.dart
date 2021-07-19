@@ -1,5 +1,7 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
+import 'package:khanos/src/pages/activity_page.dart';
+import 'package:khanos/src/pages/overdue_page.dart';
 import 'package:khanos/src/preferences/user_preferences.dart';
 import 'package:khanos/src/providers/dark_theme_provider.dart';
 import 'package:khanos/src/providers/user_provider.dart';
@@ -20,6 +22,7 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  int _currentIndex = 0;
   final _prefs = new UserPreferences();
   final projectProvider = new ProjectProvider();
   final columnProvider = new ColumnProvider();
@@ -36,11 +39,17 @@ class _HomePageState extends State<HomePage> {
   int projectsAmount;
   @override
   Widget build(BuildContext context) {
+    List<Widget> _children = [];
+    _children.add(projectList(context));
+    _children.add(OverdueTasksPage());
+    _children.add(ActivityPage());
+
     currentThemeData =
         _darkTheme == true ? ThemeData.dark() : ThemeData.light();
     return Scaffold(
       appBar: normalAppBar('Khanos'),
-      body: projectList(context),
+      // body: projectList(context),
+      body: _children[_currentIndex],
       drawer: _homeDrawer(),
       floatingActionButton: FloatingActionButton(
         heroTag: "addHero",
@@ -49,6 +58,25 @@ class _HomePageState extends State<HomePage> {
         onPressed: () => Navigator.of(context)
             .pushNamed('newProject')
             .then((_) => setState(() {})),
+      ),
+      bottomNavigationBar: BottomNavigationBar(
+        onTap: onTabTapped,
+        currentIndex: _currentIndex,
+        items: [
+          BottomNavigationBarItem(
+            icon: new Icon(Icons.home),
+            label: 'Home',
+          ),
+          BottomNavigationBarItem(
+            icon: new Icon(Icons.watch_later_outlined),
+            label: 'Overdue Tasks',
+          ),
+          BottomNavigationBarItem(
+            icon: new Icon(Icons.list),
+            label: 'Activities',
+          ),
+        ],
+        selectedItemColor: Colors.blue,
       ),
     );
   }
@@ -91,8 +119,10 @@ class _HomePageState extends State<HomePage> {
   }
 
   Widget projectList(BuildContext context) {
+    currentThemeData =
+        _darkTheme == true ? ThemeData.dark() : ThemeData.light();
     return FutureBuilder(
-        future: projectProvider.getProjects(context),
+        future: projectProvider.getProjects(),
         builder:
             (BuildContext context, AsyncSnapshot<List<ProjectModel>> snapshot) {
           if (snapshot.hasError) {
@@ -365,5 +395,13 @@ class _HomePageState extends State<HomePage> {
     } else {
       throw 'Could not launch $url';
     }
+  }
+
+  void onTabTapped(int index) {
+    currentThemeData =
+        _darkTheme == true ? ThemeData.dark() : ThemeData.light();
+    setState(() {
+      _currentIndex = index;
+    });
   }
 }
