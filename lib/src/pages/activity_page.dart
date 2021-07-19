@@ -1,17 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:khanos/src/models/activity_model.dart';
 import 'package:flutter_dash/flutter_dash.dart';
-// import 'package:khanos/src/models/project_model.dart';
-// import 'package:khanos/src/models/task_model.dart';
 import 'package:khanos/src/preferences/user_preferences.dart';
 import 'package:khanos/src/providers/user_provider.dart';
 import 'package:shimmer/shimmer.dart';
-// import 'package:khanos/src/providers/project_provider.dart';
-// import 'package:khanos/src/providers/task_provider.dart';
-// import 'package:flutter/gestures.dart';
-// import 'package:khanos/src/utils/datetime_utils.dart';
-// import 'package:khanos/src/utils/theme_utils.dart';
-// import 'package:shimmer/shimmer.dart';
 
 class ActivityPage extends StatefulWidget {
   @override
@@ -23,8 +15,6 @@ class _ActivityPageState extends State<ActivityPage> {
   ThemeData currentThemeData;
   List<ActivityModel> activities;
   UserProvider userProvider = new UserProvider();
-  // TaskProvider taskProvider = new TaskProvider();
-  // ProjectProvider projectProvider = new ProjectProvider();
   final _prefs = new UserPreferences();
   Map<String, dynamic> error;
 
@@ -146,9 +136,14 @@ class _ActivityPageState extends State<ActivityPage> {
                         Container(
                           width: MediaQuery.of(context).size.width * 0.70,
                           child: Shimmer.fromColors(
-                              child: Text(
-                                  'The quick brown fox jumps over the lazy dog',
-                                  overflow: TextOverflow.clip),
+                              child: Container(
+                                width: 200,
+                                height: 20,
+                                decoration: BoxDecoration(
+                                  color: Colors.grey,
+                                  borderRadius: BorderRadius.circular(5),
+                                ),
+                              ),
                               baseColor: Colors.grey,
                               highlightColor: Colors.grey[300]),
                         ),
@@ -183,11 +178,29 @@ class _ActivityPageState extends State<ActivityPage> {
       case "task.update":
         eventIcon = Icons.edit;
         break;
-      case "task.delete":
-        eventIcon = Icons.delete;
+      case "task.update":
+        eventIcon = Icons.edit;
+        break;
+      case "task.move.position":
+        eventIcon = Icons.view_column_rounded;
+        break;
+      case "task.move.column":
+        eventIcon = Icons.view_column_rounded;
+        break;
+      case "task_internal_link.create_update":
+        eventIcon = Icons.link;
+        break;
+      case "task_internal_link.delete":
+        eventIcon = Icons.link_off;
+        break;
+      case "task.assignee_change":
+        eventIcon = Icons.person_add;
+        break;
+      case "task.close":
+        eventIcon = Icons.close;
         break;
       case "subtask.create":
-        eventIcon = Icons.featured_play_list;
+        eventIcon = Icons.add_task;
         break;
       case "subtask.update":
         eventIcon = Icons.playlist_add_check_rounded;
