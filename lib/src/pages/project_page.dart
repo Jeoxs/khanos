@@ -38,6 +38,11 @@ class _ProjectPageState extends State<ProjectPage> {
   void initState() {
     _darkTheme = _prefs.darkTheme;
     super.initState();
+
+    if (_prefs.firstTime == true) {
+      Future.delayed(Duration.zero, () => showSlideTutorial(context));
+      _prefs.firstTime = false;
+    }
   }
 
   @override
