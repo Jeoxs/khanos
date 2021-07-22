@@ -300,9 +300,11 @@ class _ProjectPageState extends State<ProjectPage> {
     if (ownerId != '0') {
       UserModel owner = users.firstWhere((user) => user.id == ownerId);
       avatar = (owner.avatarPath != null)
-          ? Image(
+          ? FadeInImage(
               image:
-                  NetworkImage(getAvatarUrl(owner.id, owner.avatarPath, '40')))
+                  NetworkImage(getAvatarUrl(ownerId, owner.avatarPath, '40')),
+              placeholder: AssetImage('assets/images/icon-user.png'),
+            )
           : Padding(
               padding: const EdgeInsets.all(10.0),
               child: Icon(Icons.person, size: 20));

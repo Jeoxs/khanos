@@ -281,8 +281,10 @@ class _CommentPageState extends State<CommentPage> {
   _commentCard(String username, String comment, String dateCreated,
       String commentId, String userId, UserModel user) {
     Widget avatar = (user.avatarPath != null)
-        ? Image(
-            image: NetworkImage(getAvatarUrl(userId, user.avatarPath, '40')))
+        ? FadeInImage(
+            image: NetworkImage(getAvatarUrl(userId, user.avatarPath, '40')),
+            placeholder: AssetImage('assets/images/icon-user.png'),
+          )
         : Padding(
             padding: const EdgeInsets.all(10.0),
             child: Text(username[0],
