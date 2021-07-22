@@ -6,11 +6,13 @@ import 'package:flutter/material.dart';
 import 'package:khanos/src/models/column_model.dart';
 import 'package:khanos/src/models/project_model.dart';
 import 'package:khanos/src/models/task_model.dart';
+import 'package:khanos/src/models/user_model.dart';
 import 'package:khanos/src/preferences/user_preferences.dart';
 import 'package:khanos/src/providers/project_provider.dart';
 import 'package:khanos/src/providers/task_provider.dart';
 import 'package:khanos/src/utils/board_item_object.dart';
 import 'package:khanos/src/utils/board_list_object.dart';
+import 'package:khanos/src/utils/utils.dart';
 import 'package:khanos/src/utils/widgets_utils.dart';
 
 // ignore: must_be_immutable
@@ -32,6 +34,7 @@ class _KanbanPageState extends State<KanbanPage> {
   List<TaskModel> tasks;
   List<ColumnModel> columns;
   ProjectModel _project;
+  List<UserModel> users;
 
   //Can be used to animate to different sections of the BoardView
   BoardViewController boardViewController = new BoardViewController();
@@ -53,6 +56,7 @@ class _KanbanPageState extends State<KanbanPage> {
     final Map kanbanArgs = ModalRoute.of(context).settings.arguments;
     _project = kanbanArgs['project'];
     columns = kanbanArgs['columns'];
+    users = kanbanArgs['users'];
     if (kanbanArgs['tasks'] != null) {
       tasks = kanbanArgs['tasks'];
       kanbanArgs['tasks'] = null;
@@ -167,18 +171,47 @@ class _KanbanPageState extends State<KanbanPage> {
           'project': _project
         }).then((_) => setState(() {}));
       },
-      item: _taskElement(
-          itemObject.taskContent.title, itemObject.taskContent.colorId),
+      item: _taskElement(itemObject.taskContent.title,
+          itemObject.taskContent.colorId, itemObject.taskContent.ownerId),
     );
   }
 
-  Widget _taskElement(String title, String color) {
+  Widget _taskElement(String title, String color, String ownerId) {
+    Widget avatar;
+
+    if (ownerId != '0') {
+      UserModel owner = users.firstWhere((user) => user.id == ownerId);
+      avatar = (owner.avatarPath != null)
+          ? FadeInImage(
+              image:
+                  NetworkImage(getAvatarUrl(ownerId, owner.avatarPath, '40')),
+              placeholder: AssetImage('assets/images/icon-user.png'),
+            )
+          : Padding(
+              padding: const EdgeInsets.all(10.0),
+              child: Icon(Icons.person, size: 15));
+    } else {
+      avatar = Padding(
+        padding: const EdgeInsets.all(10.0),
+        child: Icon(Icons.person, size: 15),
+      );
+    }
+
     return Container(
       margin: EdgeInsets.fromLTRB(20, 0, 20, 15),
-      padding: EdgeInsets.fromLTRB(25, 13, 5, 13),
+      padding: EdgeInsets.fromLTRB(5, 13, 5, 13),
       child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: <Widget>[
+          Container(
+            width: 35.0,
+            height: 35.0,
+            margin: EdgeInsets.symmetric(horizontal: 10.0),
+            child: avatar,
+            decoration: BoxDecoration(
+              color: currentThemeData.backgroundColor,
+              borderRadius: BorderRadius.circular(20.0),
+            ),
+          ),
           Container(
             width: 150,
             child: Text(title,
