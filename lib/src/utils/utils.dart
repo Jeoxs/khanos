@@ -38,7 +38,7 @@ void showChangelog(BuildContext context) {
           scrollable: true,
           title: Text('Welcome!'),
           content: Text(
-              'Welcome to version 1.0.9! You can see what\'s new in the Changelog Section.'),
+              'Welcome to version 1.1.1! You can see what\'s new in the Changelog Section.'),
           actions: <Widget>[
             TextButton(
                 child: Text('View Changes'),
