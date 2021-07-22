@@ -15,6 +15,10 @@ class ChangelogPage extends StatelessWidget {
   _showChangelog() {
     final String changelog = """
 
+## Version 1.1.1
+### **Added** 🚀
+- Added Avatars to Tasks, subtasks, comments and Kanban
+
 ## Version 1.1.0
 ### **Added** 🚀
 - Changelog Section in Side Menu showing this Changelog
