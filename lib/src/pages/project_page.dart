@@ -116,7 +116,8 @@ class _ProjectPageState extends State<ProjectPage> {
                       Navigator.pushNamed(context, 'kanban', arguments: {
                         'project': project,
                         'tasks': tasks,
-                        'columns': columns
+                        'columns': columns,
+                        'users': users,
                       }).then((_) => setState(() {}));
                     },
                   ),
