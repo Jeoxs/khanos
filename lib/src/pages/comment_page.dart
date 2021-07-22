@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:khanos/src/models/task_model.dart';
 import 'package:khanos/src/models/comment_model.dart';
+import 'package:khanos/src/models/user_model.dart';
 import 'package:khanos/src/preferences/user_preferences.dart';
 import 'package:khanos/src/providers/task_provider.dart';
 import 'package:khanos/src/providers/comment_provider.dart';
@@ -29,6 +30,7 @@ class _CommentPageState extends State<CommentPage> {
   final userProvider = new UserProvider();
   bool _darkTheme;
   ThemeData currentThemeData;
+  List<UserModel> users;
 
   @override
   void initState() {
@@ -41,6 +43,8 @@ class _CommentPageState extends State<CommentPage> {
     currentThemeData =
         _darkTheme == true ? ThemeData.dark() : ThemeData.light();
     final Map commentArgs = ModalRoute.of(context).settings.arguments;
+    // print(getAvatarUrl(
+    //     '1', 'avatars/1/241dc6826ab3ae148fe4f711acf8a364990b1810', '20'));
 
     task = commentArgs['task'];
 
@@ -86,6 +90,7 @@ class _CommentPageState extends State<CommentPage> {
         }
         if (snapshot.hasData) {
           List<CommentModel> comments = snapshot.data[0];
+          users = snapshot.data[1];
           return _commentList(comments);
         } else {
           return _shimmerList();
@@ -107,7 +112,8 @@ class _CommentPageState extends State<CommentPage> {
                     comments[i].comment,
                     comments[i].dateCreation,
                     comments[i].id,
-                    comments[i].userId);
+                    comments[i].userId,
+                    users.firstWhere((user) => user.id == comments[i].userId));
               }),
         ),
         Container(
@@ -273,7 +279,16 @@ class _CommentPageState extends State<CommentPage> {
   }
 
   _commentCard(String username, String comment, String dateCreated,
-      String commentId, String userId) {
+      String commentId, String userId, UserModel user) {
+    Widget avatar = (user.avatarPath != null)
+        ? Image(
+            image: NetworkImage(getAvatarUrl(userId, user.avatarPath, '40')))
+        : Padding(
+            padding: const EdgeInsets.all(10.0),
+            child: Text(username[0],
+                style: TextStyle(fontSize: 17.0, fontWeight: FontWeight.bold),
+                textAlign: TextAlign.center),
+          );
     return Card(
       elevation: 5.0,
       margin: EdgeInsets.symmetric(horizontal: 20.0, vertical: 10.0),
@@ -286,12 +301,8 @@ class _CommentPageState extends State<CommentPage> {
                 Container(
                   width: 40.0,
                   height: 40.0,
-                  padding: EdgeInsets.all(10.0),
                   margin: EdgeInsets.symmetric(horizontal: 10.0),
-                  child: Text(username[0],
-                      style: TextStyle(
-                          fontSize: 17.0, fontWeight: FontWeight.bold),
-                      textAlign: TextAlign.center),
+                  child: avatar,
                   decoration: BoxDecoration(
                     color: currentThemeData.backgroundColor,
                     borderRadius: BorderRadius.circular(20.0),
