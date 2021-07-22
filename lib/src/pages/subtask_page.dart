@@ -4,9 +4,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:khanos/src/models/subtask_model.dart';
 import 'package:khanos/src/models/task_model.dart';
+import 'package:khanos/src/models/user_model.dart';
 import 'package:khanos/src/preferences/user_preferences.dart';
 import 'package:khanos/src/providers/subtask_provider.dart';
 import 'package:khanos/src/providers/task_provider.dart';
+import 'package:khanos/src/providers/user_provider.dart';
 import 'package:khanos/src/utils/utils.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:khanos/src/utils/widgets_utils.dart';
@@ -25,6 +27,8 @@ class _SubtaskPageState extends State<SubtaskPage> {
   final subtaskProvider = new SubtaskProvider();
   bool _darkTheme;
   ThemeData currentThemeData;
+  List<UserModel> users;
+  final userProvider = new UserProvider();
 
   @override
   void initState() {
@@ -57,7 +61,10 @@ class _SubtaskPageState extends State<SubtaskPage> {
 
   _subtaskList(int taskId) {
     return FutureBuilder(
-        future: subtaskProvider.getSubtasks(taskId),
+        future: Future.wait([
+          subtaskProvider.getSubtasks(taskId),
+          userProvider.getUsers(),
+        ]),
         builder: (BuildContext context, AsyncSnapshot<List<dynamic>> snapshot) {
           if (snapshot.hasError) {
             processApiError(snapshot.error);
@@ -85,7 +92,8 @@ class _SubtaskPageState extends State<SubtaskPage> {
             }
           }
           if (snapshot.hasData) {
-            final List<SubtaskModel> subtasks = snapshot.data;
+            final List<SubtaskModel> subtasks = snapshot.data[0];
+            users = snapshot.data[1];
             if (subtasks.length > 0) {
               return Column(
                 children: [
@@ -131,7 +139,8 @@ class _SubtaskPageState extends State<SubtaskPage> {
                                 subtasks[i].title,
                                 subtasks[i].status,
                                 subtasks[i].timeSpent,
-                                subtasks[i].id),
+                                subtasks[i].id,
+                                subtasks[i].userId),
                             secondaryActions: <Widget>[
                               SlideAction(
                                 child: Container(
@@ -215,7 +224,7 @@ class _SubtaskPageState extends State<SubtaskPage> {
   }
 
   Widget _subtaskElement(
-      String title, String status, String timeSpent, String id) {
+      String title, String status, String timeSpent, String id, String userId) {
     Icon _subtaskIcon;
 
     switch (status) {
@@ -223,11 +232,29 @@ class _SubtaskPageState extends State<SubtaskPage> {
         _subtaskIcon = Icon(Icons.check_box_outline_blank);
         break;
       case "1":
-        _subtaskIcon = Icon(Icons.access_time_rounded);
+        _subtaskIcon = Icon(Icons.pause);
         break;
       case "2":
         _subtaskIcon = Icon(Icons.check_box_outlined);
         break;
+    }
+
+    Widget avatar;
+
+    if (userId != '0') {
+      UserModel owner = users.firstWhere((user) => user.id == userId);
+      avatar = (owner.avatarPath != null)
+          ? Image(
+              image:
+                  NetworkImage(getAvatarUrl(owner.id, owner.avatarPath, '40')))
+          : Padding(
+              padding: const EdgeInsets.all(10.0),
+              child: Icon(Icons.person, size: 15));
+    } else {
+      avatar = Padding(
+        padding: const EdgeInsets.all(10.0),
+        child: Icon(Icons.person, size: 15),
+      );
     }
 
     return Container(
@@ -236,10 +263,14 @@ class _SubtaskPageState extends State<SubtaskPage> {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceAround,
         children: <Widget>[
-          _subtaskIcon,
-          Text('${timeSpent}h'),
+          Column(
+            children: [
+              _subtaskIcon,
+              Text('${timeSpent}h'),
+            ],
+          ),
           Container(
-            width: 250,
+            width: 200,
             child: Text(title,
                 style: TextStyle(
                   fontSize: 15,
@@ -249,6 +280,17 @@ class _SubtaskPageState extends State<SubtaskPage> {
                 overflow: TextOverflow.clip),
           ),
           // _getTaskTimeSpent(int.parse(subtaskId)),
+
+          Container(
+            width: 35.0,
+            height: 35.0,
+            margin: EdgeInsets.symmetric(horizontal: 10.0),
+            child: avatar,
+            decoration: BoxDecoration(
+              color: currentThemeData.backgroundColor,
+              borderRadius: BorderRadius.circular(20.0),
+            ),
+          ),
         ],
       ),
       decoration: BoxDecoration(
