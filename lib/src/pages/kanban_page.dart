@@ -169,7 +169,10 @@ class _KanbanPageState extends State<KanbanPage> {
         Navigator.pushNamed(context, 'task', arguments: {
           'task_id': itemObject.taskContent.id,
           'project': _project
-        }).then((_) => setState(() {}));
+        }).then((_) async {
+          tasks = await taskProvider.getTasks(int.parse(_project.id), 1);
+          setState(() {});
+        });
       },
       item: _taskElement(itemObject.taskContent.title,
           itemObject.taskContent.colorId, itemObject.taskContent.ownerId),
