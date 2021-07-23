@@ -166,6 +166,5 @@ String getAvatarUrl(String userId, String avatarPath, String size) {
   String hash = crypto.md5.convert(utf8.encode(avatarPath)).toString();
   String avatarUrl =
       '$domain?controller=AvatarFileController&action=image&user_id=$userId&hash=$hash&size=$size';
-  print(avatarUrl);
   return avatarUrl;
 }

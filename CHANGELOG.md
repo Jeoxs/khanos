@@ -9,6 +9,9 @@ The format is based on [Keep a Changelog][Keep a Changelog] and this project adh
 ### Added
 - Added Avatars to Tasks, subtasks, comments and Kanban
 
+### Fixed
+- Kanban now refresh elements after pop out from task page.
+
 ## [1.1.0] - 2021-07-19
 ### Added
 - Changelog Section in Side Menu showing this Changelog

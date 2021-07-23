@@ -19,6 +19,9 @@ class ChangelogPage extends StatelessWidget {
 ### **Added** 🚀
 - Added Avatars to Tasks, subtasks, comments and Kanban
 
+### **Fixed**  🔧
+- Kanban now refresh elements after pop out from task page.
+
 ## Version 1.1.0
 ### **Added** 🚀
 - Changelog Section in Side Menu showing this Changelog
