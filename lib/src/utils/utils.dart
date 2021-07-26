@@ -38,7 +38,7 @@ void showChangelog(BuildContext context) {
           scrollable: true,
           title: Text('Welcome!'),
           content: Text(
-              'Welcome to version 1.0.9! You can see what\'s new in the Changelog Section.'),
+              'Welcome to version 1.1.1! You can see what\'s new in the Changelog Section.'),
           actions: <Widget>[
             TextButton(
                 child: Text('View Changes'),
@@ -166,6 +166,5 @@ String getAvatarUrl(String userId, String avatarPath, String size) {
   String hash = crypto.md5.convert(utf8.encode(avatarPath)).toString();
   String avatarUrl =
       '$domain?controller=AvatarFileController&action=image&user_id=$userId&hash=$hash&size=$size';
-  print(avatarUrl);
   return avatarUrl;
 }

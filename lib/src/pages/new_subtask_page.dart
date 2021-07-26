@@ -12,6 +12,7 @@ class NewSubtaskPage extends StatefulWidget {
 }
 
 class _NewSubtaskPageState extends State<NewSubtaskPage> {
+  bool _disabledButton = true;
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final userProvider = new UserProvider();
   final subtaskProvider = new SubtaskProvider();
@@ -116,7 +117,9 @@ class _NewSubtaskPageState extends State<NewSubtaskPage> {
           // margin: EdgeInsets.only(left: 40.0),
           padding: EdgeInsets.symmetric(horizontal: 20.0),
           child: DropdownButtonFormField(
-            onTap: () {FocusScope.of(context).requestFocus(new FocusNode());},
+            onTap: () {
+              FocusScope.of(context).requestFocus(new FocusNode());
+            },
             icon: Padding(
               padding: const EdgeInsets.only(right: 12),
               child: Icon(Icons.person, color: Colors.blue),
@@ -150,6 +153,7 @@ class _NewSubtaskPageState extends State<NewSubtaskPage> {
   }
 
   Widget _submitButton() {
+    _disabledButton = false;
     return ElevatedButton(
       style: ButtonStyle(
         elevation: MaterialStateProperty.all(5.0),
@@ -158,14 +162,20 @@ class _NewSubtaskPageState extends State<NewSubtaskPage> {
         padding: EdgeInsets.symmetric(horizontal: 50.0, vertical: 15.0),
         child: Text('Create'),
       ),
-      onPressed: () {
-        if (_formKey.currentState.validate()) {
-          _createSubtask(context);
-        } else {
-          mostrarAlerta(context, 'Please fill required Fields');
-        }
-      },
+      onPressed: (_disabledButton) ? null : _processSubmission,
     );
+  }
+
+  _processSubmission() {
+    if (_disabledButton != true) {
+      _disabledButton = true;
+      if (_formKey.currentState.validate()) {
+        _createSubtask(context);
+      } else {
+        mostrarAlerta(context, 'Please fill required Fields');
+        _disabledButton = false;
+      }
+    }
   }
 
   _createSubtask(BuildContext context) async {
@@ -178,10 +188,12 @@ class _NewSubtaskPageState extends State<NewSubtaskPage> {
 
     if (newSubtaskId > 0) {
       setState(() {
+        _disabledButton = false;
         Navigator.pop(context);
       });
     } else {
       mostrarAlerta(context, 'Something went Wront!');
+      _disabledButton = false;
     }
   }
 }
