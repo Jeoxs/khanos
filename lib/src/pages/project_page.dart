@@ -5,10 +5,12 @@ import 'package:flutter/material.dart';
 import 'package:khanos/src/models/column_model.dart';
 import 'package:khanos/src/models/project_model.dart';
 import 'package:khanos/src/models/task_model.dart';
+import 'package:khanos/src/models/user_model.dart';
 import 'package:khanos/src/preferences/user_preferences.dart';
 import 'package:khanos/src/providers/column_provider.dart';
 import 'package:khanos/src/providers/project_provider.dart';
 import 'package:khanos/src/providers/task_provider.dart';
+import 'package:khanos/src/providers/user_provider.dart';
 import 'package:khanos/src/utils/datetime_utils.dart';
 import 'package:khanos/src/utils/utils.dart';
 import 'package:khanos/src/utils/widgets_utils.dart';
@@ -32,7 +34,10 @@ class _ProjectPageState extends State<ProjectPage> {
   final projectProvider = new ProjectProvider();
   final taskProvider = new TaskProvider();
   final columnProvider = new ColumnProvider();
+  final userProvider = new UserProvider();
+
   Widget floatingAction;
+  List<UserModel> users;
 
   @override
   void initState() {
@@ -59,6 +64,7 @@ class _ProjectPageState extends State<ProjectPage> {
         future: Future.wait([
           taskProvider.getTasks(int.parse(project.id), 1),
           columnProvider.getColumns(project.id),
+          userProvider.getUsers(),
         ]),
         builder: (BuildContext context, AsyncSnapshot<List<dynamic>> snapshot) {
           if (snapshot.hasError) {
@@ -91,6 +97,7 @@ class _ProjectPageState extends State<ProjectPage> {
           if (snapshot.hasData) {
             final List<TaskModel> tasks = snapshot.data[0];
             final List<ColumnModel> columns = snapshot.data[1];
+            users = snapshot.data[2];
             tasks.sort((a, b) => a.id.compareTo(b.id));
             return Scaffold(
               appBar: normalAppBar(project.name),
@@ -109,7 +116,8 @@ class _ProjectPageState extends State<ProjectPage> {
                       Navigator.pushNamed(context, 'kanban', arguments: {
                         'project': project,
                         'tasks': tasks,
-                        'columns': columns
+                        'columns': columns,
+                        'users': users,
                       }).then((_) => setState(() {}));
                     },
                   ),
@@ -213,7 +221,8 @@ class _ProjectPageState extends State<ProjectPage> {
                       columns
                           .firstWhere(
                               (element) => element.id == tasks[i].columnId)
-                          .title),
+                          .title,
+                      tasks[i].ownerId),
                   secondaryActions: <Widget>[
                     SlideAction(
                       child: Container(
@@ -284,27 +293,58 @@ class _ProjectPageState extends State<ProjectPage> {
     }
   }
 
-  Widget _taskElement(
-      String timeUpdated, String title, Color color, String columnTitle) {
+  Widget _taskElement(String timeUpdated, String title, Color color,
+      String columnTitle, String ownerId) {
+    Widget avatar;
+
+    if (ownerId != '0') {
+      UserModel owner = users.firstWhere((user) => user.id == ownerId);
+      avatar = (owner.avatarPath != null)
+          ? FadeInImage(
+              image:
+                  NetworkImage(getAvatarUrl(ownerId, owner.avatarPath, '40')),
+              placeholder: AssetImage('assets/images/icon-user.png'),
+            )
+          : Padding(
+              padding: const EdgeInsets.all(10.0),
+              child: Icon(Icons.person, size: 20));
+    } else {
+      avatar = Padding(
+        padding: const EdgeInsets.all(10.0),
+        child: Icon(Icons.person, size: 20),
+      );
+    }
+
     return Container(
       margin: EdgeInsets.fromLTRB(20, 0, 20, 15),
-      padding: EdgeInsets.fromLTRB(25, 13, 5, 13),
+      padding: EdgeInsets.fromLTRB(5, 13, 5, 13),
       child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: <Widget>[
+          Container(
+            width: 40.0,
+            height: 40.0,
+            margin: EdgeInsets.symmetric(horizontal: 10.0),
+            child: avatar,
+            decoration: BoxDecoration(
+              color: currentThemeData.backgroundColor,
+              borderRadius: BorderRadius.circular(20.0),
+            ),
+          ),
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Container(
                   width: 100.0,
-                  child: Text(columnTitle, overflow: TextOverflow.clip)),
-              Text('Mod: ' + timeUpdated, style: TextStyle(fontSize: 12.0)),
+                  child: Text(columnTitle,
+                      style: TextStyle(fontSize: 13.0),
+                      overflow: TextOverflow.clip)),
+              Text('Mod: ' + timeUpdated, style: TextStyle(fontSize: 11.0)),
             ],
           ),
           Container(
-            width: 200,
+            width: 150,
             child: Text(title,
-                style: TextStyle(fontSize: 15, fontWeight: FontWeight.w600),
+                style: TextStyle(fontSize: 14, fontWeight: FontWeight.w600),
                 overflow: TextOverflow.clip),
           ),
         ],

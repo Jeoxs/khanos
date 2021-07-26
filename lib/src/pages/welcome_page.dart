@@ -59,23 +59,9 @@ class _WelcomePageState extends State<WelcomePage> {
                     width: MediaQuery.of(context).size.width / 1.4,
                     height: 60,
                     decoration: const BoxDecoration(
-                      gradient: LinearGradient(
-                        colors: <Color>[
-                          CustomColors.BlueLight,
-                          CustomColors.BlueDark,
-                        ],
-                      ),
                       borderRadius: BorderRadius.all(
                         Radius.circular(8.0),
                       ),
-                      boxShadow: [
-                        BoxShadow(
-                          color: CustomColors.BlueShadow,
-                          blurRadius: 15.0,
-                          spreadRadius: 3.0,
-                          offset: Offset(0.0, 0.0),
-                        ),
-                      ],
                     ),
                     padding: const EdgeInsets.fromLTRB(20, 10, 20, 10),
                     child: Center(

@@ -176,7 +176,9 @@ class _TaskPageState extends State<TaskPage> {
                         child: Icon(Icons.security_rounded,
                             color: Colors.blueGrey),
                       ),
-                      _getUserFullName(task.creatorId),
+                      (task.creatorId != '0')
+                          ? _getUserFullName(task.creatorId)
+                          : Text('N/A'),
                     ]),
                     SizedBox(height: 20.0),
                     Row(children: [
@@ -184,7 +186,9 @@ class _TaskPageState extends State<TaskPage> {
                         padding: const EdgeInsets.only(right: 10.0),
                         child: Icon(Icons.person, color: Colors.blueGrey),
                       ),
-                      _getUserFullName(task.ownerId),
+                      (task.ownerId != '0')
+                          ? _getUserFullName(task.ownerId)
+                          : Text('N/A'),
                     ]),
                     SizedBox(height: 20.0),
                     Row(children: [

@@ -5,6 +5,14 @@ The format is based on [Keep a Changelog][Keep a Changelog] and this project adh
 
 ## [Released]
 
+## [1.1.1] - 2021-07-21
+### Added
+- Added Avatars to Tasks, subtasks, comments and Kanban
+- Changed Logo design to comply with Google Play Policies
+
+### Fixed
+- Kanban now refresh elements after pop out from task page.
+
 ## [1.1.0] - 2021-07-19
 ### Added
 - Changelog Section in Side Menu showing this Changelog
