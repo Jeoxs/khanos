@@ -15,6 +15,10 @@ class ChangelogPage extends StatelessWidget {
   _showChangelog() {
     final String changelog = """
 
+## Version 1.1.2
+### **Fixed**  🔧
+- Uncaught login error redirected to login screen without valid credentials | Thanks: @murchu27.
+
 ## Version 1.1.1
 ### **Added** 🚀
 - Added Avatars to Tasks, subtasks, comments and Kanban

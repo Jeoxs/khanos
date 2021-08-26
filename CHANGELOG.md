@@ -5,6 +5,10 @@ The format is based on [Keep a Changelog][Keep a Changelog] and this project adh
 
 ## [Released]
 
+## [1.1.2] - 2021-08-26
+### Fixed
+- Uncaught login error redirected to login screen without valid credentials | Thanks: @murchu27.
+
 ## [1.1.1] - 2021-07-21
 ### Added
 - Added Avatars to Tasks, subtasks, comments and Kanban
@@ -122,6 +126,8 @@ The format is based on [Keep a Changelog][Keep a Changelog] and this project adh
 <!-- Versions -->
 [Released]: https://github.com/Jeoxs/khanos/releases
 
+[1.1.0]: https://github.com/Jeoxs/khanos/compare/v1.1.1...v1.1.2
+[1.1.0]: https://github.com/Jeoxs/khanos/compare/v1.1.0...v1.1.1
 [1.1.0]: https://github.com/Jeoxs/khanos/compare/v1.0.9...v1.1.0
 [1.0.9]: https://github.com/Jeoxs/khanos/compare/v1.0.8...v1.0.9
 [1.0.8]: https://github.com/Jeoxs/khanos/compare/v1.0.7...v1.0.8

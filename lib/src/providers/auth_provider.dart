@@ -48,7 +48,7 @@ class AuthProvider {
     final Map<String, dynamic> parameters = {
       "jsonrpc": "2.0",
       "method": "getAllProjects",
-      "id": 1
+      "id": 2134420212
     };
 
     final credentials = "$username:$password";
@@ -69,10 +69,21 @@ class AuthProvider {
       decodedData =
           json.decode(utf8.decode(resp.bodyBytes)) as Map<String, dynamic>;
     } on FormatException catch (_) {
-      return false;
+      Map<String, String> error = {
+        'message':
+            'Unknown Error! Please, try again or contact your administrator'
+      };
+      return Future.error(error);
     }
 
-    if (decodedData == null) return false;
+    if (decodedData == null) {
+      Map<String, String> error = {
+        'message':
+            'Unknown Error! Please, check your credentials and access permission!'
+      };
+      return Future.error(error);
+    }
+    ;
 
     // Check for errors
     if (decodedData['error'] != null) {
@@ -90,9 +101,11 @@ class AuthProvider {
       return true;
     } else {
       _prefs.authFlag = false;
-      return false;
+      Map<String, String> error = {
+        'message':
+            'Unknown Error! Please, check your credentials and access permission!'
+      };
+      return Future.error(error);
     }
-
-    // print(decodedData['result']);
   }
 }
