@@ -5,7 +5,10 @@ The format is based on [Keep a Changelog][Keep a Changelog] and this project adh
 
 ## [Released]
 
-## [1.1.2] - 2021-08-26
+## [1.1.2] - 2021-08-27
+### Changed
+- The login URL doesn't need the 'jsonrpc.php' anymore. Users can type only the Kanboard URL or specify the 'jsonrpc.php' endpoint if needed. 
+
 ### Fixed
 - Uncaught login error redirected to login screen without valid credentials | Thanks: @murchu27.
 
