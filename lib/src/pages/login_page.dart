@@ -14,10 +14,10 @@ class _LoginPageState extends State<LoginPage> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final _prefs = new UserPreferences();
 
-  String endPoint = '';
+  String url = '';
   String username = '';
   String password = '';
-  // TextEditingController _endPointController = new TextEditingController();
+  // TextEditingController _urlController = new TextEditingController();
   // TextEditingController _usernameController = new TextEditingController();
   // TextEditingController _passwordController = new TextEditingController();
 
@@ -64,7 +64,7 @@ class _LoginPageState extends State<LoginPage> {
                   children: <Widget>[
                     Text('Setup', style: TextStyle(fontSize: 20.0)),
                     SizedBox(height: 30.0),
-                    _createEndpoint(),
+                    _createurl(),
                     SizedBox(height: 15.0),
                     _createUsername(),
                     SizedBox(height: 15.0),
@@ -80,23 +80,23 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 
-  Widget _createEndpoint() {
+  Widget _createurl() {
     return Container(
       padding: EdgeInsets.symmetric(horizontal: 20.0),
       child: TextFormField(
-          initialValue: _prefs.endpoint,
+          initialValue: _prefs.url,
           decoration: InputDecoration(
             icon:
                 Icon(Icons.swap_horizontal_circle_outlined, color: Colors.blue),
-            hintText: 'https://YOUR_SERVER/jsonrpc.php',
-            labelText: 'khanos Endpoint',
+            hintText: 'https://YOUR_KANBOARD_URL/',
+            labelText: 'Kanboard URL',
           ),
           onChanged: (value) {
-            endPoint = value;
+            url = value;
           },
           validator: (value) {
             if (value == null || value.isEmpty) {
-              return 'Must fill an endpoint URL!';
+              return 'Must specify an url URL!';
             }
             return null;
           }),
@@ -168,11 +168,11 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   _login(BuildContext context) async {
-    if (endPoint == '') endPoint = _prefs.endpoint;
+    if (url == '') url = _prefs.url;
     if (username == '') username = _prefs.username;
     if (password == '') password = _prefs.password;
 
-    await AuthProvider().login(endPoint, username, password).then((value) {
+    await AuthProvider().login(url, username, password).then((value) {
       Navigator.pop(context);
       setState(() {
         Navigator.pushNamedAndRemoveUntil(context, 'home', (route) => false);

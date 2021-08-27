@@ -33,6 +33,14 @@ class UserPreferences {
     _prefs.setString('endpoint', value);
   }
 
+    get url {
+    return _prefs.getString('url') ?? '';
+  }
+
+  set url(String value) {
+    _prefs.setString('url', value);
+  }
+
   get username {
     return _prefs.getString('username') ?? '';
   }
