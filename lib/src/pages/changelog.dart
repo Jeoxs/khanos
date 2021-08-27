@@ -15,6 +15,13 @@ class ChangelogPage extends StatelessWidget {
   _showChangelog() {
     final String changelog = """
 
+## Version 1.1.2
+### **Changed** 🔄
+- The login URL doesn't need the 'jsonrpc.php' anymore. Users can type only the Kanboard URL or specify the 'jsonrpc.php' endpoint if needed. | Thanks: @murchu27.
+
+### **Fixed**  🔧
+- Uncaught login error redirected to login screen without valid credentials | Thanks: @murchu27.
+
 ## Version 1.1.1
 ### **Added** 🚀
 - Added Avatars to Tasks, subtasks, comments and Kanban

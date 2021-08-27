@@ -40,15 +40,29 @@ class AuthProvider {
     return (result > 0) ? result : 0;
   }
 
-  Future<bool> login(String endpoint, String username, String password) async {
+  Future<bool> login(String url, String username, String password) async {
+    String endpoint = url;
+
+    int searchResult = url.indexOf('/jsonrpc.php');
+
+    if (searchResult < 0) {
+      endpoint += '/jsonrpc.php';
+    }
+
     bool _validURL = Uri.tryParse(endpoint).isAbsolute;
 
-    if (_validURL != true) return false;
+    if (_validURL != true) {
+      Map<String, String> error = {
+        'message':
+            'We could not reach your Kanboard Endpoint. Please, check your Endpoint URL and try again!'
+      };
+      return Future.error(error);
+    }
 
     final Map<String, dynamic> parameters = {
       "jsonrpc": "2.0",
       "method": "getAllProjects",
-      "id": 1
+      "id": 2134420212
     };
 
     final credentials = "$username:$password";
@@ -69,10 +83,21 @@ class AuthProvider {
       decodedData =
           json.decode(utf8.decode(resp.bodyBytes)) as Map<String, dynamic>;
     } on FormatException catch (_) {
-      return false;
+      Map<String, String> error = {
+        'message':
+            'Unknown Error! Please, try again or contact your administrator'
+      };
+      return Future.error(error);
     }
 
-    if (decodedData == null) return false;
+    if (decodedData == null) {
+      Map<String, String> error = {
+        'message':
+            'Unknown Error! Please, check your credentials and access permission!'
+      };
+      return Future.error(error);
+    }
+    ;
 
     // Check for errors
     if (decodedData['error'] != null) {
@@ -82,6 +107,7 @@ class AuthProvider {
     final List<dynamic> results = decodedData['result'];
 
     if (results != null) {
+      _prefs.url = url;
       _prefs.endpoint = endpoint;
       _prefs.username = username;
       _prefs.password = password;
@@ -90,9 +116,11 @@ class AuthProvider {
       return true;
     } else {
       _prefs.authFlag = false;
-      return false;
+      Map<String, String> error = {
+        'message':
+            'Unknown Error! Please, check your credentials and access permission!'
+      };
+      return Future.error(error);
     }
-
-    // print(decodedData['result']);
   }
 }
