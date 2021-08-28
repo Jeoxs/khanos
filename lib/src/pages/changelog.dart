@@ -14,6 +14,9 @@ class ChangelogPage extends StatelessWidget {
 
   _showChangelog() {
     final String changelog = """
+## Version 1.1.3
+### **Fixed**  🔧
+- Fixed the Dark Theme colors on Login Page after logging out | Thanks: @murchu27.
 
 ## Version 1.1.2
 ### **Changed** 🔄
