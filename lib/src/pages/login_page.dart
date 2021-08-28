@@ -17,12 +17,22 @@ class _LoginPageState extends State<LoginPage> {
   String url = '';
   String username = '';
   String password = '';
+  ThemeData currentThemeData;
+  bool _darkTheme;
   // TextEditingController _urlController = new TextEditingController();
   // TextEditingController _usernameController = new TextEditingController();
   // TextEditingController _passwordController = new TextEditingController();
 
   @override
+  void initState() {
+    _darkTheme = _prefs.darkTheme;
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
+    currentThemeData =
+        _darkTheme == true ? ThemeData.dark() : ThemeData.light();
     return Scaffold(
         body: Stack(
       children: <Widget>[
@@ -49,7 +59,7 @@ class _LoginPageState extends State<LoginPage> {
             margin: EdgeInsets.symmetric(vertical: 30.0),
             padding: EdgeInsets.symmetric(vertical: 50.0),
             decoration: BoxDecoration(
-                color: Colors.white,
+                color: currentThemeData.cardColor,
                 borderRadius: BorderRadius.circular(5.0),
                 boxShadow: <BoxShadow>[
                   BoxShadow(
