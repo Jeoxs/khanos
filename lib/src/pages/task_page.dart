@@ -217,7 +217,7 @@ class _TaskPageState extends State<TaskPage> {
                                   color: Colors.blueGrey),
                             ),
                             Text(
-                                'Created: ${getStringDateTimeFromEpoch("dd/MM/yy - HH:mm", task.dateStarted)}'),
+                                'Start: ${getStringDateTimeFromEpoch("dd/MM/yy - HH:mm", task.dateStarted)}'),
                           ])
                         : Container(),
                     SizedBox(height: 20.0),
