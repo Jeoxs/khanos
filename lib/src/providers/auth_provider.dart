@@ -61,7 +61,7 @@ class AuthProvider {
 
     final Map<String, dynamic> parameters = {
       "jsonrpc": "2.0",
-      "method": "getAllProjects",
+      "method": "getmyProjects",
       "id": 2134420212
     };
 

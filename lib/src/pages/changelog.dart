@@ -14,6 +14,10 @@ class ChangelogPage extends StatelessWidget {
 
   _showChangelog() {
     final String changelog = """
+## Version 1.1.4
+### **Fixed**  🔧
+- Users can login regardless of their profile type | Thanks: @bobylapointe63.
+
 ## Version 1.1.3
 ### **Fixed**  🔧
 - Fixed the Dark Theme colors on Login Page after logging out | Thanks: @murchu27.
