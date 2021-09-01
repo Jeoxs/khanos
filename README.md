@@ -1,4 +1,4 @@
-[![Version](https://img.shields.io/badge/version-v1.1.3-red)](https://github.com/Jeoxs/khanos/releases/latest)
+[![Version](https://img.shields.io/badge/version-v1.1.4-red)](https://github.com/Jeoxs/khanos/releases/latest)
 [![Follow on Twitter](https://img.shields.io/badge/twitter-@thejoseaponte-blue.svg)](https://twitter.com/thejoseaponte)
 [![Download Khanos](https://img.shields.io/badge/download-khanos-green)](https://github.com/Jeoxs/khanos/releases)
 
@@ -44,8 +44,11 @@ What's all the bells and whistles this project can perform?
 ## Credits
 * [LiveLikeCounter - Flutter-Todolist]
 * [VeriTechie]
+* [murchu27]
+* [bobylapointe63]
 
 
 [LiveLikeCounter - Flutter-Todolist]: https://github.com/LiveLikeCounter/Flutter-Todolist
 [VeriTechie]: https://github.com/VeroMoreno
 [murchu27]: https://github.com/murchu27
+[bobylapointe63]: https://github.com/bobylapointe63

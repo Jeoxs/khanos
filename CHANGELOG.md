@@ -5,6 +5,11 @@ The format is based on [Keep a Changelog][Keep a Changelog] and this project adh
 
 ## [Released]
 
+## [1.1.4] - 2021-09-01
+### Fixed
+- Users can login regardless of their profile type | Thanks: @bobylapointe63.
+
+
 ## [1.1.3] - 2021-08-28
 ### Fixed
 - Fixed the Dark Theme colors on Login Page after logging out | Thanks: @murchu27.
