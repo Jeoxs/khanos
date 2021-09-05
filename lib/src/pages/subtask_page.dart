@@ -113,14 +113,16 @@ class _SubtaskPageState extends State<SubtaskPage> {
                   Expanded(
                     child: ReorderableListView.builder(
                       onReorder: (oldIndex, newIndex) async {
-                        Feedback.forTap(context);
-                        showLoaderDialog(context);
+                        if(userRole != 'project-viewer'){
+                          Feedback.forTap(context);
+                          showLoaderDialog(context);
 
-                        await subtaskProvider.updateSubtaskPosition(
-                            subtasks[oldIndex], subtasks[newIndex]);
-                        setState(() {
-                          Navigator.pop(context);
-                        });
+                          await subtaskProvider.updateSubtaskPosition(
+                              subtasks[oldIndex], subtasks[newIndex]);
+                          setState(() {
+                            Navigator.pop(context);
+                          });
+                        }
                       },
                       padding: EdgeInsets.only(top: 20, bottom: 140),
                       itemCount: subtasks.length,
@@ -128,13 +130,15 @@ class _SubtaskPageState extends State<SubtaskPage> {
                         return GestureDetector(
                           key: ValueKey(subtasks[i].id),
                           onTap: () async {
-                            Feedback.forTap(context);
-                            showLoaderDialog(context);
+                            if(userRole != 'project-viewer'){
+                              Feedback.forTap(context);
+                              showLoaderDialog(context);
 
-                            await subtaskProvider.processSubtask(subtasks[i]);
-                            setState(() {
-                              Navigator.pop(context);
-                            });
+                              await subtaskProvider.processSubtask(subtasks[i]);
+                              setState(() {
+                                Navigator.pop(context);
+                              });
+                            }
                           },
                           child: Slidable(
                             actionPane: SlidableDrawerActionPane(),

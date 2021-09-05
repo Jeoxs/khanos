@@ -84,16 +84,12 @@ class ProjectProvider {
     final Map<String, dynamic> results = decodedData['result'];
 
     results.forEach((userId, user) async {
-      Map<String, dynamic> jsonUser = {
-        "id": userId,
-        "name": user
-      };
+      Map<String, dynamic> jsonUser = {"id": userId, "name": user};
       final userTemp = UserModel.fromJson(jsonUser);
       users.add(userTemp);
     });
     return users;
   }
-
 
   Future<String> getProjectUserRole(int projectId, int userId) async {
     final Map<String, dynamic> parameters = {
@@ -114,7 +110,7 @@ class ProjectProvider {
     );
 
     final decodedData = json.decode(utf8.decode(resp.bodyBytes));
-    
+
     if (decodedData == null || decodedData['result'] == false) return '';
 
     // Check for errors
@@ -153,7 +149,7 @@ class ProjectProvider {
     final decodedData = json.decode(utf8.decode(resp.bodyBytes));
 
     if (decodedData == null || decodedData['result'] == false) return 0;
-
+    print(decodedData);
     // Check for errors
     if (decodedData['error'] != null) {
       return Future.error(decodedData['error']);

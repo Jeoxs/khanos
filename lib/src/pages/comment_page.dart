@@ -5,6 +5,7 @@ import 'package:khanos/src/models/task_model.dart';
 import 'package:khanos/src/models/comment_model.dart';
 import 'package:khanos/src/models/user_model.dart';
 import 'package:khanos/src/preferences/user_preferences.dart';
+import 'package:khanos/src/providers/project_provider.dart';
 import 'package:khanos/src/providers/task_provider.dart';
 import 'package:khanos/src/providers/comment_provider.dart';
 import 'package:khanos/src/providers/user_provider.dart';
@@ -22,6 +23,7 @@ class _CommentPageState extends State<CommentPage> {
   TextEditingController _commentFieldController = new TextEditingController();
   ScrollController _scrollController = ScrollController();
   String newComment = '';
+  String userRole = '';
   final _prefs = new UserPreferences();
   TaskModel task = new TaskModel();
   Map<String, dynamic> error;
@@ -43,10 +45,9 @@ class _CommentPageState extends State<CommentPage> {
     currentThemeData =
         _darkTheme == true ? ThemeData.dark() : ThemeData.light();
     final Map commentArgs = ModalRoute.of(context).settings.arguments;
-    // print(getAvatarUrl(
-    //     '1', 'avatars/1/241dc6826ab3ae148fe4f711acf8a364990b1810', '20'));
 
     task = commentArgs['task'];
+    userRole = commentArgs['userRole'];
 
     return Scaffold(
       appBar: normalAppBar(task.title),
@@ -58,7 +59,7 @@ class _CommentPageState extends State<CommentPage> {
     return FutureBuilder(
       future: Future.wait([
         commentProvider.getAllComments(int.parse(task.id)),
-        userProvider.getUsers(),
+        ProjectProvider().getProjectUsers(int.parse(task.projectId)),
       ]),
       builder: (BuildContext context, AsyncSnapshot snapshot) {
         if (snapshot.hasError) {
@@ -116,7 +117,7 @@ class _CommentPageState extends State<CommentPage> {
                     users.firstWhere((user) => user.id == comments[i].userId));
               }),
         ),
-        Container(
+        (userRole != 'project-viewer') ? Container(
             margin: EdgeInsets.symmetric(vertical: 2.0),
             padding: EdgeInsets.symmetric(vertical: 10.0, horizontal: 10.0),
             child: Row(mainAxisAlignment: MainAxisAlignment.end, children: [
@@ -149,7 +150,7 @@ class _CommentPageState extends State<CommentPage> {
                   _addComment(context);
                 },
               )
-            ])),
+            ])) : SizedBox(),
       ],
     );
   }

@@ -79,7 +79,7 @@ class _TaskPageState extends State<TaskPage> {
             backgroundColor: Colors.blue,
             heroTag: "commentsHero",
             onPressed: () {
-              Navigator.pushNamed(context, 'comment', arguments: {'task': task})
+              Navigator.pushNamed(context, 'comment', arguments: {'task': task, 'userRole': userRole})
                   .then((_) => setState(() {}));
             },
             child: Icon(Icons.comment),

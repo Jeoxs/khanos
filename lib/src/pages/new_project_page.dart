@@ -84,16 +84,26 @@ class _NewProjectPageState extends State<NewProjectPage> {
   }
 
   _createProject(BuildContext context) async {
-    int newProjectId =
-        await ProjectProvider().createProject(_name, _identifier, _description);
-
-    Navigator.pop(context);
+    int newProjectId = 0;
+    bool error = false;
+    try {
+      newProjectId = await ProjectProvider()
+          .createProject(_name, _identifier, _description);
+    } catch (e) {
+      error = true;
+      Navigator.pop(context);
+      mostrarAlerta(context, e['message']);      
+    }
+   
     if (newProjectId > 0) {
       setState(() {
         Navigator.pop(context);
       });
     } else {
-      mostrarAlerta(context, 'Something went Wront!');
+      if(!error){
+         Navigator.pop(context);
+        mostrarAlerta(context, 'Something went Wront!');
+      }
     }
     return true;
   }

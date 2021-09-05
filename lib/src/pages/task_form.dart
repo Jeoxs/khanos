@@ -5,6 +5,7 @@ import 'package:khanos/src/models/tag_model.dart';
 import 'package:khanos/src/models/task_model.dart';
 import 'package:khanos/src/models/user_model.dart';
 import 'package:khanos/src/providers/column_provider.dart';
+import 'package:khanos/src/providers/project_provider.dart';
 import 'package:khanos/src/providers/tag_provider.dart';
 import 'package:khanos/src/providers/task_provider.dart';
 import 'package:khanos/src/providers/user_provider.dart';
@@ -148,7 +149,7 @@ class _TaskFormPageState extends State<TaskFormPage> {
         future: Future.wait([
           tagProvider.getTagsByProject(int.parse(project.id)),
           tagProvider.getDefaultTags(),
-          userProvider.getUsers(),
+          ProjectProvider().getProjectUsers(int.parse(project.id)),
           columnProvider.getColumns(int.parse(project.id)),
         ]),
         builder: (BuildContext context, AsyncSnapshot snapshot) {
