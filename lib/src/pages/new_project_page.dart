@@ -96,12 +96,13 @@ class _NewProjectPageState extends State<NewProjectPage> {
     }
    
     if (newProjectId > 0) {
+      Navigator.pop(context);
       setState(() {
         Navigator.pop(context);
       });
     } else {
       if(!error){
-         Navigator.pop(context);
+        Navigator.pop(context);
         mostrarAlerta(context, 'Something went Wront!');
       }
     }
