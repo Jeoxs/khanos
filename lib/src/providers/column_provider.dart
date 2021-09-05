@@ -27,7 +27,7 @@ class ColumnProvider {
     );
 
     final decodedData = json.decode(utf8.decode(resp.bodyBytes));
-
+    
     if (decodedData == null) return [];
 
     // Check for errors

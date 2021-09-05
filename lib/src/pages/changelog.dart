@@ -14,6 +14,13 @@ class ChangelogPage extends StatelessWidget {
 
   _showChangelog() {
     final String changelog = """
+## Version 1.1.5
+### **Added** 🚀
+- Users can create personal projects.
+
+### **Fixed**  🔧
+- Users can access projects and interact depending on their permission | Thanks: @bobylapointe63.
+
 ## Version 1.1.4
 ### **Fixed**  🔧
 - Users can login regardless of their profile type | Thanks: @bobylapointe63.

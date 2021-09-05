@@ -104,4 +104,12 @@ class UserPreferences {
   set buildNumber(String value) {
     _prefs.setString('buildNumber', value);
   }
+
+  get appRole {
+    return _prefs.getString('appRole') ?? '';
+  }
+
+  set appRole(String value) {
+    _prefs.setString('appRole', value);
+  }
 }

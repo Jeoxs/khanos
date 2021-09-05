@@ -35,6 +35,7 @@ class _KanbanPageState extends State<KanbanPage> {
   List<ColumnModel> columns;
   ProjectModel _project;
   List<UserModel> users;
+  String userRole;
 
   //Can be used to animate to different sections of the BoardView
   BoardViewController boardViewController = new BoardViewController();
@@ -57,6 +58,7 @@ class _KanbanPageState extends State<KanbanPage> {
     _project = kanbanArgs['project'];
     columns = kanbanArgs['columns'];
     users = kanbanArgs['users'];
+    userRole = kanbanArgs['userRole'];
     if (kanbanArgs['tasks'] != null) {
       tasks = kanbanArgs['tasks'];
       kanbanArgs['tasks'] = null;
@@ -138,29 +140,31 @@ class _KanbanPageState extends State<KanbanPage> {
       onStartDragItem: (int listIndex, int itemIndex, BoardItemState state) {},
       onDropItem: (int listIndex, int itemIndex, int oldListIndex,
           int oldItemIndex, BoardItemState state) async {
-        //Used to update our local item data
-        var item = _listData[oldListIndex].items[oldItemIndex];
-        bool updateResult = await taskProvider.moveTaskPosition({
-          'task_id': itemObject.taskContent.id,
-          'project_id': itemObject.taskContent.projectId,
-          'column_id': _listData[listIndex].columnContent.id,
-          'position': itemIndex + 1,
-          'swimlane_id': itemObject.taskContent.swimlaneId,
-        });
+        if(userRole != 'project-viewer'){
+          //Used to update our local item data
+          var item = _listData[oldListIndex].items[oldItemIndex];
+          bool updateResult = await taskProvider.moveTaskPosition({
+            'task_id': itemObject.taskContent.id,
+            'project_id': itemObject.taskContent.projectId,
+            'column_id': _listData[listIndex].columnContent.id,
+            'position': itemIndex + 1,
+            'swimlane_id': itemObject.taskContent.swimlaneId,
+          });
 
-        if (updateResult) {
-          _listData[oldListIndex].items.removeAt(oldItemIndex);
-          _listData[listIndex].items.insert(itemIndex, item);
-          itemObject.taskContent.columnId =
-              _listData[listIndex].columnContent.id;
-          tasks[tasks.indexWhere(
-                  (element) => element.id == itemObject.taskContent.id)]
-              .columnId = _listData[listIndex].columnContent.id;
-          tasks[tasks.indexWhere(
-                  (element) => element.id == itemObject.taskContent.id)]
-              .position = (itemIndex + 1).toString();
-          tasks = taskProvider.getTasks(int.parse(_project.id), 1)
-              as List<TaskModel>;
+          if (updateResult) {
+            _listData[oldListIndex].items.removeAt(oldItemIndex);
+            _listData[listIndex].items.insert(itemIndex, item);
+            itemObject.taskContent.columnId =
+                _listData[listIndex].columnContent.id;
+            tasks[tasks.indexWhere(
+                    (element) => element.id == itemObject.taskContent.id)]
+                .columnId = _listData[listIndex].columnContent.id;
+            tasks[tasks.indexWhere(
+                    (element) => element.id == itemObject.taskContent.id)]
+                .position = (itemIndex + 1).toString();
+            tasks = taskProvider.getTasks(int.parse(_project.id), 1)
+                as List<TaskModel>;
+          }
         }
         setState(() {});
       },
@@ -168,7 +172,8 @@ class _KanbanPageState extends State<KanbanPage> {
         Feedback.forTap(context);
         Navigator.pushNamed(context, 'task', arguments: {
           'task_id': itemObject.taskContent.id,
-          'project': _project
+          'project': _project,
+          'userRole': userRole
         }).then((_) async {
           tasks = await taskProvider.getTasks(int.parse(_project.id), 1);
           setState(() {});
