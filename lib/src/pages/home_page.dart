@@ -251,11 +251,16 @@ class _HomePageState extends State<HomePage> {
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
-              Text(
-                title,
-                style: TextStyle(fontSize: 20.0),
+              Container(
+                width: 200,
+                child: Text(
+                  title,
+                  style: TextStyle(fontSize: 20.0),
+                  overflow: TextOverflow.ellipsis,
+                ),
               ),
               Container(
+                width: 200,
                 child: Text(description,
                     style: TextStyle(fontSize: 15),
                     overflow: TextOverflow.ellipsis),
