@@ -69,7 +69,7 @@ class _TaskPageState extends State<TaskPage> {
             backgroundColor: Colors.blue,
             heroTag: "subtaskListHero",
             onPressed: () {
-              Navigator.pushNamed(context, 'subtask', arguments: {'task': task})
+              Navigator.pushNamed(context, 'subtask', arguments: {'task': task,'userRole':userRole})
                   .then((_) => setState(() {}));
             },
             child: Icon(Icons.playlist_add_check_rounded),
