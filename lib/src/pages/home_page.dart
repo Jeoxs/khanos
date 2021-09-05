@@ -190,7 +190,7 @@ class _HomePageState extends State<HomePage> {
                           child: Slidable(
                             actionPane: SlidableDrawerActionPane(),
                             child: _projectElement(
-                                projects[i].name, projects[i].description),
+                                projects[i].name, projects[i].description, projects[i].isPrivate),
                             secondaryActions: <Widget>[
                               SlideAction(
                                 child: Container(
@@ -227,7 +227,7 @@ class _HomePageState extends State<HomePage> {
                             horizontal: 20.0, vertical: 10.0),
                         itemCount: 8,
                         itemBuilder: (context, index) {
-                          return _projectElement('someTitle', 'description..');
+                          return _projectElement('someTitle', 'description..',"0");
                         }),
                     baseColor: CustomColors.BlueDark,
                     highlightColor: Colors.lightBlue[200],
@@ -239,24 +239,30 @@ class _HomePageState extends State<HomePage> {
         });
   }
 
-  Widget _projectElement(String title, String description) {
+  Widget _projectElement(String title, String description, String isPrivate) {
     description = description != null ? description : 'No description';
     return Container(
       margin: EdgeInsets.symmetric(horizontal: 10.0, vertical: 8.0),
       padding: EdgeInsets.symmetric(vertical: 20.0, horizontal: 30.0),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.spaceAround,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: <Widget>[
-          Text(
-            title,
-            style: TextStyle(fontSize: 20.0),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Column(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: <Widget>[
+              Text(
+                title,
+                style: TextStyle(fontSize: 20.0),
+              ),
+              Container(
+                child: Text(description,
+                    style: TextStyle(fontSize: 15),
+                    overflow: TextOverflow.ellipsis),
+              ),
+            ],
           ),
-          Container(
-            child: Text(description,
-                style: TextStyle(fontSize: 15),
-                overflow: TextOverflow.ellipsis),
-          ),
+        (isPrivate == "1") ? Icon(Icons.lock,color:Colors.grey) : SizedBox(),
         ],
       ),
       decoration: BoxDecoration(
