@@ -43,9 +43,9 @@ class UserProvider {
       final userTemp = UserModel.fromJson(user);
       users.add(userTemp);
     });
-    // print(decodedData['result']);
+
     return users;
-  }
+  }  
 
   Future<UserModel> getUser(int userId) async {
     final Map<String, dynamic> parameters = {
@@ -96,8 +96,6 @@ class UserProvider {
 
     String encoded = stringToBase64.encode(credentials);
 
-    print(encoded);
-
     final resp = await http.post(
       Uri.parse(_prefs.endpoint),
       headers: <String, String>{"Authorization": "Basic $encoded"},
@@ -123,7 +121,6 @@ class UserProvider {
       activities.add(activityTemp);
     });
 
-    // print(decodedData['result']);
     return activities;
   }
 }

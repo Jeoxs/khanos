@@ -8,6 +8,7 @@ import 'package:khanos/src/models/task_model.dart';
 import 'package:khanos/src/models/user_model.dart';
 import 'package:khanos/src/preferences/user_preferences.dart';
 import 'package:khanos/src/providers/column_provider.dart';
+import 'package:khanos/src/providers/project_provider.dart';
 import 'package:khanos/src/providers/subtask_provider.dart';
 import 'package:khanos/src/providers/tag_provider.dart';
 import 'package:khanos/src/providers/task_provider.dart';
@@ -31,11 +32,13 @@ class _TaskPageState extends State<TaskPage> {
   List<ColumnModel> projectColumns = [];
   List<TagModel> _tags = [];
   ProjectModel project;
+  String userRole;
   final taskProvider = new TaskProvider();
   final tagProvider = new TagProvider();
   final subtaskProvider = new SubtaskProvider();
   final userProvider = new UserProvider();
   final columnProvider = new ColumnProvider();
+
   bool _darkTheme;
   ThemeData currentThemeData;
 
@@ -53,6 +56,7 @@ class _TaskPageState extends State<TaskPage> {
 
     // final String projectName = taskArgs['project_name'];
     project = taskArgs['project'];
+    userRole = taskArgs['userRole'];
     taskId = int.parse(taskArgs['task_id']);
 
     return Scaffold(
@@ -81,7 +85,7 @@ class _TaskPageState extends State<TaskPage> {
             child: Icon(Icons.comment),
           ),
           SizedBox(width: 10.0),
-          FloatingActionButton(
+          (userRole != 'project-viewer') ? FloatingActionButton(
             backgroundColor: Colors.blue,
             heroTag: "editTaskHero",
             onPressed: () async {
@@ -92,7 +96,7 @@ class _TaskPageState extends State<TaskPage> {
               }).then((_) => setState(() {}));
             },
             child: Icon(Icons.edit),
-          ),
+          ) : SizedBox(),
         ],
       ),
     );
@@ -100,7 +104,10 @@ class _TaskPageState extends State<TaskPage> {
 
   _taskInfo() {
     return FutureBuilder(
-      future: TaskProvider().getTask(taskId),
+      future: Future.wait([
+        TaskProvider().getTask(taskId),
+        ProjectProvider().getProjectUsers(int.parse(project.id))
+      ]),
       builder: (BuildContext context, AsyncSnapshot snapshot) {
         if (snapshot.hasError) {
           processApiError(snapshot.error);
@@ -129,7 +136,8 @@ class _TaskPageState extends State<TaskPage> {
         }
 
         if (snapshot.hasData) {
-          task = snapshot.data;
+          task = snapshot.data[0];
+          List<UserModel> projectUsers = snapshot.data[1];
           return Column(
             children: [
               Expanded(
@@ -148,7 +156,9 @@ class _TaskPageState extends State<TaskPage> {
                       ],
                     ),
                     SizedBox(height: 20.0),
-                    _closeTaskButton(),
+                    (userRole != 'project-viewer')
+                        ? _closeTaskButton()
+                        : Container(),
                     SizedBox(height: 20.0),
                     Row(children: [
                       Padding(
@@ -177,7 +187,10 @@ class _TaskPageState extends State<TaskPage> {
                             color: Colors.blueGrey),
                       ),
                       (task.creatorId != '0')
-                          ? _getUserFullName(task.creatorId)
+                          ? _userButton(projectUsers
+                              .firstWhere(
+                                  (element) => element.id == task.creatorId)
+                              .name)
                           : Text('N/A'),
                     ]),
                     SizedBox(height: 20.0),
@@ -187,7 +200,10 @@ class _TaskPageState extends State<TaskPage> {
                         child: Icon(Icons.person, color: Colors.blueGrey),
                       ),
                       (task.ownerId != '0')
-                          ? _getUserFullName(task.ownerId)
+                          ? _userButton(projectUsers
+                              .firstWhere(
+                                  (element) => element.id == task.ownerId)
+                              .name)
                           : Text('N/A'),
                     ]),
                     SizedBox(height: 20.0),
@@ -299,7 +315,7 @@ class _TaskPageState extends State<TaskPage> {
           }
           if (snapshot.hasData) {
             final UserModel user = snapshot.data;
-            return _userButton(user);
+            return _userButton(user.username);
           } else {
             return Text('Loading..');
           }
@@ -351,13 +367,13 @@ class _TaskPageState extends State<TaskPage> {
     );
   }
 
-  Widget _userButton(UserModel user) {
+  Widget _userButton(String name) {    
     return GestureDetector(
       onTap: () {},
       child: Container(
         margin: EdgeInsets.only(right: 10),
         child: Text(
-          user.name,
+          name,
           style: TextStyle(color: Colors.white),
         ),
         padding: EdgeInsets.symmetric(vertical: 5, horizontal: 10),

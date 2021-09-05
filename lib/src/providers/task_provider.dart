@@ -28,7 +28,7 @@ class TaskProvider {
     );
 
     final decodedData = json.decode(utf8.decode(resp.bodyBytes));
-
+    
     final List<TaskModel> tasks = [];
 
     final List<dynamic> results = decodedData['result'];

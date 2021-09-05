@@ -35,6 +35,7 @@ class _KanbanPageState extends State<KanbanPage> {
   List<ColumnModel> columns;
   ProjectModel _project;
   List<UserModel> users;
+  String userRole;
 
   //Can be used to animate to different sections of the BoardView
   BoardViewController boardViewController = new BoardViewController();
@@ -57,6 +58,7 @@ class _KanbanPageState extends State<KanbanPage> {
     _project = kanbanArgs['project'];
     columns = kanbanArgs['columns'];
     users = kanbanArgs['users'];
+    userRole = kanbanArgs['userRole'];
     if (kanbanArgs['tasks'] != null) {
       tasks = kanbanArgs['tasks'];
       kanbanArgs['tasks'] = null;
@@ -168,7 +170,8 @@ class _KanbanPageState extends State<KanbanPage> {
         Feedback.forTap(context);
         Navigator.pushNamed(context, 'task', arguments: {
           'task_id': itemObject.taskContent.id,
-          'project': _project
+          'project': _project,
+          'userRole': userRole
         }).then((_) async {
           tasks = await taskProvider.getTasks(int.parse(_project.id), 1);
           setState(() {});

@@ -35,6 +35,7 @@ class _ProjectPageState extends State<ProjectPage> {
   final taskProvider = new TaskProvider();
   final columnProvider = new ColumnProvider();
   final userProvider = new UserProvider();
+  String userRole = '';
 
   Widget floatingAction;
   List<UserModel> users;
@@ -64,7 +65,9 @@ class _ProjectPageState extends State<ProjectPage> {
         future: Future.wait([
           taskProvider.getTasks(int.parse(project.id), 1),
           columnProvider.getColumns(project.id),
-          userProvider.getUsers(),
+          projectProvider.getProjectUsers(int.parse(project.id)),
+          projectProvider.getProjectUserRole(
+              int.parse(project.id), _prefs.userId)
         ]),
         builder: (BuildContext context, AsyncSnapshot<List<dynamic>> snapshot) {
           if (snapshot.hasError) {
@@ -95,6 +98,7 @@ class _ProjectPageState extends State<ProjectPage> {
             }
           }
           if (snapshot.hasData) {
+            userRole = snapshot.data[3];            
             final List<TaskModel> tasks = snapshot.data[0];
             final List<ColumnModel> columns = snapshot.data[1];
             users = snapshot.data[2];
@@ -118,20 +122,23 @@ class _ProjectPageState extends State<ProjectPage> {
                         'tasks': tasks,
                         'columns': columns,
                         'users': users,
+                        'userRole': userRole,
                       }).then((_) => setState(() {}));
                     },
                   ),
                   SizedBox(height: 10.0),
-                  FloatingActionButton(
-                    backgroundColor: Colors.blue,
-                    child: Icon(Icons.add),
-                    heroTag: "addHero",
-                    onPressed: () {
-                      Navigator.pushNamed(context, 'taskForm',
-                              arguments: {'project': project})
-                          .then((_) => setState(() {}));
-                    },
-                  ),
+                  (userRole != 'project-viewer')
+                      ? FloatingActionButton(
+                          backgroundColor: Colors.blue,
+                          child: Icon(Icons.add),
+                          heroTag: "addHero",
+                          onPressed: () {
+                            Navigator.pushNamed(context, 'taskForm',
+                                    arguments: {'project': project})
+                                .then((_) => setState(() {}));
+                          },
+                        )
+                      : SizedBox(),
                 ],
               ),
             );
@@ -204,7 +211,8 @@ class _ProjectPageState extends State<ProjectPage> {
                   Feedback.forTap(context);
                   Navigator.pushNamed(context, 'task', arguments: {
                     'task_id': tasks[i].id,
-                    'project': project
+                    'project': project,
+                    'userRole': userRole,
                   }).then((_) => setState(() {}));
                 },
                 onLongPressStart: (LongPressStartDetails tempDetails) {
