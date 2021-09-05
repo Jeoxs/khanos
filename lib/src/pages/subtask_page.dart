@@ -6,6 +6,7 @@ import 'package:khanos/src/models/subtask_model.dart';
 import 'package:khanos/src/models/task_model.dart';
 import 'package:khanos/src/models/user_model.dart';
 import 'package:khanos/src/preferences/user_preferences.dart';
+import 'package:khanos/src/providers/project_provider.dart';
 import 'package:khanos/src/providers/subtask_provider.dart';
 import 'package:khanos/src/providers/task_provider.dart';
 import 'package:khanos/src/providers/user_provider.dart';
@@ -26,6 +27,7 @@ class _SubtaskPageState extends State<SubtaskPage> {
   final taskProvider = new TaskProvider();
   final subtaskProvider = new SubtaskProvider();
   bool _darkTheme;
+  String userRole;
   ThemeData currentThemeData;
   List<UserModel> users;
   final userProvider = new UserProvider();
@@ -42,20 +44,21 @@ class _SubtaskPageState extends State<SubtaskPage> {
         _darkTheme == true ? ThemeData.dark() : ThemeData.light();
     final Map taskArgs = ModalRoute.of(context).settings.arguments;
     task = taskArgs['task'];
+    userRole = taskArgs['userRole'];
     return Scaffold(
       appBar: normalAppBar(task.title),
       body: Container(
         width: double.infinity,
         child: _subtaskList(int.parse(task.id)),
       ),
-      floatingActionButton: FloatingActionButton(
+      floatingActionButton: (userRole != 'project-viewer') ? FloatingActionButton(
         backgroundColor: Colors.blue,
         child: Icon(Icons.add),
         onPressed: () {
           Navigator.pushNamed(context, 'newSubtask', arguments: {'task': task})
               .then((_) => setState(() {}));
         },
-      ),
+      ) : SizedBox(),
     );
   }
 
@@ -63,7 +66,7 @@ class _SubtaskPageState extends State<SubtaskPage> {
     return FutureBuilder(
         future: Future.wait([
           subtaskProvider.getSubtasks(taskId),
-          userProvider.getUsers(),
+          ProjectProvider().getProjectUsers(int.parse(task.projectId)),
         ]),
         builder: (BuildContext context, AsyncSnapshot<List<dynamic>> snapshot) {
           if (snapshot.hasError) {
@@ -110,14 +113,16 @@ class _SubtaskPageState extends State<SubtaskPage> {
                   Expanded(
                     child: ReorderableListView.builder(
                       onReorder: (oldIndex, newIndex) async {
-                        Feedback.forTap(context);
-                        showLoaderDialog(context);
+                        if(userRole != 'project-viewer'){
+                          Feedback.forTap(context);
+                          showLoaderDialog(context);
 
-                        await subtaskProvider.updateSubtaskPosition(
-                            subtasks[oldIndex], subtasks[newIndex]);
-                        setState(() {
-                          Navigator.pop(context);
-                        });
+                          await subtaskProvider.updateSubtaskPosition(
+                              subtasks[oldIndex], subtasks[newIndex]);
+                          setState(() {
+                            Navigator.pop(context);
+                          });
+                        }
                       },
                       padding: EdgeInsets.only(top: 20, bottom: 140),
                       itemCount: subtasks.length,
@@ -125,13 +130,15 @@ class _SubtaskPageState extends State<SubtaskPage> {
                         return GestureDetector(
                           key: ValueKey(subtasks[i].id),
                           onTap: () async {
-                            Feedback.forTap(context);
-                            showLoaderDialog(context);
+                            if(userRole != 'project-viewer'){
+                              Feedback.forTap(context);
+                              showLoaderDialog(context);
 
-                            await subtaskProvider.processSubtask(subtasks[i]);
-                            setState(() {
-                              Navigator.pop(context);
-                            });
+                              await subtaskProvider.processSubtask(subtasks[i]);
+                              setState(() {
+                                Navigator.pop(context);
+                              });
+                            }
                           },
                           child: Slidable(
                             actionPane: SlidableDrawerActionPane(),

@@ -5,6 +5,35 @@ import 'package:khanos/src/preferences/user_preferences.dart';
 class AuthProvider {
   final _prefs = new UserPreferences();
 
+  Future getMe() async {
+    final Map<String, dynamic> parameters = {
+      "jsonrpc": "2.0",
+      "method": "getMe",
+      "id": 1718627783
+    };
+
+    final credentials = "${_prefs.username}:${_prefs.password}";
+
+    Codec<String, String> stringToBase64 = utf8.fuse(base64);
+
+    String encoded = stringToBase64.encode(credentials);
+
+    final resp = await http.post(
+      Uri.parse(_prefs.endpoint),
+      headers: <String, String>{"Authorization": "Basic $encoded"},
+      body: json.encode(parameters),
+      encoding: Encoding.getByName("utf-8"),
+    );
+
+    final decodedData = json.decode(utf8.decode(resp.bodyBytes));
+    // Check for errors
+    if (decodedData['error'] != null) {
+      return Future.error(decodedData['error']);
+    }    
+
+    return decodedData['result'];
+  }
+
   Future<int> getUserIdByName(String username) async {
     final Map<String, dynamic> parameters = {
       "jsonrpc": "2.0",
@@ -40,7 +69,7 @@ class AuthProvider {
     return (result > 0) ? result : 0;
   }
 
-  Future<bool> login(String url, String username, String password) async {
+  Future<bool> login(String url, String username, String password) async {    
     String endpoint = url;
 
     int searchResult = url.indexOf('/jsonrpc.php');
@@ -97,7 +126,6 @@ class AuthProvider {
       };
       return Future.error(error);
     }
-    ;
 
     // Check for errors
     if (decodedData['error'] != null) {
@@ -111,7 +139,9 @@ class AuthProvider {
       _prefs.endpoint = endpoint;
       _prefs.username = username;
       _prefs.password = password;
-      _prefs.userId = await getUserIdByName(username);
+      final myUser = await getMe();      
+      _prefs.userId = myUser["id"];
+      _prefs.appRole = myUser["role"];
       _prefs.authFlag = true;
       return true;
     } else {

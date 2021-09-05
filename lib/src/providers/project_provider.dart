@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:khanos/src/models/project_model.dart';
+import 'package:khanos/src/models/user_model.dart';
 import 'package:khanos/src/preferences/user_preferences.dart';
 import 'package:khanos/src/utils/utils.dart';
 
@@ -50,6 +51,78 @@ class ProjectProvider {
     return projects;
   }
 
+  Future<List<UserModel>> getProjectUsers(int projectId) async {
+    final Map<String, dynamic> parameters = {
+      "jsonrpc": "2.0",
+      "method": "getProjectUsers",
+      "id": 1601016721,
+      "params": [projectId]
+    };
+
+    final credentials = "${_prefs.username}:${_prefs.password}";
+
+    Codec<String, String> stringToBase64 = utf8.fuse(base64);
+
+    String encoded = stringToBase64.encode(credentials);
+
+    final resp = await http.post(
+      Uri.parse(_prefs.endpoint),
+      headers: <String, String>{"Authorization": "Basic $encoded"},
+      body: json.encode(parameters),
+    );
+
+    final decodedData = json.decode(utf8.decode(resp.bodyBytes));
+
+    if (decodedData == null) return [];
+    // Check for errors
+    if (decodedData['error'] != null) {
+      return Future.error(decodedData['error']);
+    }
+
+    final List<UserModel> users = [];
+
+    final Map<String, dynamic> results = decodedData['result'];
+
+    results.forEach((userId, user) async {
+      Map<String, dynamic> jsonUser = {"id": userId, "name": user};
+      final userTemp = UserModel.fromJson(jsonUser);
+      users.add(userTemp);
+    });
+    return users;
+  }
+
+  Future<String> getProjectUserRole(int projectId, int userId) async {
+    final Map<String, dynamic> parameters = {
+      "jsonrpc": "2.0",
+      "method": "getProjectUserRole",
+      "id": 2114673298,
+      "params": ["$projectId", "$userId"]
+    };
+
+    Codec<String, String> stringToBase64 = utf8.fuse(base64);
+    final credentials = "${_prefs.username}:${_prefs.password}";
+    String encoded = stringToBase64.encode(credentials);
+
+    final resp = await http.post(
+      Uri.parse(_prefs.endpoint),
+      headers: <String, String>{"Authorization": "Basic $encoded"},
+      body: json.encode(parameters),
+    );
+
+    final decodedData = json.decode(utf8.decode(resp.bodyBytes));
+
+    if (decodedData == null || decodedData['result'] == false) return '';
+
+    // Check for errors
+    if (decodedData['error'] != null) {
+      return Future.error(decodedData['error']);
+    }
+
+    final result = decodedData['result'];
+
+    return result;
+  }
+
   Future<int> createProject(
       String name, String identifier, String description) async {
     final Map<String, dynamic> parameters = {
@@ -76,7 +149,43 @@ class ProjectProvider {
     final decodedData = json.decode(utf8.decode(resp.bodyBytes));
 
     if (decodedData == null || decodedData['result'] == false) return 0;
+    
+    // Check for errors
+    if (decodedData['error'] != null) {
+      return Future.error(decodedData['error']);
+    }
 
+    final result = decodedData['result'];
+
+    return (result > 0) ? result : 0;
+  }
+
+  Future<int> createPersonalProject(
+      String name, String identifier, String description) async {
+    final Map<String, dynamic> parameters = {
+      "jsonrpc": "2.0",
+      "method": "createMyPrivateProject",
+      "id": 1271580569,
+      "params": [
+        name,        
+        description
+      ]
+    };
+
+    Codec<String, String> stringToBase64 = utf8.fuse(base64);
+    final credentials = "${_prefs.username}:${_prefs.password}";
+    String encoded = stringToBase64.encode(credentials);
+
+    final resp = await http.post(
+      Uri.parse(_prefs.endpoint),
+      headers: <String, String>{"Authorization": "Basic $encoded"},
+      body: json.encode(parameters),
+    );
+
+    final decodedData = json.decode(utf8.decode(resp.bodyBytes));
+
+    if (decodedData == null || decodedData['result'] == false) return 0;
+    
     // Check for errors
     if (decodedData['error'] != null) {
       return Future.error(decodedData['error']);

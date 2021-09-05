@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:khanos/src/pages/activity_page.dart';
 import 'package:khanos/src/pages/overdue_page.dart';
 import 'package:khanos/src/preferences/user_preferences.dart';
+import 'package:khanos/src/providers/auth_provider.dart';
 import 'package:khanos/src/providers/dark_theme_provider.dart';
 import 'package:khanos/src/providers/user_provider.dart';
 import 'package:khanos/src/utils/theme_utils.dart';
@@ -27,12 +28,14 @@ class _HomePageState extends State<HomePage> {
   final projectProvider = new ProjectProvider();
   final columnProvider = new ColumnProvider();
   final userProvider = new UserProvider();
+  final authProvider = new AuthProvider();
   bool _darkTheme;
   ThemeData currentThemeData;
+  Map<String, dynamic> myProfileInfo;
 
   @override
   void initState() {
-    _darkTheme = _prefs.darkTheme;
+    _darkTheme = _prefs.darkTheme;    
     super.initState();
   }
 
@@ -127,9 +130,9 @@ class _HomePageState extends State<HomePage> {
     currentThemeData =
         _darkTheme == true ? ThemeData.dark() : ThemeData.light();
     return FutureBuilder(
-        future: projectProvider.getProjects(),
-        builder:
-            (BuildContext context, AsyncSnapshot<List<ProjectModel>> snapshot) {
+        future:
+            Future.wait([projectProvider.getProjects(), authProvider.getMe()]),
+        builder: (BuildContext context, AsyncSnapshot snapshot) {
           if (snapshot.hasError) {
             processApiError(snapshot.error);
             if (_prefs.authFlag != true) {
@@ -155,7 +158,9 @@ class _HomePageState extends State<HomePage> {
             }
           }
           if (snapshot.hasData) {
-            final projects = snapshot.data;
+            final projects = snapshot.data[0];
+            myProfileInfo = snapshot.data[1];
+            _prefs.appRole = myProfileInfo['role'];
             projectsAmount = projects.length;
             return Column(
               children: [
@@ -185,7 +190,7 @@ class _HomePageState extends State<HomePage> {
                           child: Slidable(
                             actionPane: SlidableDrawerActionPane(),
                             child: _projectElement(
-                                projects[i].name, projects[i].description),
+                                projects[i].name, projects[i].description, projects[i].isPrivate),
                             secondaryActions: <Widget>[
                               SlideAction(
                                 child: Container(
@@ -222,7 +227,7 @@ class _HomePageState extends State<HomePage> {
                             horizontal: 20.0, vertical: 10.0),
                         itemCount: 8,
                         itemBuilder: (context, index) {
-                          return _projectElement('someTitle', 'description..');
+                          return _projectElement('someTitle', 'description..',"0");
                         }),
                     baseColor: CustomColors.BlueDark,
                     highlightColor: Colors.lightBlue[200],
@@ -234,24 +239,35 @@ class _HomePageState extends State<HomePage> {
         });
   }
 
-  Widget _projectElement(String title, String description) {
+  Widget _projectElement(String title, String description, String isPrivate) {
     description = description != null ? description : 'No description';
     return Container(
       margin: EdgeInsets.symmetric(horizontal: 10.0, vertical: 8.0),
       padding: EdgeInsets.symmetric(vertical: 20.0, horizontal: 30.0),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.spaceAround,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: <Widget>[
-          Text(
-            title,
-            style: TextStyle(fontSize: 20.0),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Column(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: <Widget>[
+              Container(
+                width: 200,
+                child: Text(
+                  title,
+                  style: TextStyle(fontSize: 20.0),
+                  overflow: TextOverflow.ellipsis,
+                ),
+              ),
+              Container(
+                width: 200,
+                child: Text(description,
+                    style: TextStyle(fontSize: 15),
+                    overflow: TextOverflow.ellipsis),
+              ),
+            ],
           ),
-          Container(
-            child: Text(description,
-                style: TextStyle(fontSize: 15),
-                overflow: TextOverflow.ellipsis),
-          ),
+        (isPrivate == "1") ? Icon(Icons.lock,color:Colors.grey) : SizedBox(),
         ],
       ),
       decoration: BoxDecoration(

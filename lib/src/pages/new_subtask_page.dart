@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:khanos/src/models/task_model.dart';
 import 'package:khanos/src/models/user_model.dart';
+import 'package:khanos/src/providers/project_provider.dart';
 import 'package:khanos/src/providers/subtask_provider.dart';
 import 'package:khanos/src/providers/user_provider.dart';
 import 'package:khanos/src/utils/utils.dart';
@@ -93,7 +94,7 @@ class _NewSubtaskPageState extends State<NewSubtaskPage> {
 
   Widget _userSelect() {
     return FutureBuilder(
-      future: userProvider.getUsers(),
+      future: ProjectProvider().getProjectUsers(int.parse(task.projectId)),
       builder: (BuildContext context, AsyncSnapshot snapshot) {
         List<DropdownMenuItem<String>> usernameList = [];
         if (snapshot.hasData) {
