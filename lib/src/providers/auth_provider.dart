@@ -141,6 +141,7 @@ class AuthProvider {
       _prefs.password = password;
       final myUser = await getMe();      
       _prefs.userId = myUser["id"];
+      _prefs.appRole = myUser["role"];
       _prefs.authFlag = true;
       return true;
     } else {

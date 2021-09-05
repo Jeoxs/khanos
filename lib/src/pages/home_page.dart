@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:khanos/src/pages/activity_page.dart';
 import 'package:khanos/src/pages/overdue_page.dart';
 import 'package:khanos/src/preferences/user_preferences.dart';
+import 'package:khanos/src/providers/auth_provider.dart';
 import 'package:khanos/src/providers/dark_theme_provider.dart';
 import 'package:khanos/src/providers/user_provider.dart';
 import 'package:khanos/src/utils/theme_utils.dart';
@@ -27,12 +28,14 @@ class _HomePageState extends State<HomePage> {
   final projectProvider = new ProjectProvider();
   final columnProvider = new ColumnProvider();
   final userProvider = new UserProvider();
+  final authProvider = new AuthProvider();
   bool _darkTheme;
   ThemeData currentThemeData;
+  Map<String, dynamic> myProfileInfo;
 
   @override
   void initState() {
-    _darkTheme = _prefs.darkTheme;
+    _darkTheme = _prefs.darkTheme;    
     super.initState();
   }
 
@@ -127,9 +130,9 @@ class _HomePageState extends State<HomePage> {
     currentThemeData =
         _darkTheme == true ? ThemeData.dark() : ThemeData.light();
     return FutureBuilder(
-        future: projectProvider.getProjects(),
-        builder:
-            (BuildContext context, AsyncSnapshot<List<ProjectModel>> snapshot) {
+        future:
+            Future.wait([projectProvider.getProjects(), authProvider.getMe()]),
+        builder: (BuildContext context, AsyncSnapshot snapshot) {
           if (snapshot.hasError) {
             processApiError(snapshot.error);
             if (_prefs.authFlag != true) {
@@ -155,7 +158,9 @@ class _HomePageState extends State<HomePage> {
             }
           }
           if (snapshot.hasData) {
-            final projects = snapshot.data;
+            final projects = snapshot.data[0];
+            myProfileInfo = snapshot.data[1];
+            _prefs.appRole = myProfileInfo['role'];
             projectsAmount = projects.length;
             return Column(
               children: [

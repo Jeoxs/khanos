@@ -28,6 +28,7 @@ class _TaskFormPageState extends State<TaskFormPage> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final userProvider = new UserProvider();
   final columnProvider = new ColumnProvider();
+  final projectProvider = new ProjectProvider();
   final tagProvider = new TagProvider();
   final taskProvider = new TaskProvider();
 
@@ -149,7 +150,7 @@ class _TaskFormPageState extends State<TaskFormPage> {
         future: Future.wait([
           tagProvider.getTagsByProject(int.parse(project.id)),
           tagProvider.getDefaultTags(),
-          ProjectProvider().getProjectUsers(int.parse(project.id)),
+          projectProvider.getProjectUsers(int.parse(project.id)),
           columnProvider.getColumns(int.parse(project.id)),
         ]),
         builder: (BuildContext context, AsyncSnapshot snapshot) {

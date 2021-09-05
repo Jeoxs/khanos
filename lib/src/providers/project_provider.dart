@@ -149,7 +149,43 @@ class ProjectProvider {
     final decodedData = json.decode(utf8.decode(resp.bodyBytes));
 
     if (decodedData == null || decodedData['result'] == false) return 0;
-    print(decodedData);
+    
+    // Check for errors
+    if (decodedData['error'] != null) {
+      return Future.error(decodedData['error']);
+    }
+
+    final result = decodedData['result'];
+
+    return (result > 0) ? result : 0;
+  }
+
+  Future<int> createPersonalProject(
+      String name, String identifier, String description) async {
+    final Map<String, dynamic> parameters = {
+      "jsonrpc": "2.0",
+      "method": "createMyPrivateProject",
+      "id": 1271580569,
+      "params": [
+        name,        
+        description
+      ]
+    };
+
+    Codec<String, String> stringToBase64 = utf8.fuse(base64);
+    final credentials = "${_prefs.username}:${_prefs.password}";
+    String encoded = stringToBase64.encode(credentials);
+
+    final resp = await http.post(
+      Uri.parse(_prefs.endpoint),
+      headers: <String, String>{"Authorization": "Basic $encoded"},
+      body: json.encode(parameters),
+    );
+
+    final decodedData = json.decode(utf8.decode(resp.bodyBytes));
+
+    if (decodedData == null || decodedData['result'] == false) return 0;
+    
     // Check for errors
     if (decodedData['error'] != null) {
       return Future.error(decodedData['error']);
