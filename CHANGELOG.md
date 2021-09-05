@@ -5,6 +5,13 @@ The format is based on [Keep a Changelog][Keep a Changelog] and this project adh
 
 ## [Released]
 
+## [1.1.5] - 2021-09-05
+### Added
+- Users can create personal projects.
+
+### Fixed
+- Users can access projects and interact depending on their permission | Thanks: @bobylapointe63.
+
 ## [1.1.4] - 2021-09-01
 ### Fixed
 - Users can login regardless of their profile type | Thanks: @bobylapointe63.
@@ -138,9 +145,11 @@ The format is based on [Keep a Changelog][Keep a Changelog] and this project adh
 <!-- Versions -->
 [Released]: https://github.com/Jeoxs/khanos/releases
 
-[1.1.0]: https://github.com/Jeoxs/khanos/compare/v1.1.2...v1.1.3
-[1.1.0]: https://github.com/Jeoxs/khanos/compare/v1.1.1...v1.1.2
-[1.1.0]: https://github.com/Jeoxs/khanos/compare/v1.1.0...v1.1.1
+[1.1.5]: https://github.com/Jeoxs/khanos/compare/v1.1.4...v1.1.5
+[1.1.4]: https://github.com/Jeoxs/khanos/compare/v1.1.3...v1.1.4
+[1.1.3]: https://github.com/Jeoxs/khanos/compare/v1.1.2...v1.1.3
+[1.1.2]: https://github.com/Jeoxs/khanos/compare/v1.1.1...v1.1.2
+[1.1.1]: https://github.com/Jeoxs/khanos/compare/v1.1.0...v1.1.1
 [1.1.0]: https://github.com/Jeoxs/khanos/compare/v1.0.9...v1.1.0
 [1.0.9]: https://github.com/Jeoxs/khanos/compare/v1.0.8...v1.0.9
 [1.0.8]: https://github.com/Jeoxs/khanos/compare/v1.0.7...v1.0.8
