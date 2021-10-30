@@ -69,7 +69,8 @@ class _HomePageState extends State<HomePage> {
             .pushNamed('newProject')
             .then((_) => setState(() {})),
       ),
-      bottomNavigationBar: BottomNavigationBar(        
+      bottomNavigationBar: BottomNavigationBar(     
+        type: BottomNavigationBarType.fixed,   
         onTap: onTabTapped,
         currentIndex: _currentIndex,
         items: [
