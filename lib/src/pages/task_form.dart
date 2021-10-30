@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:khanos/src/models/column_model.dart';
 import 'package:khanos/src/models/project_model.dart';
+import 'package:khanos/src/models/swimlane_model.dart';
 import 'package:khanos/src/models/tag_model.dart';
 import 'package:khanos/src/models/task_model.dart';
 import 'package:khanos/src/models/user_model.dart';
 import 'package:khanos/src/providers/column_provider.dart';
 import 'package:khanos/src/providers/project_provider.dart';
+import 'package:khanos/src/providers/swimlane_provider.dart';
 import 'package:khanos/src/providers/tag_provider.dart';
 import 'package:khanos/src/providers/task_provider.dart';
 import 'package:khanos/src/providers/user_provider.dart';
@@ -40,6 +42,7 @@ class _TaskFormPageState extends State<TaskFormPage> {
 
   List<UserModel> _users = [];
   List<ColumnModel> _columns = [];
+  List<SwimlaneModel> swimlanes = [];
   DateTime dateStartedLimitMin;
   DateTime startedDateLimitMax;
   DateTime dateDueLimitMin;
@@ -54,6 +57,7 @@ class _TaskFormPageState extends State<TaskFormPage> {
   String _creatorId = '0';
   String _ownerId = '0';
   String _columnId = '0';
+  String _swimlaneId;
   String _timeEstimated = '';
   String _timeSpent = '';
   String _dateStarted = '';
@@ -102,6 +106,7 @@ class _TaskFormPageState extends State<TaskFormPage> {
       _creatorId = task.creatorId;
       _ownerId = task.ownerId;
       _columnId = task.columnId;
+      _swimlaneId = task.swimlaneId;
       _timeSpent = task.timeSpent;
       _timeSpentFieldController.text = _timeSpent;
       _timeEstimated = task.timeEstimated;
@@ -152,6 +157,7 @@ class _TaskFormPageState extends State<TaskFormPage> {
           tagProvider.getDefaultTags(),
           projectProvider.getProjectUsers(int.parse(project.id)),
           columnProvider.getColumns(int.parse(project.id)),
+          SwimlaneProvider().getActiveSwimlanes(int.parse(project.id)),
         ]),
         builder: (BuildContext context, AsyncSnapshot snapshot) {
           if (snapshot.hasData) {
@@ -159,6 +165,7 @@ class _TaskFormPageState extends State<TaskFormPage> {
               ..addAll(snapshot.data[1]);
             _users = snapshot.data[2];
             _columns = snapshot.data[3];
+            swimlanes = snapshot.data[4];
             return ListView(
               padding: EdgeInsets.only(top: 10.0, bottom: 80.0),
               children: [_taskForm()],
@@ -233,6 +240,8 @@ class _TaskFormPageState extends State<TaskFormPage> {
           _ownerSelect(),
           SizedBox(height: 10.0),
           _columnSelect(),
+          SizedBox(height: 10.0),
+          _swimlaneSelect(),
           SizedBox(height: 10.0),
           Row(
             children: [
@@ -500,6 +509,40 @@ class _TaskFormPageState extends State<TaskFormPage> {
     );
   }
 
+  Widget _swimlaneSelect() {
+    List<DropdownMenuItem<String>> swimlaneList = [];
+    // swimlaneList.add(DropdownMenuItem<String>(
+    //     child: Text('Select Swimlane'), value: 0.toString()));
+    swimlanes.forEach((swimlane) {
+      swimlaneList.add(DropdownMenuItem<String>(
+          child: Container(
+            child: Text(
+              swimlane.name,
+            ),
+          ),
+          value: swimlane.id.toString()));
+    });
+    return Container(
+      // margin: EdgeInsets.only(left: 40.0),
+      padding: EdgeInsets.symmetric(horizontal: 20.0),
+      child: DropdownButtonFormField(
+        onTap: () {
+          FocusScope.of(context).requestFocus(new FocusNode());
+        },
+        icon: Padding(
+          padding: const EdgeInsets.only(right: 12),
+          child: Icon(Icons.table_rows_rounded, color: Colors.blue),
+        ),
+        items: swimlaneList,
+        value: task.swimlaneId,
+        // decoration: InputDecoration(helperText: 'Optional'),
+        onChanged: (newValue) {
+          _swimlaneId = newValue;
+        },
+      ),
+    );
+  }
+
   Widget _timeEstimatedField() {
     return Container(
       padding: EdgeInsets.symmetric(horizontal: 20.0),
@@ -564,6 +607,7 @@ class _TaskFormPageState extends State<TaskFormPage> {
         "creator_id": _creatorId,
         "owner_id": _ownerId,
         "column_id": _columnId,
+        "swimlane_id": _swimlaneId,
         "time_spent": _timeSpent,
         "time_estimated": _timeEstimated,
         "color_id": _colorId,
@@ -590,6 +634,7 @@ class _TaskFormPageState extends State<TaskFormPage> {
         "creator_id": _creatorId,
         "owner_id": _ownerId,
         "column_id": _columnId,
+        "swimlane_id": _swimlaneId,
         "time_spent": _timeSpent,
         "time_estimated": _timeEstimated,
         "color_id": _colorId,
@@ -599,7 +644,19 @@ class _TaskFormPageState extends State<TaskFormPage> {
         "score": _score,
         "tags": _tags,
       };
+
+      Map<String, dynamic> taskPosition = {
+        "project_id": task.projectId,
+        "task_id": task.id,
+        "column_id": _columnId,
+        "position": task.position,
+        "swimlane_id": _swimlaneId
+      };
+
+      // print(formData);
       bool result = await taskProvider.updateTask(formData);
+      await taskProvider.moveTaskPosition(taskPosition);
+
       Navigator.pop(context);
       if (result) {
         setState(() {
