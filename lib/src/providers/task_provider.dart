@@ -28,7 +28,7 @@ class TaskProvider {
     );
 
     final decodedData = json.decode(utf8.decode(resp.bodyBytes));
-    
+
     final List<TaskModel> tasks = [];
 
     final List<dynamic> results = decodedData['result'];
@@ -73,6 +73,45 @@ class TaskProvider {
 
     final List<dynamic> results = decodedData['result'];
 
+    if (decodedData == null) return [];
+
+    // Check for errors
+    if (decodedData['error'] != null) {
+      return Future.error(decodedData['error']);
+    }
+
+    results.forEach((task) {
+      final taskTemp = TaskModel.fromJson(task);
+      tasks.add(taskTemp);
+    });
+    return tasks;
+  }
+
+  Future<List<TaskModel>> getMyTasks() async {
+    final Map<String, dynamic> parameters = {
+      "jsonrpc": "2.0",
+      "method": "getMyDashboard",
+      "id": 447898718
+    };
+
+    final credentials = "${_prefs.username}:${_prefs.password}";
+
+    Codec<String, String> stringToBase64 = utf8.fuse(base64);
+
+    String encoded = stringToBase64.encode(credentials);
+
+    final resp = await http.post(
+      Uri.parse(_prefs.endpoint),
+      headers: <String, String>{"Authorization": "Basic $encoded"},
+      body: json.encode(parameters),
+      encoding: Encoding.getByName("utf-8"),
+    );
+
+    final decodedData = json.decode(utf8.decode(resp.bodyBytes));
+
+    final List<TaskModel> tasks = [];
+
+    final List<dynamic> results = decodedData['result'];
     if (decodedData == null) return [];
 
     // Check for errors
@@ -242,7 +281,7 @@ class TaskProvider {
     );
 
     final decodedData = json.decode(utf8.decode(resp.bodyBytes));
-    print(decodedData);
+    // print(decodedData);
     final result = decodedData['result'];
 
     if (decodedData == null) return false;

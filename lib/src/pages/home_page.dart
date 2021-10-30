@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:khanos/src/pages/activity_page.dart';
+import 'package:khanos/src/pages/my_tasks_page.dart';
 import 'package:khanos/src/pages/overdue_page.dart';
 import 'package:khanos/src/preferences/user_preferences.dart';
 import 'package:khanos/src/providers/auth_provider.dart';
@@ -50,6 +51,7 @@ class _HomePageState extends State<HomePage> {
     List<Widget> _children = [];
     _children.add(projectList(context));
     _children.add(OverdueTasksPage());
+    _children.add(MyTasksPage());
     _children.add(ActivityPage());
 
     currentThemeData =
@@ -67,7 +69,7 @@ class _HomePageState extends State<HomePage> {
             .pushNamed('newProject')
             .then((_) => setState(() {})),
       ),
-      bottomNavigationBar: BottomNavigationBar(
+      bottomNavigationBar: BottomNavigationBar(        
         onTap: onTabTapped,
         currentIndex: _currentIndex,
         items: [
@@ -78,6 +80,10 @@ class _HomePageState extends State<HomePage> {
           BottomNavigationBarItem(
             icon: new Icon(Icons.watch_later_outlined),
             label: 'Overdue Tasks',
+          ),
+          BottomNavigationBarItem(
+            icon: new Icon(Icons.check_rounded),
+            label: 'My Tasks',
           ),
           BottomNavigationBarItem(
             icon: new Icon(Icons.list),
