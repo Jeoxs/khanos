@@ -12,7 +12,6 @@ import 'package:khanos/src/utils/utils.dart';
 import 'package:khanos/src/utils/widgets_utils.dart';
 import 'package:provider/provider.dart';
 import 'package:shimmer/shimmer.dart';
-import 'package:khanos/src/models/project_model.dart';
 import 'package:khanos/src/providers/column_provider.dart';
 import 'package:khanos/src/providers/project_provider.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
