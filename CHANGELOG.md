@@ -5,6 +5,12 @@ The format is based on [Keep a Changelog][Keep a Changelog] and this project adh
 
 ## [Released]
 
+## [1.1.6] - 2021-10-30
+### Added
+- Swimlane Support for Tasks
+- My Tasks page
+- Note about 2FA on login
+
 ## [1.1.5] - 2021-09-05
 ### Added
 - Users can create personal projects.
@@ -145,6 +151,7 @@ The format is based on [Keep a Changelog][Keep a Changelog] and this project adh
 <!-- Versions -->
 [Released]: https://github.com/Jeoxs/khanos/releases
 
+[1.1.5]: https://github.com/Jeoxs/khanos/compare/v1.1.5...v1.1.6
 [1.1.5]: https://github.com/Jeoxs/khanos/compare/v1.1.4...v1.1.5
 [1.1.4]: https://github.com/Jeoxs/khanos/compare/v1.1.3...v1.1.4
 [1.1.3]: https://github.com/Jeoxs/khanos/compare/v1.1.2...v1.1.3

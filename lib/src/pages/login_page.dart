@@ -80,7 +80,9 @@ class _LoginPageState extends State<LoginPage> {
                     SizedBox(height: 15.0),
                     _createPassword(),
                     SizedBox(height: 25.0),
-                    _createBoton(context)
+                    _tfaWarning(),
+                    SizedBox(height: 10.0),
+                    _loginButton(context)
                   ],
                 )),
           ),
@@ -156,7 +158,7 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 
-  Widget _createBoton(BuildContext context) {
+  Widget _loginButton(BuildContext context) {
     return StreamBuilder(
       builder: (BuildContext context, AsyncSnapshot snapshot) {
         return ElevatedButton(
@@ -242,6 +244,14 @@ class _LoginPageState extends State<LoginPage> {
           ),
         )
       ],
+    );
+  }
+
+  Widget _tfaWarning() {
+    return Container(
+      padding: EdgeInsets.symmetric(horizontal:20),
+      child: Text(
+          'Note: Since Kanboard 1.2.8, If you have 2FA enabled you must use an API key as password'),
     );
   }
 }

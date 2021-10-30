@@ -14,6 +14,12 @@ class ChangelogPage extends StatelessWidget {
 
   _showChangelog() {
     final String changelog = """
+## Version 1.1.6
+### **Added** 🚀
+- Swimlane Support for Tasks
+- My Tasks page
+- Note about 2FA on login
+
 ## Version 1.1.5
 ### **Added** 🚀
 - Users can create personal projects.

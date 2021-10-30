@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:khanos/src/models/column_model.dart';
 import 'package:khanos/src/models/project_model.dart';
+import 'package:khanos/src/models/swimlane_model.dart';
 import 'package:khanos/src/models/tag_model.dart';
 import 'package:khanos/src/models/task_model.dart';
 import 'package:khanos/src/models/user_model.dart';
@@ -10,6 +11,7 @@ import 'package:khanos/src/preferences/user_preferences.dart';
 import 'package:khanos/src/providers/column_provider.dart';
 import 'package:khanos/src/providers/project_provider.dart';
 import 'package:khanos/src/providers/subtask_provider.dart';
+import 'package:khanos/src/providers/swimlane_provider.dart';
 import 'package:khanos/src/providers/tag_provider.dart';
 import 'package:khanos/src/providers/task_provider.dart';
 import 'package:khanos/src/providers/user_provider.dart';
@@ -31,6 +33,7 @@ class _TaskPageState extends State<TaskPage> {
   int taskId;
   List<ColumnModel> projectColumns = [];
   List<TagModel> _tags = [];
+  List<SwimlaneModel> swimlanes = [];
   ProjectModel project;
   String userRole;
   final taskProvider = new TaskProvider();
@@ -69,7 +72,8 @@ class _TaskPageState extends State<TaskPage> {
             backgroundColor: Colors.blue,
             heroTag: "subtaskListHero",
             onPressed: () {
-              Navigator.pushNamed(context, 'subtask', arguments: {'task': task,'userRole':userRole})
+              Navigator.pushNamed(context, 'subtask',
+                      arguments: {'task': task, 'userRole': userRole})
                   .then((_) => setState(() {}));
             },
             child: Icon(Icons.playlist_add_check_rounded),
@@ -79,24 +83,27 @@ class _TaskPageState extends State<TaskPage> {
             backgroundColor: Colors.blue,
             heroTag: "commentsHero",
             onPressed: () {
-              Navigator.pushNamed(context, 'comment', arguments: {'task': task, 'userRole': userRole})
+              Navigator.pushNamed(context, 'comment',
+                      arguments: {'task': task, 'userRole': userRole})
                   .then((_) => setState(() {}));
             },
             child: Icon(Icons.comment),
           ),
           SizedBox(width: 10.0),
-          (userRole != 'project-viewer') ? FloatingActionButton(
-            backgroundColor: Colors.blue,
-            heroTag: "editTaskHero",
-            onPressed: () async {
-              Navigator.pushNamed(context, 'taskForm', arguments: {
-                'task': task,
-                'project': project,
-                'tags': _tags,
-              }).then((_) => setState(() {}));
-            },
-            child: Icon(Icons.edit),
-          ) : SizedBox(),
+          (userRole != 'project-viewer')
+              ? FloatingActionButton(
+                  backgroundColor: Colors.blue,
+                  heroTag: "editTaskHero",
+                  onPressed: () async {
+                    Navigator.pushNamed(context, 'taskForm', arguments: {
+                      'task': task,
+                      'project': project,
+                      'tags': _tags,
+                    }).then((_) => setState(() {}));
+                  },
+                  child: Icon(Icons.edit),
+                )
+              : SizedBox(),
         ],
       ),
     );
@@ -106,7 +113,8 @@ class _TaskPageState extends State<TaskPage> {
     return FutureBuilder(
       future: Future.wait([
         TaskProvider().getTask(taskId),
-        ProjectProvider().getProjectUsers(int.parse(project.id))
+        ProjectProvider().getProjectUsers(int.parse(project.id)),
+        SwimlaneProvider().getActiveSwimlanes(int.parse(project.id)),
       ]),
       builder: (BuildContext context, AsyncSnapshot snapshot) {
         if (snapshot.hasError) {
@@ -138,6 +146,9 @@ class _TaskPageState extends State<TaskPage> {
         if (snapshot.hasData) {
           task = snapshot.data[0];
           List<UserModel> projectUsers = snapshot.data[1];
+          swimlanes = snapshot.data[2];
+          SwimlaneModel swimlane =
+              swimlanes.firstWhere((element) => element.id == task.swimlaneId);
           return Column(
             children: [
               Expanded(
@@ -206,6 +217,18 @@ class _TaskPageState extends State<TaskPage> {
                               .name)
                           : Text('N/A'),
                     ]),
+
+                    SizedBox(height: 20.0),
+                    Row(children: [
+                      Padding(
+                        padding: const EdgeInsets.only(right: 10.0),
+                        child: Icon(Icons.table_rows_rounded,
+                            color: Colors.blueGrey),
+                      ),
+                      Text(
+                          'Swimlane: ${swimlane.name}'),
+                    ]),
+
                     SizedBox(height: 20.0),
                     Row(children: [
                       Padding(
@@ -367,7 +390,7 @@ class _TaskPageState extends State<TaskPage> {
     );
   }
 
-  Widget _userButton(String name) {    
+  Widget _userButton(String name) {
     return GestureDetector(
       onTap: () {},
       child: Container(
